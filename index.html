@@ -162,14 +162,29 @@
                 <h2>GitHub Gist Sync</h2>
                 <div id="gistSetup">
                     <p>Sync your trades across devices using GitHub Gist.</p>
+
+                    <details class="help-section">
+                        <summary>How to get a token (first time setup)</summary>
+                        <ol class="help-steps">
+                            <li>Click the <a href="https://github.com/settings/tokens/new?scopes=gist&description=Trade%20Tracker" target="_blank">Create token</a> link below</li>
+                            <li>Log in to GitHub if prompted</li>
+                            <li>Set expiration to <strong>"No expiration"</strong> (recommended)</li>
+                            <li>The "gist" checkbox should already be selected</li>
+                            <li>Click <strong>"Generate token"</strong> at the bottom</li>
+                            <li>Copy the token (starts with <code>ghp_</code>)</li>
+                            <li>Paste it below and click "Save & Sync"</li>
+                        </ol>
+                        <p class="help-note">On a new device? Enter the same token and your Gist ID to sync existing trades.</p>
+                    </details>
+
                     <div class="form-group">
                         <label for="gistToken">GitHub Personal Access Token</label>
                         <input type="password" id="gistToken" placeholder="ghp_xxxxxxxxxxxx">
                         <small>Needs "gist" scope. <a href="https://github.com/settings/tokens/new?scopes=gist&description=Trade%20Tracker" target="_blank">Create token</a></small>
                     </div>
                     <div class="form-group" id="gistIdGroup">
-                        <label for="gistId">Gist ID (leave empty to create new)</label>
-                        <input type="text" id="gistId" placeholder="Optional - for existing gist">
+                        <label for="gistId">Gist ID <span class="optional-label">(leave empty for new setup)</span></label>
+                        <input type="text" id="gistId" placeholder="Only needed to sync existing trades">
                     </div>
                     <div class="modal-actions">
                         <button id="saveGistSettings" class="btn btn-primary">Save & Sync</button>

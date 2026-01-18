@@ -513,3 +513,66 @@ tbody tr:last-child td {
     border-radius: 4px;
     font-size: 0.85rem;
 }
+
+/* Help Section */
+.help-section {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 12px;
+    margin-bottom: 20px;
+}
+
+.help-section summary {
+    cursor: pointer;
+    font-weight: 500;
+    color: #2563eb;
+    font-size: 0.9rem;
+}
+
+.help-section summary:hover {
+    color: #1d4ed8;
+}
+
+.help-section[open] summary {
+    margin-bottom: 12px;
+}
+
+.help-steps {
+    margin: 0;
+    padding-left: 20px;
+    font-size: 0.85rem;
+    color: #4b5563;
+}
+
+.help-steps li {
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+.help-steps code {
+    background: #e5e7eb;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: 0.8rem;
+}
+
+.help-steps a {
+    color: #2563eb;
+}
+
+.help-note {
+    margin-top: 12px;
+    margin-bottom: 0;
+    padding: 8px 10px;
+    background: #eff6ff;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    color: #1e40af;
+}
+
+.optional-label {
+    font-weight: 400;
+    color: #9ca3af;
+    font-size: 0.8rem;
+}
