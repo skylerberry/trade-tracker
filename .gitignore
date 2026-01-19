@@ -1,6 +1,7 @@
 node_modules/
 .DS_Store
 test-results/
+status.md
 
 # Local Netlify folder
 .netlify
