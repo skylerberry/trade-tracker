@@ -990,7 +990,8 @@ tbody tr:last-child td {
     flex-wrap: wrap;
 }
 
-.setting-item > label {
+.setting-item > label,
+.setting-item > .setting-label {
     font-size: 0.8rem;
     color: var(--color-gray-500);
     white-space: nowrap;
