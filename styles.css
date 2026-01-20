@@ -34,6 +34,9 @@ header h1 {
 }
 
 .sync-status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
     font-size: 0.8rem;
     padding: 4px 10px;
     border-radius: 12px;
@@ -42,8 +45,16 @@ header h1 {
     transition: background-color 0.2s, opacity 0.2s;
 }
 
-.sync-status:empty {
+.sync-status .sync-icon {
+    flex-shrink: 0;
+}
+
+.sync-status .icon-cloud {
     display: none;
+}
+
+.sync-status .icon-cloud-off {
+    display: block;
 }
 
 .sync-status.not-synced {
@@ -62,6 +73,20 @@ header h1 {
     color: #1a365d;
 }
 
+.sync-status.syncing .icon-cloud {
+    display: block;
+    animation: pulse 1s ease-in-out infinite;
+}
+
+.sync-status.syncing .icon-cloud-off {
+    display: none;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
 .sync-status.synced {
     background: #22c55e;
     color: white;
@@ -71,6 +96,14 @@ header h1 {
     background: #16a34a;
 }
 
+.sync-status.synced .icon-cloud {
+    display: block;
+}
+
+.sync-status.synced .icon-cloud-off {
+    display: none;
+}
+
 .sync-status.error {
     background: #ef4444;
     color: white;
@@ -78,6 +111,14 @@ header h1 {
 
 .sync-status.error:hover {
     background: #dc2626;
+}
+
+.sync-status.error .icon-cloud-off {
+    display: block;
+}
+
+.sync-status.error .icon-cloud {
+    display: none;
 }
 
 /* Add Trade Section */

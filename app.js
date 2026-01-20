@@ -584,7 +584,7 @@ const LAST_SYNC_KEY = 'tradeTracker_lastSync';
 
 function updateSyncStatus(status, text) {
     syncStatus.className = 'sync-status ' + status;
-    syncStatus.textContent = text;
+    syncStatus.querySelector('.sync-text').textContent = text;
 
     // Update last synced timestamp on successful sync
     if (status === 'synced') {
