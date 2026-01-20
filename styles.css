@@ -38,6 +38,23 @@ header h1 {
     padding: 4px 10px;
     border-radius: 12px;
     background: rgba(255,255,255,0.2);
+    cursor: pointer;
+    transition: background-color 0.2s, opacity 0.2s;
+}
+
+.sync-status:empty {
+    display: none;
+}
+
+.sync-status.not-synced {
+    background: rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.7);
+    border: 1px dashed rgba(255,255,255,0.4);
+}
+
+.sync-status.not-synced:hover {
+    background: rgba(255,255,255,0.25);
+    color: white;
 }
 
 .sync-status.syncing {
@@ -50,9 +67,17 @@ header h1 {
     color: white;
 }
 
+.sync-status.synced:hover {
+    background: #16a34a;
+}
+
 .sync-status.error {
     background: #ef4444;
     color: white;
+}
+
+.sync-status.error:hover {
+    background: #dc2626;
 }
 
 /* Add Trade Section */

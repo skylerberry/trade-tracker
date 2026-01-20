@@ -576,7 +576,7 @@ async function initGistSync() {
         }
     } else {
         loadTrades();
-        updateSyncStatus('', '');
+        updateSyncStatus('not-synced', 'Not synced');
     }
 }
 
@@ -584,6 +584,11 @@ function updateSyncStatus(status, text) {
     syncStatus.className = 'sync-status ' + status;
     syncStatus.textContent = text;
 }
+
+// Click sync status to open settings
+syncStatus.addEventListener('click', () => {
+    document.getElementById('gistSettingsBtn').click();
+});
 
 // Load trades from Gist
 async function loadFromGist() {
@@ -794,7 +799,7 @@ document.getElementById('disconnectGist').addEventListener('click', () => {
 
     localStorage.removeItem(GIST_TOKEN_KEY);
     localStorage.removeItem(GIST_ID_KEY);
-    updateSyncStatus('', '');
+    updateSyncStatus('not-synced', 'Not synced');
     gistModal.classList.add('hidden');
 });
 
