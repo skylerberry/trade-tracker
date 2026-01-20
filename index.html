@@ -12,11 +12,11 @@
     <div class="container">
         <header>
             <h1>Trade Management for Swing Trades</h1>
-            <div class="sync-status" id="syncStatus">
-                <svg class="sync-icon icon-cloud" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <div class="sync-status" id="syncStatus" role="button" tabindex="0" aria-label="Sync settings">
+                <svg class="sync-icon icon-cloud" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path>
                 </svg>
-                <svg class="sync-icon icon-cloud-off" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg class="sync-icon icon-cloud-off" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <path d="M22.61 16.95A5 5 0 0 0 18 10h-1.26a8 8 0 0 0-7.05-6M5 5a8 8 0 0 0 4 15h9a5 5 0 0 0 1.7-.3"></path>
                     <line x1="1" y1="1" x2="23" y2="23"></line>
                 </svg>
@@ -248,9 +248,9 @@
         </section>
 
         <!-- Gist Settings Modal -->
-        <div id="gistModal" class="modal hidden">
+        <div id="gistModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="gistModalTitle">
             <div class="modal-content">
-                <h2>GitHub Gist Sync</h2>
+                <h2 id="gistModalTitle">GitHub Gist Sync</h2>
                 <div id="gistSetup">
                     <p>Sync your trades easily across devices using GitHub Gist.</p>
 
@@ -284,12 +284,12 @@
                 </div>
                 <div id="gistConnected" class="hidden">
                     <p class="sync-connected">Connected to GitHub Gist</p>
-                    <p class="gist-id-display">Gist ID: <code id="displayGistId"></code><button type="button" id="copyGistId" class="btn-copy-gist" title="Copy Gist ID">
-                        <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <p class="gist-id-display">Gist ID: <code id="displayGistId"></code><button type="button" id="copyGistId" class="btn-copy-gist" title="Copy Gist ID" aria-label="Copy Gist ID">
+                        <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                             <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                             <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
                         </svg>
-                        <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                             <polyline points="20 6 9 17 4 12"></polyline>
                         </svg>
                     </button></p>
@@ -308,16 +308,16 @@
                 <table id="tradesTable">
                     <thead>
                         <tr>
-                            <th>Ticker</th>
-                            <th>Entry Price</th>
-                            <th>Entry Date</th>
-                            <th>Initial SL</th>
-                            <th>Current SL</th>
-                            <th>Sale 1</th>
-                            <th>Sale 2</th>
-                            <th>Sale 3</th>
-                            <th>Status</th>
-                            <th>Actions</th>
+                            <th scope="col">Ticker</th>
+                            <th scope="col">Entry Price</th>
+                            <th scope="col">Entry Date</th>
+                            <th scope="col">Initial SL</th>
+                            <th scope="col">Current SL</th>
+                            <th scope="col">Sale 1</th>
+                            <th scope="col">Sale 2</th>
+                            <th scope="col">Sale 3</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Actions</th>
                         </tr>
                     </thead>
                     <tbody id="tradesBody">

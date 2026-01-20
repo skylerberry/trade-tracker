@@ -183,11 +183,14 @@ function getSalesData() {
         const price = document.getElementById(`sale${saleId}Price`)?.value;
         const date = document.getElementById(`sale${saleId}Date`)?.value || null;
 
-        sales.push({
-            portion,
-            price: price ? parseFloat(price) : null,
-            date
-        });
+        // Only include sales that have at least a portion or price
+        if (portion || price) {
+            sales.push({
+                portion,
+                price: price ? parseFloat(price) : null,
+                date
+            });
+        }
     });
     return sales;
 }
@@ -236,7 +239,12 @@ statusFilter.addEventListener('change', renderTrades);
 function loadTrades() {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
-        trades = JSON.parse(stored);
+        try {
+            trades = JSON.parse(stored);
+        } catch (e) {
+            console.error('Failed to parse trades from localStorage:', e);
+            trades = [];
+        }
     }
 }
 
@@ -246,13 +254,78 @@ function saveTrades() {
     syncToGist();
 }
 
+// Validate trade form and show errors
+function validateTradeForm() {
+    const ticker = document.getElementById('ticker').value.trim();
+    const entryPrice = parseFloat(document.getElementById('entryPrice').value);
+    const initialSL = parseFloat(document.getElementById('initialSL').value);
+    const currentSL = parseFloat(document.getElementById('currentSL').value);
+
+    // Clear previous errors
+    clearFormErrors();
+
+    let isValid = true;
+
+    if (!ticker) {
+        showFormError('ticker', 'Ticker is required');
+        isValid = false;
+    }
+
+    if (isNaN(entryPrice) || entryPrice <= 0) {
+        showFormError('entryPrice', 'Entry price must be a positive number');
+        isValid = false;
+    }
+
+    if (isNaN(initialSL) || initialSL <= 0) {
+        showFormError('initialSL', 'Initial stop loss must be a positive number');
+        isValid = false;
+    } else if (initialSL >= entryPrice) {
+        showFormError('initialSL', 'Stop loss must be below entry price');
+        isValid = false;
+    }
+
+    if (isNaN(currentSL) || currentSL <= 0) {
+        showFormError('currentSL', 'Current stop loss must be a positive number');
+        isValid = false;
+    } else if (currentSL >= entryPrice) {
+        showFormError('currentSL', 'Stop loss must be below entry price');
+        isValid = false;
+    }
+
+    return isValid;
+}
+
+function showFormError(fieldId, message) {
+    const field = document.getElementById(fieldId);
+    if (field) {
+        field.classList.add('error');
+        // Create error message element if it doesn't exist
+        let errorEl = field.parentNode.querySelector('.form-error');
+        if (!errorEl) {
+            errorEl = document.createElement('span');
+            errorEl.className = 'form-error';
+            field.parentNode.appendChild(errorEl);
+        }
+        errorEl.textContent = message;
+    }
+}
+
+function clearFormErrors() {
+    document.querySelectorAll('#tradeForm .error').forEach(el => el.classList.remove('error'));
+    document.querySelectorAll('#tradeForm .form-error').forEach(el => el.remove());
+}
+
 // Handle form submission
 function handleFormSubmit(e) {
     e.preventDefault();
 
+    if (!validateTradeForm()) {
+        return;
+    }
+
     const trade = {
         id: editingId || Date.now().toString(),
-        ticker: document.getElementById('ticker').value.toUpperCase(),
+        ticker: document.getElementById('ticker').value.toUpperCase().trim(),
         entryPrice: parseFloat(document.getElementById('entryPrice').value),
         entryDate: document.getElementById('entryDate').value,
         initialSL: parseFloat(document.getElementById('initialSL').value),
@@ -631,6 +704,14 @@ syncStatus.addEventListener('click', () => {
     document.getElementById('gistSettingsBtn').click();
 });
 
+// Keyboard support for sync status (Enter/Space)
+syncStatus.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        document.getElementById('gistSettingsBtn').click();
+    }
+});
+
 // Load trades from Gist
 async function loadFromGist() {
     const token = localStorage.getItem(GIST_TOKEN_KEY);
@@ -653,8 +734,13 @@ async function loadFromGist() {
     const content = gist.files['trades.json']?.content;
 
     if (content) {
-        trades = JSON.parse(content);
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(trades));
+        try {
+            trades = JSON.parse(content);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(trades));
+        } catch (e) {
+            console.error('Failed to parse trades from Gist:', e);
+            trades = [];
+        }
     } else {
         trades = [];
     }
