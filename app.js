@@ -803,6 +803,20 @@ document.getElementById('disconnectGist').addEventListener('click', () => {
     gistModal.classList.add('hidden');
 });
 
+// Copy Gist ID to clipboard
+document.getElementById('copyGistId').addEventListener('click', async () => {
+    const gistId = document.getElementById('displayGistId').textContent;
+    const btn = document.getElementById('copyGistId');
+
+    try {
+        await navigator.clipboard.writeText(gistId);
+        btn.classList.add('copied');
+        setTimeout(() => btn.classList.remove('copied'), 1500);
+    } catch (err) {
+        console.error('Failed to copy:', err);
+    }
+});
+
 // Close modal on background click
 gistModal.addEventListener('click', (e) => {
     if (e.target === gistModal) {

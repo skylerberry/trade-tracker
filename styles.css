@@ -642,11 +642,42 @@ tbody tr:last-child td {
     font-size: 0.9rem;
 }
 
+.gist-id-display {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
 .gist-id-display code {
     background: #f3f4f6;
     padding: 2px 8px;
     border-radius: 4px;
     font-size: 0.85rem;
+}
+
+.btn-copy-gist {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    background: #f9fafb;
+    color: #6b7280;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-copy-gist:hover {
+    background: #e5e7eb;
+    color: #374151;
+    border-color: #9ca3af;
+}
+
+.btn-copy-gist.copied {
+    background: #dcfce7;
+    color: #16a34a;
+    border-color: #86efac;
 }
 
 /* Help Section */

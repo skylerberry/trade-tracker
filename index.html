@@ -275,7 +275,12 @@
                 </div>
                 <div id="gistConnected" class="hidden">
                     <p class="sync-connected">Connected to GitHub Gist</p>
-                    <p class="gist-id-display">Gist ID: <code id="displayGistId"></code></p>
+                    <p class="gist-id-display">Gist ID: <code id="displayGistId"></code><button type="button" id="copyGistId" class="btn-copy-gist" title="Copy Gist ID">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                        </svg>
+                    </button></p>
                     <div class="modal-actions">
                         <button id="forceSyncBtn" class="btn btn-primary">Force Sync Now</button>
                         <button id="disconnectGist" class="btn btn-delete">Disconnect</button>
