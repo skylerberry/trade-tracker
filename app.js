@@ -686,6 +686,12 @@ function updateSyncStatus(status, text) {
     syncStatus.className = 'sync-status ' + status;
     syncStatus.querySelector('.sync-text').textContent = text;
 
+    // Update settings button text based on sync status
+    const settingsBtn = document.getElementById('gistSettingsBtn');
+    if (settingsBtn) {
+        settingsBtn.textContent = status === 'not-synced' ? 'Configure Sync' : 'Sync Settings';
+    }
+
     // Update last synced timestamp on successful sync
     if (status === 'synced') {
         const now = Date.now();
