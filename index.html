@@ -34,7 +34,7 @@
                 <div class="calc-settings-header">
                     <div class="setting-item">
                         <label for="calcAccountSize">Account:</label>
-                        <input type="text" id="calcAccountSize" placeholder="e.g., 50k">
+                        <input type="text" id="calcAccountSize" placeholder="e.g., 50k" autocomplete="off">
                     </div>
                     <div class="setting-item">
                         <label>Risk:</label>
@@ -66,7 +66,7 @@
                     <div class="form-group">
                         <label for="calcEntryPrice">Entry Price</label>
                         <div class="input-with-buttons">
-                            <input type="number" id="calcEntryPrice" step="0.01" placeholder="0.00">
+                            <input type="number" id="calcEntryPrice" step="0.01" placeholder="0.00" autocomplete="off">
                             <div class="increment-btn-stack">
                                 <button type="button" class="increment-btn increment-btn-top" data-target="calcEntryPrice" data-delta="0.01" tabindex="-1">+</button>
                                 <button type="button" class="increment-btn increment-btn-bottom" data-target="calcEntryPrice" data-delta="-0.01" tabindex="-1">-</button>
@@ -76,7 +76,7 @@
                     <div class="form-group">
                         <label for="calcStopLoss">Stop Loss</label>
                         <div class="input-with-buttons">
-                            <input type="number" id="calcStopLoss" step="0.01" placeholder="0.00">
+                            <input type="number" id="calcStopLoss" step="0.01" placeholder="0.00" autocomplete="off">
                             <div class="increment-btn-stack">
                                 <button type="button" class="increment-btn increment-btn-top" data-target="calcStopLoss" data-delta="0.01" tabindex="-1">+</button>
                                 <button type="button" class="increment-btn increment-btn-bottom" data-target="calcStopLoss" data-delta="-0.01" tabindex="-1">-</button>
@@ -87,7 +87,7 @@
                     <div class="form-group target-group">
                         <label for="calcTargetPrice">Target Price <span class="optional-tag">optional</span></label>
                         <div class="input-with-buttons">
-                            <input type="number" id="calcTargetPrice" step="0.01" placeholder="0.00">
+                            <input type="number" id="calcTargetPrice" step="0.01" placeholder="0.00" autocomplete="off">
                             <div class="increment-btn-stack">
                                 <button type="button" class="increment-btn increment-btn-top" data-target="calcTargetPrice" data-delta="0.01" tabindex="-1">+</button>
                                 <button type="button" class="increment-btn increment-btn-bottom" data-target="calcTargetPrice" data-delta="-0.01" tabindex="-1">-</button>
@@ -180,44 +180,68 @@
         <section class="add-trade-section">
             <button id="toggleFormBtn" class="btn btn-primary">+ Add New Trade</button>
 
-            <form id="tradeForm" class="trade-form hidden">
+            <form id="tradeForm" class="trade-form hidden" autocomplete="off">
                 <h2 id="formTitle">Add New Trade</h2>
                 <input type="hidden" id="tradeId">
 
                 <div class="form-grid">
                     <div class="form-group">
                         <label for="ticker">Ticker</label>
-                        <input type="text" id="ticker" required placeholder="e.g., AAPL">
+                        <div class="input-with-icon">
+                            <span class="input-icon">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline><polyline points="16 7 22 7 22 13"></polyline></svg>
+                            </span>
+                            <input type="text" id="ticker" required placeholder="e.g., AAPL">
+                        </div>
                     </div>
 
                     <div class="form-group">
                         <label for="entryPrice">Entry Price</label>
-                        <input type="number" id="entryPrice" step="0.01" required placeholder="0.00">
+                        <div class="input-with-icon">
+                            <span class="input-icon">$</span>
+                            <input type="number" id="entryPrice" step="0.01" required placeholder="0.00">
+                        </div>
                     </div>
 
                     <div class="form-group">
                         <label for="entryDate">Entry Date</label>
-                        <input type="text" id="entryDate" class="datepicker" required placeholder="Select date">
+                        <div class="input-with-icon">
+                            <span class="input-icon">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                            </span>
+                            <input type="text" id="entryDate" class="datepicker" required placeholder="Select date">
+                        </div>
                     </div>
 
                     <div class="form-group">
                         <label for="initialSL">Initial Stop Loss</label>
-                        <input type="number" id="initialSL" step="0.01" required placeholder="0.00">
+                        <div class="input-with-icon">
+                            <span class="input-icon">$</span>
+                            <input type="number" id="initialSL" step="0.01" required placeholder="0.00">
+                        </div>
                     </div>
 
                     <div class="form-group">
                         <label for="currentSL">Current Stop Loss <button type="button" id="copyInitialSL" class="btn-copy" title="Copy from Initial SL">= Initial</button></label>
-                        <input type="number" id="currentSL" step="0.01" required placeholder="0.00">
+                        <div class="input-with-icon">
+                            <span class="input-icon">$</span>
+                            <input type="number" id="currentSL" step="0.01" required placeholder="0.00">
+                        </div>
                     </div>
 
                     <div class="form-group">
                         <label for="status">Status</label>
-                        <select id="status">
-                            <option value="open">Open</option>
-                            <option value="partially_closed">Partially Closed</option>
-                            <option value="closed">Fully Closed</option>
-                            <option value="stopped_out">Stopped Out</option>
-                        </select>
+                        <div class="input-with-icon">
+                            <span class="input-icon">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                            </span>
+                            <select id="status">
+                                <option value="open">Open</option>
+                                <option value="partially_closed">Partially Closed</option>
+                                <option value="closed">Fully Closed</option>
+                                <option value="stopped_out">Stopped Out</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
 
@@ -270,12 +294,12 @@
 
                     <div class="form-group">
                         <label for="gistToken">GitHub Personal Access Token</label>
-                        <input type="password" id="gistToken" placeholder="ghp_xxxxxxxxxxxx">
+                        <input type="password" id="gistToken" placeholder="ghp_xxxxxxxxxxxx" autocomplete="off">
                         <small>Needs "gist" scope. <a href="https://github.com/settings/tokens/new?scopes=gist&description=Trade%20Tracker" target="_blank">Create token</a></small>
                     </div>
                     <div class="form-group" id="gistIdGroup">
                         <label for="gistId">Gist ID <span class="optional-label">(leave empty for new setup)</span></label>
-                        <input type="text" id="gistId" placeholder="Only needed to sync existing trades">
+                        <input type="text" id="gistId" placeholder="Only needed to sync existing trades" autocomplete="off">
                     </div>
                     <div class="modal-actions">
                         <button id="saveGistSettings" class="btn btn-primary">Save & Sync</button>

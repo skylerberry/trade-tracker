@@ -4,6 +4,21 @@ const STORAGE_KEY = 'tradeTracker_trades';
 const GIST_TOKEN_KEY = 'tradeTracker_gistToken';
 const GIST_ID_KEY = 'tradeTracker_gistId';
 
+// Trade status constants
+const STATUS = {
+    OPEN: 'open',
+    PARTIALLY_CLOSED: 'partially_closed',
+    CLOSED: 'closed',
+    STOPPED_OUT: 'stopped_out'
+};
+
+const STATUS_LABELS = {
+    [STATUS.OPEN]: 'Open',
+    [STATUS.PARTIALLY_CLOSED]: 'Partial',
+    [STATUS.CLOSED]: 'Closed',
+    [STATUS.STOPPED_OUT]: 'Stopped'
+};
+
 // DOM Elements
 const toggleFormBtn = document.getElementById('toggleFormBtn');
 const tradeForm = document.getElementById('tradeForm');
@@ -122,19 +137,32 @@ function addSale(saleData = null) {
     saleRow.innerHTML = `
         <span class="sale-number">Sale ${saleId}</span>
         <div class="form-group">
-            <select id="sale${saleId}Portion">
-                <option value="">Portion</option>
-                <option value="1/5">1/5</option>
-                <option value="1/4">1/4</option>
-                <option value="1/3">1/3</option>
-                <option value="1/2">1/2</option>
-            </select>
+            <div class="input-with-icon">
+                <span class="input-icon">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                </span>
+                <select id="sale${saleId}Portion">
+                    <option value="">Portion</option>
+                    <option value="1/5">1/5</option>
+                    <option value="1/4">1/4</option>
+                    <option value="1/3">1/3</option>
+                    <option value="1/2">1/2</option>
+                </select>
+            </div>
         </div>
         <div class="form-group">
-            <input type="number" id="sale${saleId}Price" step="0.01" placeholder="Price">
+            <div class="input-with-icon">
+                <span class="input-icon">$</span>
+                <input type="number" id="sale${saleId}Price" step="0.01" placeholder="Price">
+            </div>
         </div>
         <div class="form-group">
-            <input type="text" id="sale${saleId}Date" class="datepicker" placeholder="Date">
+            <div class="input-with-icon">
+                <span class="input-icon">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                </span>
+                <input type="text" id="sale${saleId}Date" class="datepicker" placeholder="Date">
+            </div>
         </div>
         <button type="button" class="btn-remove-sale" onclick="removeSale(${saleId})">×</button>
     `;
@@ -392,9 +420,9 @@ function formatShortDate(dateString) {
 }
 
 // Format sale for display
-function formatSale(sale) {
+function formatSale(sale, forHtml = true) {
     if (!sale || !sale.portion || !sale.price) {
-        return '<span class="sale-empty">-</span>';
+        return forHtml ? '<span class="sale-empty">-</span>' : '-';
     }
     const dateStr = sale.date ? ` ${formatShortDate(sale.date)}` : '';
     return `${sale.portion} @ ${sale.price.toFixed(2)}${dateStr}`;
@@ -415,13 +443,7 @@ function getTradeSales(trade) {
 
 // Format status for display
 function formatStatus(status) {
-    const labels = {
-        'open': 'Open',
-        'partially_closed': 'Partial',
-        'closed': 'Closed',
-        'stopped_out': 'Stopped'
-    };
-    return `<span class="status-badge status-${status}">${labels[status] || status}</span>`;
+    return `<span class="status-badge status-${status}">${STATUS_LABELS[status] || status}</span>`;
 }
 
 // Render trades table
@@ -441,7 +463,7 @@ function renderTrades() {
         noTradesMsg.classList.remove('hidden');
         noTradesMsg.textContent = filter === 'all'
             ? 'No trades logged yet. Click "Add New Trade" to get started.'
-            : `No ${filter.replace('_', ' ')} trades found.`;
+            : `No ${STATUS_LABELS[filter] || filter} trades found.`;
         return;
     }
 
@@ -535,17 +557,11 @@ window.deleteTrade = deleteTrade;
 // PDF Export
 document.getElementById('exportPdfBtn').addEventListener('click', exportToPdf);
 
-function formatSaleText(sale) {
-    if (!sale || !sale.portion || !sale.price) return '-';
-    const dateStr = sale.date ? ` ${formatShortDate(sale.date)}` : '';
-    return `${sale.portion} @ ${sale.price.toFixed(2)}${dateStr}`;
-}
-
 function exportToPdf() {
     const { jsPDF } = window.jspdf;
 
     // Get open and partially closed trades
-    const openTrades = trades.filter(t => t.status === 'open' || t.status === 'partially_closed');
+    const openTrades = trades.filter(t => t.status === STATUS.OPEN || t.status === STATUS.PARTIALLY_CLOSED);
 
     if (openTrades.length === 0) {
         alert('No open trades to export.');
@@ -576,9 +592,9 @@ function exportToPdf() {
             formatDate(trade.entryDate),
             trade.initialSL.toFixed(2),
             trade.currentSL.toFixed(2),
-            formatSaleText(sales[0]),
-            formatSaleText(sales[1]),
-            formatSaleText(sales[2])
+            formatSale(sales[0], false),
+            formatSale(sales[1], false),
+            formatSale(sales[2], false)
         ];
     });
 
@@ -625,6 +641,19 @@ function exportToPdf() {
 // =====================
 // GitHub Gist Sync
 // =====================
+
+// Helper to get Gist API headers
+function getGistHeaders(includeContentType = false) {
+    const token = localStorage.getItem(GIST_TOKEN_KEY);
+    const headers = {
+        'Authorization': `token ${token}`,
+        'Accept': 'application/vnd.github.v3+json'
+    };
+    if (includeContentType) {
+        headers['Content-Type'] = 'application/json';
+    }
+    return headers;
+}
 
 const syncStatus = document.getElementById('syncStatus');
 const gistModal = document.getElementById('gistModal');
@@ -720,10 +749,7 @@ async function loadFromGist() {
     if (!token || !gistId) return;
 
     const response = await fetch(`https://api.github.com/gists/${gistId}`, {
-        headers: {
-            'Authorization': `token ${token}`,
-            'Accept': 'application/vnd.github.v3+json'
-        }
+        headers: getGistHeaders()
     });
 
     if (!response.ok) {
@@ -778,11 +804,7 @@ async function pushToGist() {
 
     const response = await fetch(`https://api.github.com/gists/${gistId}`, {
         method: 'PATCH',
-        headers: {
-            'Authorization': `token ${token}`,
-            'Accept': 'application/vnd.github.v3+json',
-            'Content-Type': 'application/json'
-        },
+        headers: getGistHeaders(true),
         body: JSON.stringify({
             files: {
                 'trades.json': {
@@ -799,13 +821,11 @@ async function pushToGist() {
 
 // Create a new Gist
 async function createGist(token) {
+    // Temporarily store token for getGistHeaders to use
+    localStorage.setItem(GIST_TOKEN_KEY, token);
     const response = await fetch('https://api.github.com/gists', {
         method: 'POST',
-        headers: {
-            'Authorization': `token ${token}`,
-            'Accept': 'application/vnd.github.v3+json',
-            'Content-Type': 'application/json'
-        },
+        headers: getGistHeaders(true),
         body: JSON.stringify({
             description: 'Trade Tracker Data',
             public: false,
@@ -876,14 +896,13 @@ document.getElementById('saveGistSettings').addEventListener('click', async () =
             // Create new Gist
             gistId = await createGist(token);
         } else {
-            // Verify existing Gist
+            // Verify existing Gist - temporarily store token for getGistHeaders
+            localStorage.setItem(GIST_TOKEN_KEY, token);
             const response = await fetch(`https://api.github.com/gists/${gistId}`, {
-                headers: {
-                    'Authorization': `token ${token}`,
-                    'Accept': 'application/vnd.github.v3+json'
-                }
+                headers: getGistHeaders()
             });
             if (!response.ok) {
+                localStorage.removeItem(GIST_TOKEN_KEY);
                 throw new Error('Could not access Gist. Check the ID and token permissions.');
             }
         }
@@ -1277,11 +1296,14 @@ calcEntryPrice.addEventListener('input', calculatePosition);
 calcStopLoss.addEventListener('input', calculatePosition);
 calcTargetPrice.addEventListener('input', calculatePosition);
 
-// Increment/decrement button handlers
-document.querySelectorAll('.increment-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-        const targetId = btn.dataset.target;
-        const delta = parseFloat(btn.dataset.delta);
+// Calculator click event delegation
+calculatorPanel.addEventListener('click', (e) => {
+    const target = e.target;
+
+    // Increment/decrement buttons
+    if (target.classList.contains('increment-btn')) {
+        const targetId = target.dataset.target;
+        const delta = parseFloat(target.dataset.delta);
         const input = document.getElementById(targetId);
 
         if (input) {
@@ -1290,13 +1312,13 @@ document.querySelectorAll('.increment-btn').forEach(btn => {
             input.value = newValue.toFixed(2);
             calculatePosition();
         }
-    });
-});
+        return;
+    }
 
-// R-level click handlers - clicking sets the target price
-document.querySelectorAll('.r-level-item').forEach(item => {
-    item.addEventListener('click', () => {
-        const rLevel = parseInt(item.dataset.r);
+    // R-level items
+    const rLevelItem = target.closest('.r-level-item');
+    if (rLevelItem) {
+        const rLevel = parseInt(rLevelItem.dataset.r);
         const entry = parseFloat(calcEntryPrice.value) || 0;
         const stopLoss = parseFloat(calcStopLoss.value) || 0;
 
@@ -1306,34 +1328,34 @@ document.querySelectorAll('.r-level-item').forEach(item => {
             calcTargetPrice.value = targetPrice.toFixed(2);
             calculatePosition();
         }
-    });
-});
+        return;
+    }
 
-// Preset button handlers
-document.querySelectorAll('.risk-preset').forEach(btn => {
-    btn.addEventListener('click', () => {
-        const value = parseFloat(btn.dataset.value);
+    // Risk preset buttons
+    if (target.classList.contains('risk-preset')) {
+        const value = parseFloat(target.dataset.value);
         calcRiskPercent.value = value;
 
         // Update active state
         document.querySelectorAll('.risk-preset').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+        target.classList.add('active');
 
         calculatePosition();
-    });
-});
+        return;
+    }
 
-document.querySelectorAll('.max-preset').forEach(btn => {
-    btn.addEventListener('click', () => {
-        const value = parseFloat(btn.dataset.value);
+    // Max preset buttons
+    if (target.classList.contains('max-preset')) {
+        const value = parseFloat(target.dataset.value);
         calcMaxPercent.value = value;
 
         // Update active state
         document.querySelectorAll('.max-preset').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+        target.classList.add('active');
 
         calculatePosition();
-    });
+        return;
+    }
 });
 
 // Update preset button active states when input changes
@@ -1461,11 +1483,7 @@ async function pushSettingsToGist() {
 
     const response = await fetch(`https://api.github.com/gists/${gistId}`, {
         method: 'PATCH',
-        headers: {
-            'Authorization': `token ${token}`,
-            'Accept': 'application/vnd.github.v3+json',
-            'Content-Type': 'application/json'
-        },
+        headers: getGistHeaders(true),
         body: JSON.stringify({
             files: {
                 'settings.json': {
@@ -1489,10 +1507,7 @@ async function loadSettingsFromGist() {
 
     try {
         const response = await fetch(`https://api.github.com/gists/${gistId}`, {
-            headers: {
-                'Authorization': `token ${token}`,
-                'Accept': 'application/vnd.github.v3+json'
-            }
+            headers: getGistHeaders()
         });
 
         if (!response.ok) return;
