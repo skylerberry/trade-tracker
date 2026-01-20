@@ -580,9 +580,50 @@ async function initGistSync() {
     }
 }
 
+const LAST_SYNC_KEY = 'tradeTracker_lastSync';
+
 function updateSyncStatus(status, text) {
     syncStatus.className = 'sync-status ' + status;
     syncStatus.textContent = text;
+
+    // Update last synced timestamp on successful sync
+    if (status === 'synced') {
+        const now = Date.now();
+        localStorage.setItem(LAST_SYNC_KEY, now.toString());
+        updateLastSyncedDisplay(now);
+    }
+}
+
+function updateLastSyncedDisplay(timestamp) {
+    const displayEl = document.getElementById('lastSyncedDisplay');
+    if (!displayEl) return;
+
+    if (!timestamp) {
+        displayEl.textContent = 'Never';
+        return;
+    }
+
+    const date = new Date(timestamp);
+    const now = new Date();
+    const diffMs = now - date;
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+
+    let timeAgo;
+    if (diffMins < 1) {
+        timeAgo = 'Just now';
+    } else if (diffMins < 60) {
+        timeAgo = `${diffMins} min${diffMins > 1 ? 's' : ''} ago`;
+    } else if (diffHours < 24) {
+        timeAgo = `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+    } else if (diffDays < 7) {
+        timeAgo = `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+    } else {
+        timeAgo = date.toLocaleDateString();
+    }
+
+    displayEl.textContent = timeAgo;
 }
 
 // Click sync status to open settings
@@ -708,6 +749,10 @@ document.getElementById('gistSettingsBtn').addEventListener('click', () => {
         gistSetup.classList.add('hidden');
         gistConnected.classList.remove('hidden');
         document.getElementById('displayGistId').textContent = gistId;
+
+        // Update last synced display
+        const lastSync = localStorage.getItem(LAST_SYNC_KEY);
+        updateLastSyncedDisplay(lastSync ? parseInt(lastSync) : null);
     } else {
         // Show setup view
         gistSetup.classList.remove('hidden');

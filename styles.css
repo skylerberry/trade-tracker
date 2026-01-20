@@ -709,6 +709,17 @@ tbody tr:last-child td {
     transform: scale(1);
 }
 
+.last-synced-display {
+    font-size: 0.85rem;
+    color: #6b7280;
+    margin-bottom: 15px;
+}
+
+.last-synced-display span {
+    color: #374151;
+    font-weight: 500;
+}
+
 /* Help Section */
 .help-section {
     background: #f8fafc;
