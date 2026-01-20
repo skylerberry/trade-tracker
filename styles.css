@@ -975,7 +975,7 @@ tbody tr:last-child td {
 }
 
 .setting-item > input {
-    width: 80px;
+    width: 120px;
     padding: 6px 10px;
     font-size: 0.85rem;
     border: 1px solid var(--color-gray-300);
