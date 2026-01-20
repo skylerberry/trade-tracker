@@ -271,6 +271,8 @@ function loadTrades() {
             console.error('Failed to parse trades from localStorage:', e);
             trades = [];
         }
+    } else {
+        trades = [];
     }
 }
 
