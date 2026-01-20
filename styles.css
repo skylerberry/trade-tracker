@@ -275,6 +275,7 @@ header h1 {
     display: flex;
     flex-direction: column;
     min-width: 0; /* Prevent grid items from overflowing */
+    width: 100%;
 }
 
 .form-group label {
@@ -350,6 +351,8 @@ header h1 {
     position: relative;
     display: flex;
     align-items: center;
+    width: 100%;
+    min-width: 0;
 }
 
 .input-with-icon .input-icon {
@@ -373,6 +376,8 @@ header h1 {
 .input-with-icon input,
 .input-with-icon select {
     padding-left: 32px;
+    width: 100%;
+    min-width: 0;
 }
 
 .input-with-icon select {
