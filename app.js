@@ -3,6 +3,7 @@
 const STORAGE_KEY = 'tradeTracker_trades';
 const GIST_TOKEN_KEY = 'tradeTracker_gistToken';
 const GIST_ID_KEY = 'tradeTracker_gistId';
+const THEME_KEY = 'tradeTracker_theme';
 
 // Trade status constants
 const STATUS = {
@@ -18,6 +19,39 @@ const STATUS_LABELS = {
     [STATUS.CLOSED]: 'Closed',
     [STATUS.STOPPED_OUT]: 'Stopped'
 };
+
+// Theme Management
+function getPreferredTheme() {
+    const saved = localStorage.getItem(THEME_KEY);
+    if (saved) return saved;
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
+
+function setTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem(THEME_KEY, theme);
+}
+
+function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme') || getPreferredTheme();
+    const next = current === 'dark' ? 'light' : 'dark';
+    setTheme(next);
+}
+
+function initTheme() {
+    const saved = localStorage.getItem(THEME_KEY);
+    if (saved) {
+        setTheme(saved);
+    }
+    // Listen for system theme changes (only applies if user hasn't set manual preference)
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+        if (!localStorage.getItem(THEME_KEY)) {
+            // No manual override, follow system
+        }
+    });
+
+    document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+}
 
 // DOM Elements
 const toggleFormBtn = document.getElementById('toggleFormBtn');
@@ -56,6 +90,7 @@ const flatpickrConfig = {
 
 // Initialize
 document.addEventListener('DOMContentLoaded', async () => {
+    initTheme();
     await initGistSync();
     renderTrades();
     initDatePickers();
