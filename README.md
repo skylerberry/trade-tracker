@@ -5,11 +5,17 @@ A simple web app for logging and managing swing trades. Designed as a replacemen
 ## Features
 
 - **Trade Logging**: Track ticker, entry price, entry date, initial/current stop loss
-- **Sale Tracking**: Log up to 3 partial sales with portion (1/5, 1/4, 1/3, 1/2), price, and date
+- **Sale Tracking**: Log unlimited partial sales with portion (1/5, 1/4, 1/3, 1/2), price, and date
 - **Status Management**: Filter by open, partially closed, fully closed, or stopped out
+- **Position Size Calculator**: Calculate position size based on account size, risk %, and stop loss
+  - R-multiple calculations (1R-5R levels)
+  - Target price profit projections
+  - Max position % limit
+  - Preset buttons for common risk/max values
 - **PDF Export**: Generate shareable PDF reports of open trades
-- **Cross-Device Sync**: Sync trades across devices using GitHub Gist
+- **Cross-Device Sync**: Sync trades and calculator settings across devices using GitHub Gist
 - **Undo Support**: Cmd+Z / Ctrl+Z to undo form field changes
+- **Input Icons**: Visual glyphs for form fields ($, calendar, chart icons)
 
 ## Setup
 
