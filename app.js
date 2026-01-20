@@ -138,9 +138,7 @@ function addSale(saleData = null) {
         <span class="sale-number">Sale ${saleId}</span>
         <div class="form-group">
             <div class="input-with-icon">
-                <span class="input-icon">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-                </span>
+                <span class="input-icon">%</span>
                 <select id="sale${saleId}Portion">
                     <option value="">Portion</option>
                     <option value="1/5">1/5</option>
@@ -939,13 +937,13 @@ document.getElementById('forceSyncBtn').addEventListener('click', async () => {
         alert('Sync failed: ' + err.message);
         updateSyncStatus('error', 'Sync error');
     } finally {
-        btn.textContent = 'Force Sync Now';
+        btn.textContent = 'Sync Manually';
         btn.disabled = false;
     }
 });
 
 document.getElementById('disconnectGist').addEventListener('click', () => {
-    if (!confirm('Disconnect from GitHub Gist? Your local data will be kept.')) return;
+    if (!confirm('Unlink from GitHub Gist? Your local data will be kept.')) return;
 
     localStorage.removeItem(GIST_TOKEN_KEY);
     localStorage.removeItem(GIST_ID_KEY);
