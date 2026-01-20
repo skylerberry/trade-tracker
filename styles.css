@@ -406,6 +406,14 @@ header h1 {
     transition: border-color 0.2s, box-shadow 0.2s;
 }
 
+#ticker {
+    text-transform: uppercase;
+}
+
+#ticker::placeholder {
+    text-transform: none;
+}
+
 .form-group select {
     padding-right: 32px;
     appearance: none;

@@ -14,6 +14,7 @@ A simple web app for logging and managing swing trades. Designed as a replacemen
   - Preset buttons for common risk/max values
 - **PDF Export**: Generate shareable PDF reports of open trades
 - **Cross-Device Sync**: Sync trades and calculator settings across devices using GitHub Gist
+- **Dark Mode**: Auto-detects system preference with manual toggle override
 - **Undo Support**: Cmd+Z / Ctrl+Z to undo form field changes
 - **Input Icons**: Visual glyphs for form fields ($, calendar, chart icons)
 
