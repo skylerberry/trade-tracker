@@ -972,6 +972,13 @@ gistModal.addEventListener('click', (e) => {
     }
 });
 
+// Close modal on ESC key
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !gistModal.classList.contains('hidden')) {
+        gistModal.classList.add('hidden');
+    }
+});
+
 // =====================
 // Position Calculator
 // =====================
