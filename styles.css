@@ -656,16 +656,19 @@ tbody tr:last-child td {
 }
 
 .btn-copy-gist {
+    position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    width: 24px;
+    height: 24px;
     padding: 4px;
     border: 1px solid #d1d5db;
     border-radius: 4px;
     background: #f9fafb;
     color: #6b7280;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: background-color 0.2s, border-color 0.2s, color 0.2s;
 }
 
 .btn-copy-gist:hover {
@@ -674,10 +677,36 @@ tbody tr:last-child td {
     border-color: #9ca3af;
 }
 
+.btn-copy-gist .icon-copy,
+.btn-copy-gist .icon-check {
+    position: absolute;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.btn-copy-gist .icon-copy {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.btn-copy-gist .icon-check {
+    opacity: 0;
+    transform: scale(0.5);
+}
+
 .btn-copy-gist.copied {
     background: #dcfce7;
     color: #16a34a;
     border-color: #86efac;
+}
+
+.btn-copy-gist.copied .icon-copy {
+    opacity: 0;
+    transform: scale(0.5);
+}
+
+.btn-copy-gist.copied .icon-check {
+    opacity: 1;
+    transform: scale(1);
 }
 
 /* Help Section */
