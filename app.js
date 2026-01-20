@@ -350,9 +350,6 @@ function validateTradeForm() {
     if (isNaN(currentSL) || currentSL <= 0) {
         showFormError('currentSL', 'Current stop loss must be a positive number');
         isValid = false;
-    } else if (currentSL >= entryPrice) {
-        showFormError('currentSL', 'Stop loss must be below entry price');
-        isValid = false;
     }
 
     return isValid;
