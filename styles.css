@@ -52,20 +52,20 @@
     --radius-full: 9999px;
 }
 
-/* Dark theme */
+/* Dark theme - charcoal palette */
 [data-theme="dark"] {
-    --color-primary: #3b82f6;
-    --color-primary-hover: #2563eb;
-    --color-primary-light: rgba(59, 130, 246, 0.2);
+    --color-primary: #60a5fa;
+    --color-primary-hover: #3b82f6;
+    --color-primary-light: rgba(59, 130, 246, 0.15);
 
-    --color-accent: #60a5fa;
-    --color-accent-hover: #3b82f6;
+    --color-accent: #93c5fd;
+    --color-accent-hover: #60a5fa;
 
-    /* Status colors - slightly desaturated for dark backgrounds */
-    --color-success: #4ade80;
-    --color-success-hover: #22c55e;
+    /* Status colors - muted for dark mode */
+    --color-success: #86efac;
+    --color-success-hover: #4ade80;
     --color-success-light: #064e3b;
-    --color-success-dark: #4ade80;
+    --color-success-dark: #86efac;
 
     --color-warning: #fbbf24;
     --color-warning-light: #78350f;
@@ -80,17 +80,19 @@
     --color-info-light: #1e3a8a;
     --color-info-dark: #60a5fa;
 
-    /* Grays - elevation based (lighter = higher) */
-    --color-gray-50: #1f2937;
-    --color-gray-100: #111827;
-    --color-gray-200: #374151;
-    --color-gray-300: #4b5563;
-    --color-gray-400: #6b7280;
-    --color-gray-500: #9ca3af;
-    --color-gray-600: #d1d5db;
-    --color-gray-700: #f9fafb;
-    --color-gray-800: #f9fafb;
+    /* Charcoal grays - elevation based (lighter = higher) */
+    --color-gray-50: #27272a;
+    --color-gray-100: #18181b;
+    --color-gray-200: #3f3f46;
+    --color-gray-300: #52525b;
+    --color-gray-400: #71717a;
+    --color-gray-500: #a1a1aa;
+    --color-gray-600: #d4d4d8;
+    --color-gray-700: #e4e4e7;
+    --color-gray-800: #f4f4f5;
     --color-gray-900: #ffffff;
+
+    --color-white: #27272a;
 
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
     --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.5);
@@ -99,17 +101,17 @@
 
 @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-        --color-primary: #3b82f6;
-        --color-primary-hover: #2563eb;
-        --color-primary-light: rgba(59, 130, 246, 0.2);
+        --color-primary: #60a5fa;
+        --color-primary-hover: #3b82f6;
+        --color-primary-light: rgba(59, 130, 246, 0.15);
 
-        --color-accent: #60a5fa;
-        --color-accent-hover: #3b82f6;
+        --color-accent: #93c5fd;
+        --color-accent-hover: #60a5fa;
 
-        --color-success: #4ade80;
-        --color-success-hover: #22c55e;
+        --color-success: #86efac;
+        --color-success-hover: #4ade80;
         --color-success-light: #064e3b;
-        --color-success-dark: #4ade80;
+        --color-success-dark: #86efac;
 
         --color-warning: #fbbf24;
         --color-warning-light: #78350f;
@@ -124,16 +126,18 @@
         --color-info-light: #1e3a8a;
         --color-info-dark: #60a5fa;
 
-        --color-gray-50: #1f2937;
-        --color-gray-100: #111827;
-        --color-gray-200: #374151;
-        --color-gray-300: #4b5563;
-        --color-gray-400: #6b7280;
-        --color-gray-500: #9ca3af;
-        --color-gray-600: #d1d5db;
-        --color-gray-700: #f9fafb;
-        --color-gray-800: #f9fafb;
+        --color-gray-50: #27272a;
+        --color-gray-100: #18181b;
+        --color-gray-200: #3f3f46;
+        --color-gray-300: #52525b;
+        --color-gray-400: #71717a;
+        --color-gray-500: #a1a1aa;
+        --color-gray-600: #d4d4d8;
+        --color-gray-700: #e4e4e7;
+        --color-gray-800: #f4f4f5;
         --color-gray-900: #ffffff;
+
+        --color-white: #27272a;
 
         --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
         --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.5);
@@ -302,7 +306,7 @@ header h1 {
 }
 
 .btn-edit {
-    background-color: white;
+    background-color: var(--color-gray-50);
     color: var(--color-warning);
     padding: 6px 12px;
     font-size: 0.85rem;
@@ -316,7 +320,7 @@ header h1 {
 }
 
 .btn-delete {
-    background-color: white;
+    background-color: var(--color-gray-50);
     color: var(--color-error);
     padding: 6px 12px;
     font-size: 0.85rem;
@@ -331,7 +335,7 @@ header h1 {
 
 /* Trade Form */
 .trade-form {
-    background-color: white;
+    background-color: var(--color-gray-50);
     padding: 30px;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -598,7 +602,7 @@ header h1 {
     border: 1px solid var(--color-gray-300);
     border-radius: 6px;
     font-size: 0.95rem;
-    background-color: white;
+    background-color: var(--color-gray-50);
     appearance: none;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M2 4l4 4 4-4'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
@@ -607,7 +611,7 @@ header h1 {
 
 /* Trades Table */
 .trades-section {
-    background-color: white;
+    background-color: var(--color-gray-50);
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     overflow: hidden;
@@ -838,7 +842,7 @@ tbody tr:last-child td {
 
 .modal-content {
     position: relative;
-    background: white;
+    background: var(--color-gray-50);
     padding: 30px;
     border-radius: 12px;
     max-width: 450px;
@@ -1061,7 +1065,7 @@ tbody tr:last-child td {
 }
 
 .calculator-panel {
-    background-color: white;
+    background-color: var(--color-gray-50);
     padding: 25px;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -1119,7 +1123,7 @@ tbody tr:last-child td {
     font-size: 0.7rem;
     border: 1px solid var(--color-gray-300);
     border-radius: 20px;
-    background-color: white;
+    background-color: var(--color-gray-50);
     color: var(--color-gray-700);
     cursor: pointer;
     transition: all 0.2s;
@@ -1402,7 +1406,7 @@ tbody tr:last-child td {
     text-align: center;
     padding: 12px 8px;
     border-radius: 8px;
-    background: white;
+    background: var(--color-gray-50);
     cursor: pointer;
     transition: all 0.2s;
 }
@@ -1627,40 +1631,321 @@ tbody tr:last-child td {
     color: var(--color-gray-700);
 }
 
+[data-theme="dark"] .flatpickr-monthDropdown-months {
+    background-color: #27272a;
+    color: #e4e4e7;
+}
+
+[data-theme="dark"] .flatpickr-monthDropdown-months option {
+    background-color: #27272a;
+    color: #e4e4e7;
+}
+
 @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) .flatpickr-calendar {
-        background: #1f2937;
-        border-color: #374151;
+        background: #27272a;
+        border-color: #3f3f46;
     }
 
     :root:not([data-theme="light"]) .flatpickr-months,
     :root:not([data-theme="light"]) .flatpickr-month,
     :root:not([data-theme="light"]) .flatpickr-current-month,
     :root:not([data-theme="light"]) .flatpickr-monthDropdown-months {
-        background: #1f2937;
-        color: #f9fafb;
+        background: #27272a;
+        color: #e4e4e7;
     }
 
     :root:not([data-theme="light"]) .flatpickr-weekdays,
     :root:not([data-theme="light"]) .flatpickr-weekday {
-        background: #1f2937;
-        color: #9ca3af;
+        background: #27272a;
+        color: #a1a1aa;
     }
 
     :root:not([data-theme="light"]) .flatpickr-day {
-        color: #f9fafb;
+        color: #e4e4e7;
     }
 
     :root:not([data-theme="light"]) .flatpickr-day:hover {
-        background: #374151;
+        background: #3f3f46;
     }
 
     :root:not([data-theme="light"]) .flatpickr-day.prevMonthDay,
     :root:not([data-theme="light"]) .flatpickr-day.nextMonthDay {
-        color: #6b7280;
+        color: #71717a;
     }
 
     :root:not([data-theme="light"]) .flatpickr-current-month input.cur-year {
-        color: #f9fafb;
+        color: #e4e4e7;
+    }
+
+    :root:not([data-theme="light"]) .flatpickr-monthDropdown-months {
+        background-color: #27272a;
+        color: #e4e4e7;
+    }
+
+    :root:not([data-theme="light"]) .flatpickr-monthDropdown-months option {
+        background-color: #27272a;
+        color: #e4e4e7;
+    }
+}
+
+/* ================================
+   DARK MODE EXPLICIT OVERRIDES
+   ================================ */
+
+[data-theme="dark"] input,
+[data-theme="dark"] select,
+[data-theme="dark"] textarea {
+    background-color: #27272a;
+    color: #f4f4f5;
+    border-color: #3f3f46;
+}
+
+[data-theme="dark"] input::placeholder {
+    color: #71717a;
+}
+
+[data-theme="dark"] .setting-item > label,
+[data-theme="dark"] .setting-item > .setting-label {
+    color: #a1a1aa;
+}
+
+[data-theme="dark"] .set-default-btn {
+    color: #a1a1aa;
+}
+
+[data-theme="dark"] .r-level-item .r-label {
+    color: #a1a1aa;
+}
+
+[data-theme="dark"] .r-level-item .r-price {
+    color: #93c5fd;
+}
+
+[data-theme="dark"] .r-level-item .r-profit {
+    color: #86efac;
+}
+
+[data-theme="dark"] .preset-btn {
+    background-color: #3f3f46;
+    color: #e4e4e7;
+    border-color: #52525b;
+}
+
+[data-theme="dark"] .preset-btn:hover {
+    background-color: #52525b;
+    color: #ffffff;
+}
+
+[data-theme="dark"] .increment-btn {
+    background-color: #3f3f46;
+    color: #e4e4e7;
+    border-color: #52525b;
+}
+
+[data-theme="dark"] .btn-settings {
+    border-color: #93c5fd;
+    color: #93c5fd;
+}
+
+[data-theme="dark"] .btn-edit,
+[data-theme="dark"] .btn-delete {
+    background-color: #27272a;
+}
+
+/* Calculator cards - dark bg with colored accents instead of solid bright colors */
+[data-theme="dark"] .calc-result-card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-top: 3px solid #60a5fa;
+}
+
+[data-theme="dark"] .calc-result-card .calc-big-value {
+    color: #93c5fd;
+}
+
+[data-theme="dark"] .calc-result-card .calc-big-label {
+    color: #64748b;
+}
+
+[data-theme="dark"] .calc-result-card .calc-big-result {
+    border-bottom-color: #334155;
+}
+
+[data-theme="dark"] .calc-result-card .calc-result-row span:first-child {
+    color: #94a3b8;
+}
+
+[data-theme="dark"] .calc-result-card .calc-result-row span:last-child {
+    color: #f1f5f9;
+}
+
+[data-theme="dark"] .calc-target-card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-top: 3px solid #4ade80;
+}
+
+[data-theme="dark"] .calc-target-card .calc-target-header {
+    color: #4ade80;
+}
+
+[data-theme="dark"] .calc-target-card .calc-target-big-value {
+    color: #86efac;
+    border-bottom-color: #334155;
+}
+
+[data-theme="dark"] .calc-target-card .calc-target-row span:first-child {
+    color: #94a3b8;
+}
+
+[data-theme="dark"] .calc-target-card .calc-target-row span:last-child {
+    color: #f1f5f9;
+}
+
+/* Increase input border contrast */
+[data-theme="dark"] input,
+[data-theme="dark"] select,
+[data-theme="dark"] textarea {
+    border-color: #52525b;
+}
+
+/* Button hierarchy - secondary buttons more subtle */
+[data-theme="dark"] .btn-calculator,
+[data-theme="dark"] .btn-primary {
+    background-color: #3b82f6;
+}
+
+[data-theme="dark"] .btn-secondary {
+    background-color: #3f3f46;
+    border: 1px solid #52525b;
+}
+
+/* System preference dark mode overrides */
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) input,
+    :root:not([data-theme="light"]) select,
+    :root:not([data-theme="light"]) textarea {
+        background-color: #27272a;
+        color: #f4f4f5;
+        border-color: #3f3f46;
+    }
+
+    :root:not([data-theme="light"]) input::placeholder {
+        color: #71717a;
+    }
+
+    :root:not([data-theme="light"]) .setting-item > label,
+    :root:not([data-theme="light"]) .setting-item > .setting-label {
+        color: #a1a1aa;
+    }
+
+    :root:not([data-theme="light"]) .set-default-btn {
+        color: #a1a1aa;
+    }
+
+    :root:not([data-theme="light"]) .r-level-item .r-label {
+        color: #a1a1aa;
+    }
+
+    :root:not([data-theme="light"]) .r-level-item .r-price {
+        color: #93c5fd;
+    }
+
+    :root:not([data-theme="light"]) .r-level-item .r-profit {
+        color: #86efac;
+    }
+
+    :root:not([data-theme="light"]) .preset-btn {
+        background-color: #3f3f46;
+        color: #e4e4e7;
+        border-color: #52525b;
+    }
+
+    :root:not([data-theme="light"]) .preset-btn:hover {
+        background-color: #52525b;
+        color: #ffffff;
+    }
+
+    :root:not([data-theme="light"]) .increment-btn {
+        background-color: #3f3f46;
+        color: #e4e4e7;
+        border-color: #52525b;
+    }
+
+    :root:not([data-theme="light"]) .btn-settings {
+        border-color: #93c5fd;
+        color: #93c5fd;
+    }
+
+    :root:not([data-theme="light"]) .btn-edit,
+    :root:not([data-theme="light"]) .btn-delete {
+        background-color: #27272a;
+    }
+
+    /* Calculator cards */
+    :root:not([data-theme="light"]) .calc-result-card {
+        background: #1e293b;
+        border: 1px solid #334155;
+        border-top: 3px solid #60a5fa;
+    }
+
+    :root:not([data-theme="light"]) .calc-result-card .calc-big-value {
+        color: #93c5fd;
+    }
+
+    :root:not([data-theme="light"]) .calc-result-card .calc-big-label {
+        color: #64748b;
+    }
+
+    :root:not([data-theme="light"]) .calc-result-card .calc-big-result {
+        border-bottom-color: #334155;
+    }
+
+    :root:not([data-theme="light"]) .calc-result-card .calc-result-row span:first-child {
+        color: #94a3b8;
+    }
+
+    :root:not([data-theme="light"]) .calc-result-card .calc-result-row span:last-child {
+        color: #f1f5f9;
+    }
+
+    :root:not([data-theme="light"]) .calc-target-card {
+        background: #1e293b;
+        border: 1px solid #334155;
+        border-top: 3px solid #4ade80;
+    }
+
+    :root:not([data-theme="light"]) .calc-target-card .calc-target-header {
+        color: #4ade80;
+    }
+
+    :root:not([data-theme="light"]) .calc-target-card .calc-target-big-value {
+        color: #86efac;
+        border-bottom-color: #334155;
+    }
+
+    :root:not([data-theme="light"]) .calc-target-card .calc-target-row span:first-child {
+        color: #94a3b8;
+    }
+
+    :root:not([data-theme="light"]) .calc-target-card .calc-target-row span:last-child {
+        color: #f1f5f9;
+    }
+
+    :root:not([data-theme="light"]) input,
+    :root:not([data-theme="light"]) select,
+    :root:not([data-theme="light"]) textarea {
+        border-color: #52525b;
+    }
+
+    :root:not([data-theme="light"]) .btn-calculator,
+    :root:not([data-theme="light"]) .btn-primary {
+        background-color: #3b82f6;
+    }
+
+    :root:not([data-theme="light"]) .btn-secondary {
+        background-color: #3f3f46;
+        border: 1px solid #52525b;
     }
 }
