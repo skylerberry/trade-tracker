@@ -2,7 +2,7 @@ const { test, expect } = require('@playwright/test');
 
 test.describe('Trade Tracker App', () => {
     test.beforeEach(async ({ page }) => {
-        await page.goto('http://localhost:8000');
+        await page.goto('http://localhost:8080');
         // Clear localStorage before each test
         await page.evaluate(() => localStorage.clear());
         await page.reload();
@@ -109,8 +109,8 @@ test.describe('Trade Tracker App', () => {
         // Handle dialog
         page.on('dialog', dialog => dialog.accept());
 
-        // Click delete
-        await page.click('.btn-delete');
+        // Click delete (on the trade row, not the modal)
+        await page.click('.actions-cell .btn-delete');
 
         // Verify trade is removed
         await expect(page.locator('#noTrades')).toBeVisible();

@@ -19,6 +19,7 @@ let trades = [];
 let editingId = null;
 let datePickers = {};
 let undoStack = [];
+let saleCount = 0;
 const MAX_UNDO = 50;
 
 // Flatpickr config
@@ -103,18 +104,110 @@ function initDatePickers() {
         }
     };
 
-    const saleDateConfig = {
-        ...flatpickrConfig,
-        onClose: function(selectedDates, dateStr, instance) {
-            // Preserve empty state
-        }
-    };
-
     datePickers.entryDate = flatpickr('#entryDate', entryDateConfig);
-    datePickers.sale1Date = flatpickr('#sale1Date', saleDateConfig);
-    datePickers.sale2Date = flatpickr('#sale2Date', saleDateConfig);
-    datePickers.sale3Date = flatpickr('#sale3Date', saleDateConfig);
 }
+
+// Sales management
+const salesContainer = document.getElementById('salesContainer');
+const addSaleBtn = document.getElementById('addSaleBtn');
+
+function addSale(saleData = null) {
+    saleCount++;
+    const saleId = saleCount;
+
+    const saleRow = document.createElement('div');
+    saleRow.className = 'sale-row';
+    saleRow.dataset.saleId = saleId;
+
+    saleRow.innerHTML = `
+        <span class="sale-number">Sale ${saleId}</span>
+        <div class="form-group">
+            <select id="sale${saleId}Portion">
+                <option value="">Portion</option>
+                <option value="1/5">1/5</option>
+                <option value="1/4">1/4</option>
+                <option value="1/3">1/3</option>
+                <option value="1/2">1/2</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <input type="number" id="sale${saleId}Price" step="0.01" placeholder="Price">
+        </div>
+        <div class="form-group">
+            <input type="text" id="sale${saleId}Date" class="datepicker" placeholder="Date">
+        </div>
+        <button type="button" class="btn-remove-sale" onclick="removeSale(${saleId})">×</button>
+    `;
+
+    salesContainer.appendChild(saleRow);
+
+    // Initialize flatpickr for the new date field
+    datePickers[`sale${saleId}Date`] = flatpickr(`#sale${saleId}Date`, flatpickrConfig);
+
+    // Set data if provided (for editing)
+    if (saleData) {
+        document.getElementById(`sale${saleId}Portion`).value = saleData.portion || '';
+        if (saleData.price) document.getElementById(`sale${saleId}Price`).value = saleData.price;
+        if (saleData.date) datePickers[`sale${saleId}Date`].setDate(saleData.date);
+    }
+
+    updateSaleNumbers();
+}
+
+function removeSale(saleId) {
+    const saleRow = salesContainer.querySelector(`[data-sale-id="${saleId}"]`);
+    if (saleRow) {
+        // Destroy flatpickr instance
+        if (datePickers[`sale${saleId}Date`]) {
+            datePickers[`sale${saleId}Date`].destroy();
+            delete datePickers[`sale${saleId}Date`];
+        }
+        saleRow.remove();
+        updateSaleNumbers();
+    }
+}
+
+function updateSaleNumbers() {
+    const rows = salesContainer.querySelectorAll('.sale-row');
+    rows.forEach((row, index) => {
+        row.querySelector('.sale-number').textContent = `Sale ${index + 1}`;
+    });
+}
+
+function getSalesData() {
+    const sales = [];
+    const rows = salesContainer.querySelectorAll('.sale-row');
+    rows.forEach(row => {
+        const saleId = row.dataset.saleId;
+        const portion = document.getElementById(`sale${saleId}Portion`)?.value || '';
+        const price = document.getElementById(`sale${saleId}Price`)?.value;
+        const date = document.getElementById(`sale${saleId}Date`)?.value || null;
+
+        sales.push({
+            portion,
+            price: price ? parseFloat(price) : null,
+            date
+        });
+    });
+    return sales;
+}
+
+function clearSales() {
+    // Destroy all sale date pickers
+    Object.keys(datePickers).forEach(key => {
+        if (key.startsWith('sale') && key.endsWith('Date')) {
+            datePickers[key].destroy();
+            delete datePickers[key];
+        }
+    });
+    salesContainer.innerHTML = '';
+    saleCount = 0;
+}
+
+addSaleBtn.addEventListener('click', () => addSale());
+
+// Export for onclick handlers
+window.removeSale = removeSale;
 
 // Event Listeners
 toggleFormBtn.addEventListener('click', () => {
@@ -165,21 +258,7 @@ function handleFormSubmit(e) {
         initialSL: parseFloat(document.getElementById('initialSL').value),
         currentSL: parseFloat(document.getElementById('currentSL').value),
         status: document.getElementById('status').value,
-        sale1: {
-            portion: document.getElementById('sale1Portion').value,
-            price: document.getElementById('sale1Price').value ? parseFloat(document.getElementById('sale1Price').value) : null,
-            date: document.getElementById('sale1Date').value || null
-        },
-        sale2: {
-            portion: document.getElementById('sale2Portion').value,
-            price: document.getElementById('sale2Price').value ? parseFloat(document.getElementById('sale2Price').value) : null,
-            date: document.getElementById('sale2Date').value || null
-        },
-        sale3: {
-            portion: document.getElementById('sale3Portion').value,
-            price: document.getElementById('sale3Price').value ? parseFloat(document.getElementById('sale3Price').value) : null,
-            date: document.getElementById('sale3Date').value || null
-        }
+        sales: getSalesData()
     };
 
     if (editingId) {
@@ -208,9 +287,9 @@ function resetForm() {
 
     // Reset Flatpickr instances
     if (datePickers.entryDate) datePickers.entryDate.setDate(new Date());
-    if (datePickers.sale1Date) datePickers.sale1Date.clear();
-    if (datePickers.sale2Date) datePickers.sale2Date.clear();
-    if (datePickers.sale3Date) datePickers.sale3Date.clear();
+
+    // Clear all sales
+    clearSales();
 }
 
 // Format date for display (e.g., "25 Nov 2025")
@@ -241,11 +320,24 @@ function formatShortDate(dateString) {
 
 // Format sale for display
 function formatSale(sale) {
-    if (!sale.portion || !sale.price) {
+    if (!sale || !sale.portion || !sale.price) {
         return '<span class="sale-empty">-</span>';
     }
     const dateStr = sale.date ? ` ${formatShortDate(sale.date)}` : '';
     return `${sale.portion} @ ${sale.price.toFixed(2)}${dateStr}`;
+}
+
+// Get sales array from trade (handles both new and legacy format)
+function getTradeSales(trade) {
+    if (trade.sales && trade.sales.length > 0) {
+        return trade.sales;
+    }
+    // Legacy format: sale1, sale2, sale3
+    const sales = [];
+    if (trade.sale1) sales.push(trade.sale1);
+    if (trade.sale2) sales.push(trade.sale2);
+    if (trade.sale3) sales.push(trade.sale3);
+    return sales;
 }
 
 // Format status for display
@@ -283,23 +375,25 @@ function renderTrades() {
     tradesTable.classList.remove('hidden');
     noTradesMsg.classList.add('hidden');
 
-    tradesBody.innerHTML = filteredTrades.map(trade => `
+    tradesBody.innerHTML = filteredTrades.map(trade => {
+        const sales = getTradeSales(trade);
+        return `
         <tr data-id="${trade.id}">
             <td><strong>${trade.ticker}</strong></td>
             <td>${trade.entryPrice.toFixed(2)}</td>
             <td>${formatDate(trade.entryDate)}</td>
             <td>${trade.initialSL.toFixed(2)}</td>
             <td>${trade.currentSL.toFixed(2)}</td>
-            <td class="sale-display">${formatSale(trade.sale1)}</td>
-            <td class="sale-display">${formatSale(trade.sale2)}</td>
-            <td class="sale-display">${formatSale(trade.sale3)}</td>
+            <td class="sale-display">${formatSale(sales[0])}</td>
+            <td class="sale-display">${formatSale(sales[1])}</td>
+            <td class="sale-display">${formatSale(sales[2])}</td>
             <td>${formatStatus(trade.status)}</td>
             <td class="actions-cell">
                 <button class="btn btn-edit" onclick="editTrade('${trade.id}')">Edit</button>
                 <button class="btn btn-delete" onclick="deleteTrade('${trade.id}')">Delete</button>
             </td>
         </tr>
-    `).join('');
+    `}).join('');
 }
 
 // Edit trade
@@ -319,20 +413,31 @@ function editTrade(id) {
     // Set dates using Flatpickr
     if (datePickers.entryDate) datePickers.entryDate.setDate(trade.entryDate);
 
-    // Sale 1
-    document.getElementById('sale1Portion').value = trade.sale1?.portion || '';
-    document.getElementById('sale1Price').value = trade.sale1?.price || '';
-    if (datePickers.sale1Date) datePickers.sale1Date.setDate(trade.sale1?.date || null);
+    // Clear existing sales and load trade's sales
+    clearSales();
 
-    // Sale 2
-    document.getElementById('sale2Portion').value = trade.sale2?.portion || '';
-    document.getElementById('sale2Price').value = trade.sale2?.price || '';
-    if (datePickers.sale2Date) datePickers.sale2Date.setDate(trade.sale2?.date || null);
+    // Handle both new sales array format and legacy sale1/sale2/sale3 format
+    const salesData = trade.sales || [];
 
-    // Sale 3
-    document.getElementById('sale3Portion').value = trade.sale3?.portion || '';
-    document.getElementById('sale3Price').value = trade.sale3?.price || '';
-    if (datePickers.sale3Date) datePickers.sale3Date.setDate(trade.sale3?.date || null);
+    // Convert legacy format if needed
+    if (salesData.length === 0) {
+        if (trade.sale1?.portion || trade.sale1?.price) {
+            salesData.push(trade.sale1);
+        }
+        if (trade.sale2?.portion || trade.sale2?.price) {
+            salesData.push(trade.sale2);
+        }
+        if (trade.sale3?.portion || trade.sale3?.price) {
+            salesData.push(trade.sale3);
+        }
+    }
+
+    // Add each sale
+    salesData.forEach(sale => {
+        if (sale && (sale.portion || sale.price)) {
+            addSale(sale);
+        }
+    });
 
     tradeForm.classList.remove('hidden');
     toggleFormBtn.textContent = '- Hide Form';
@@ -358,7 +463,7 @@ window.deleteTrade = deleteTrade;
 document.getElementById('exportPdfBtn').addEventListener('click', exportToPdf);
 
 function formatSaleText(sale) {
-    if (!sale.portion || !sale.price) return '-';
+    if (!sale || !sale.portion || !sale.price) return '-';
     const dateStr = sale.date ? ` ${formatShortDate(sale.date)}` : '';
     return `${sale.portion} @ ${sale.price.toFixed(2)}${dateStr}`;
 }
@@ -390,16 +495,19 @@ function exportToPdf() {
     doc.text('Trade Management for Swing Trades', pageWidth / 2, 23, { align: 'center' });
 
     // Table data
-    const tableData = openTrades.map(trade => [
-        trade.ticker,
-        trade.entryPrice.toFixed(2),
-        formatDate(trade.entryDate),
-        trade.initialSL.toFixed(2),
-        trade.currentSL.toFixed(2),
-        formatSaleText(trade.sale1),
-        formatSaleText(trade.sale2),
-        formatSaleText(trade.sale3)
-    ]);
+    const tableData = openTrades.map(trade => {
+        const sales = getTradeSales(trade);
+        return [
+            trade.ticker,
+            trade.entryPrice.toFixed(2),
+            formatDate(trade.entryDate),
+            trade.initialSL.toFixed(2),
+            trade.currentSL.toFixed(2),
+            formatSaleText(sales[0]),
+            formatSaleText(sales[1]),
+            formatSaleText(sales[2])
+        ];
+    });
 
     // Generate table
     doc.autoTable({
@@ -694,5 +802,592 @@ document.getElementById('disconnectGist').addEventListener('click', () => {
 gistModal.addEventListener('click', (e) => {
     if (e.target === gistModal) {
         gistModal.classList.add('hidden');
+    }
+});
+
+// =====================
+// Position Calculator
+// =====================
+
+const CALC_ACCOUNT_KEY = 'tradeTracker_accountSize';
+
+// Calculator DOM Elements
+const toggleCalculatorBtn = document.getElementById('toggleCalculatorBtn');
+const calculatorPanel = document.getElementById('calculatorPanel');
+const calcAccountSize = document.getElementById('calcAccountSize');
+const calcRiskPercent = document.getElementById('calcRiskPercent');
+const calcMaxPercent = document.getElementById('calcMaxPercent');
+const calcEntryPrice = document.getElementById('calcEntryPrice');
+const calcStopLoss = document.getElementById('calcStopLoss');
+const calcTargetPrice = document.getElementById('calcTargetPrice');
+
+// Calculator Results - Position Card
+const calcShares = document.getElementById('calcShares');
+const calcPositionSize = document.getElementById('calcPositionSize');
+const calcStopDistance = document.getElementById('calcStopDistance');
+const calcTotalRisk = document.getElementById('calcTotalRisk');
+const calcPercentAccount = document.getElementById('calcPercentAccount');
+
+// Calculator Results - Target Card
+const calcRMultiple = document.getElementById('calcRMultiple');
+const calcTargetProfit = document.getElementById('calcTargetProfit');
+const calcTargetPriceDisplay = document.getElementById('calcTargetPriceDisplay');
+const calcProfitPerShare = document.getElementById('calcProfitPerShare');
+const calcROI = document.getElementById('calcROI');
+const calcRRMultiple = document.getElementById('calcRRMultiple');
+
+// Calculator state
+let accountSize = 0;
+
+// Toggle calculator panel
+toggleCalculatorBtn.addEventListener('click', () => {
+    calculatorPanel.classList.toggle('hidden');
+    if (!calculatorPanel.classList.contains('hidden')) {
+        toggleCalculatorBtn.textContent = '- Hide Calculator';
+    } else {
+        toggleCalculatorBtn.textContent = 'Position Calculator';
+    }
+});
+
+// Convert K/M shorthand notation
+function convertShorthand(inputValue) {
+    const cleanValue = inputValue.replace(/,/g, '');
+
+    // Check for M (millions) first
+    const mMatch = cleanValue.match(/^(\d*\.?\d+)[Mm]$/);
+    if (mMatch) {
+        const numberPart = parseFloat(mMatch[1]);
+        if (!isNaN(numberPart)) {
+            return numberPart * 1000000;
+        }
+    }
+
+    // Check for K (thousands)
+    const kMatch = cleanValue.match(/^(\d*\.?\d+)[Kk]$/);
+    if (kMatch) {
+        const numberPart = parseFloat(kMatch[1]);
+        if (!isNaN(numberPart)) {
+            return numberPart * 1000;
+        }
+    }
+
+    return parseFloat(cleanValue.replace(/[^0-9.]/g, '')) || 0;
+}
+
+// Format number with commas
+function formatNumber(value) {
+    return new Intl.NumberFormat('en-US').format(value);
+}
+
+// Format currency
+function formatCurrency(value) {
+    return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }).format(value);
+}
+
+// Format percentage
+function formatPercentage(value) {
+    return `${value.toFixed(2)}%`;
+}
+
+// Calculate position
+function calculatePosition() {
+    const account = accountSize;
+    const riskPercent = parseFloat(calcRiskPercent.value) || 1;
+    const maxPercent = parseFloat(calcMaxPercent.value) || 100;
+    const entry = parseFloat(calcEntryPrice.value) || 0;
+    const stopLoss = parseFloat(calcStopLoss.value) || 0;
+    const target = parseFloat(calcTargetPrice.value) || 0;
+
+    // Clear previous errors
+    clearCalcErrors();
+
+    // Reset results if missing required inputs
+    if (!account || !entry || !stopLoss) {
+        resetCalcResults();
+        return;
+    }
+
+    // Validate stop loss is below entry
+    if (stopLoss >= entry) {
+        showCalcError('stopLoss', 'Stop loss must be below entry price');
+        resetCalcResults();
+        return;
+    }
+
+    // Validate risk percent is reasonable
+    if (riskPercent <= 0 || riskPercent > 100) {
+        resetCalcResults();
+        return;
+    }
+
+    // Validate max percent is reasonable
+    if (maxPercent <= 0 || maxPercent > 100) {
+        resetCalcResults();
+        return;
+    }
+
+    // Core calculations
+    const riskPerShare = entry - stopLoss;
+    const dollarRisk = (account * riskPercent) / 100;
+    const shares = Math.floor(dollarRisk / riskPerShare);
+    const positionSize = shares * entry;
+
+    // Apply max account % limit
+    const maxPositionSize = (account * maxPercent) / 100;
+    let limitedShares = shares;
+    let limitedPositionSize = positionSize;
+    let isLimited = false;
+
+    if (positionSize > maxPositionSize) {
+        limitedPositionSize = maxPositionSize;
+        limitedShares = Math.floor(limitedPositionSize / entry);
+        isLimited = true;
+    }
+
+    // Calculate final values
+    const actualRisk = limitedShares * riskPerShare;
+    const stopDistancePercent = (riskPerShare / entry) * 100;
+    const percentOfAccount = (limitedPositionSize / account) * 100;
+
+    // Update Position Card UI
+    calcShares.textContent = formatNumber(limitedShares);
+    calcShares.classList.toggle('limited', isLimited);
+    calcStopDistance.textContent = `${formatCurrency(riskPerShare)} (${stopDistancePercent.toFixed(1)}%)`;
+    calcPositionSize.textContent = formatCurrency(limitedPositionSize);
+    calcTotalRisk.textContent = formatCurrency(actualRisk);
+    calcPercentAccount.textContent = formatPercentage(percentOfAccount);
+
+    // Calculate and update R-levels
+    updateRLevels(entry, riskPerShare, limitedShares, target);
+
+    // Calculate and update Target Card
+    updateTargetCard(entry, riskPerShare, limitedShares, target);
+}
+
+// Update R-levels bar
+function updateRLevels(entry, riskPerShare, shares, target) {
+    // Calculate which R level the target corresponds to (if any)
+    let activeR = 0;
+    if (target > entry && riskPerShare > 0) {
+        activeR = Math.round((target - entry) / riskPerShare);
+    }
+
+    for (let i = 1; i <= 5; i++) {
+        const rPrice = entry + (riskPerShare * i);
+        const rProfit = shares * riskPerShare * i;
+
+        const priceEl = document.getElementById(`r${i}Price`);
+        const profitEl = document.getElementById(`r${i}Profit`);
+        const itemEl = document.querySelector(`.r-level-item[data-r="${i}"]`);
+
+        if (priceEl) priceEl.textContent = formatCurrency(rPrice);
+        if (profitEl) profitEl.textContent = `+${formatCompactCurrency(rProfit)}`;
+
+        // Highlight active R level
+        if (itemEl) {
+            itemEl.classList.toggle('active', i === activeR);
+        }
+    }
+}
+
+// Update Target Card
+function updateTargetCard(entry, riskPerShare, shares, target) {
+    if (!target || target <= entry) {
+        // Reset target card
+        calcRMultiple.textContent = '-';
+        calcTargetProfit.textContent = '-';
+        calcTargetPriceDisplay.textContent = '-';
+        calcProfitPerShare.textContent = '-';
+        calcROI.textContent = '-';
+        calcRRMultiple.textContent = '-';
+        return;
+    }
+
+    const profitPerShare = target - entry;
+    const totalProfit = shares * profitPerShare;
+    const roi = (profitPerShare / entry) * 100;
+    const rMultiple = profitPerShare / riskPerShare;
+
+    calcRMultiple.textContent = `${rMultiple.toFixed(1)}R`;
+    calcTargetProfit.textContent = `+${formatCurrency(totalProfit)}`;
+    calcTargetPriceDisplay.textContent = formatCurrency(target);
+    calcProfitPerShare.textContent = formatCurrency(profitPerShare);
+    calcROI.textContent = `+${roi.toFixed(1)}%`;
+    calcRRMultiple.textContent = `${rMultiple.toFixed(1)}R`;
+}
+
+// Format compact currency (e.g., $10k instead of $10,000)
+function formatCompactCurrency(value) {
+    if (value >= 1000000) {
+        return `$${(value / 1000000).toFixed(1)}M`;
+    } else if (value >= 1000) {
+        return `$${(value / 1000).toFixed(0)}k`;
+    } else {
+        return formatCurrency(value);
+    }
+}
+
+// Reset calculator results
+function resetCalcResults() {
+    // Position card
+    calcShares.textContent = '-';
+    calcShares.classList.remove('limited');
+    calcPositionSize.textContent = '-';
+    calcStopDistance.textContent = '-';
+    calcTotalRisk.textContent = '-';
+    calcPercentAccount.textContent = '-';
+
+    // Target card
+    calcRMultiple.textContent = '-';
+    calcTargetProfit.textContent = '-';
+    calcTargetPriceDisplay.textContent = '-';
+    calcProfitPerShare.textContent = '-';
+    calcROI.textContent = '-';
+    calcRRMultiple.textContent = '-';
+
+    // R-levels
+    for (let i = 1; i <= 5; i++) {
+        const priceEl = document.getElementById(`r${i}Price`);
+        const profitEl = document.getElementById(`r${i}Profit`);
+        const itemEl = document.querySelector(`.r-level-item[data-r="${i}"]`);
+
+        if (priceEl) priceEl.textContent = '-';
+        if (profitEl) profitEl.textContent = '-';
+        if (itemEl) itemEl.classList.remove('active');
+    }
+}
+
+// Show calculator error
+function showCalcError(field, message) {
+    if (field === 'stopLoss') {
+        const errorEl = document.getElementById('calcStopLossError');
+        const inputEl = document.getElementById('calcStopLoss');
+        if (errorEl) {
+            errorEl.textContent = message;
+            errorEl.classList.remove('hidden');
+        }
+        if (inputEl) {
+            inputEl.classList.add('error');
+        }
+    }
+}
+
+// Clear calculator errors
+function clearCalcErrors() {
+    const errorEl = document.getElementById('calcStopLossError');
+    const inputEl = document.getElementById('calcStopLoss');
+    if (errorEl) {
+        errorEl.classList.add('hidden');
+    }
+    if (inputEl) {
+        inputEl.classList.remove('error');
+    }
+}
+
+// Account size input handler with shorthand conversion
+calcAccountSize.addEventListener('input', (e) => {
+    const inputValue = e.target.value.trim();
+
+    if (inputValue === '') {
+        accountSize = 0;
+        calculatePosition();
+        return;
+    }
+
+    // Check for shorthand notation
+    if (inputValue.toLowerCase().endsWith('k') || inputValue.toLowerCase().endsWith('m')) {
+        const converted = convertShorthand(inputValue);
+        if (!isNaN(converted) && converted > 0) {
+            accountSize = converted;
+            e.target.value = formatNumber(converted);
+        }
+    } else {
+        accountSize = convertShorthand(inputValue);
+    }
+
+    calculatePosition();
+    saveAccountSize();
+});
+
+calcAccountSize.addEventListener('blur', (e) => {
+    if (accountSize > 0) {
+        e.target.value = formatNumber(accountSize);
+    }
+});
+
+// Other input handlers
+calcRiskPercent.addEventListener('input', calculatePosition);
+calcMaxPercent.addEventListener('input', calculatePosition);
+calcEntryPrice.addEventListener('input', calculatePosition);
+calcStopLoss.addEventListener('input', calculatePosition);
+calcTargetPrice.addEventListener('input', calculatePosition);
+
+// Increment/decrement button handlers
+document.querySelectorAll('.increment-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const targetId = btn.dataset.target;
+        const delta = parseFloat(btn.dataset.delta);
+        const input = document.getElementById(targetId);
+
+        if (input) {
+            const currentValue = parseFloat(input.value) || 0;
+            const newValue = Math.max(0, currentValue + delta);
+            input.value = newValue.toFixed(2);
+            calculatePosition();
+        }
+    });
+});
+
+// R-level click handlers - clicking sets the target price
+document.querySelectorAll('.r-level-item').forEach(item => {
+    item.addEventListener('click', () => {
+        const rLevel = parseInt(item.dataset.r);
+        const entry = parseFloat(calcEntryPrice.value) || 0;
+        const stopLoss = parseFloat(calcStopLoss.value) || 0;
+
+        if (entry > 0 && stopLoss > 0 && stopLoss < entry) {
+            const riskPerShare = entry - stopLoss;
+            const targetPrice = entry + (riskPerShare * rLevel);
+            calcTargetPrice.value = targetPrice.toFixed(2);
+            calculatePosition();
+        }
+    });
+});
+
+// Preset button handlers
+document.querySelectorAll('.risk-preset').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const value = parseFloat(btn.dataset.value);
+        calcRiskPercent.value = value;
+
+        // Update active state
+        document.querySelectorAll('.risk-preset').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        calculatePosition();
+    });
+});
+
+document.querySelectorAll('.max-preset').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const value = parseFloat(btn.dataset.value);
+        calcMaxPercent.value = value;
+
+        // Update active state
+        document.querySelectorAll('.max-preset').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        calculatePosition();
+    });
+});
+
+// Update preset button active states when input changes
+calcRiskPercent.addEventListener('input', () => {
+    const value = parseFloat(calcRiskPercent.value);
+    document.querySelectorAll('.risk-preset').forEach(btn => {
+        btn.classList.toggle('active', parseFloat(btn.dataset.value) === value);
+    });
+});
+
+calcMaxPercent.addEventListener('input', () => {
+    const value = parseFloat(calcMaxPercent.value);
+    document.querySelectorAll('.max-preset').forEach(btn => {
+        btn.classList.toggle('active', parseFloat(btn.dataset.value) === value);
+    });
+});
+
+// Default settings
+let defaultRiskPercent = 1;
+let defaultMaxPercent = 100;
+
+// Save account size to localStorage and sync to Gist
+function saveAccountSize() {
+    localStorage.setItem(CALC_ACCOUNT_KEY, accountSize.toString());
+    syncSettingsToGist();
+}
+
+// Set default risk handler
+document.getElementById('setDefaultRisk').addEventListener('click', (e) => {
+    const value = parseFloat(calcRiskPercent.value) || 1;
+    defaultRiskPercent = value;
+    localStorage.setItem('tradeTracker_defaultRisk', value.toString());
+    syncSettingsToGist();
+
+    // Show saved feedback
+    const btn = e.target;
+    btn.textContent = 'Saved!';
+    btn.classList.add('saved');
+    setTimeout(() => {
+        btn.textContent = 'Set as default';
+        btn.classList.remove('saved');
+    }, 1500);
+});
+
+// Set default max position handler
+document.getElementById('setDefaultMax').addEventListener('click', (e) => {
+    const value = parseFloat(calcMaxPercent.value) || 100;
+    defaultMaxPercent = value;
+    localStorage.setItem('tradeTracker_defaultMax', value.toString());
+    syncSettingsToGist();
+
+    // Show saved feedback
+    const btn = e.target;
+    btn.textContent = 'Saved!';
+    btn.classList.add('saved');
+    setTimeout(() => {
+        btn.textContent = 'Set as default';
+        btn.classList.remove('saved');
+    }, 1500);
+});
+
+// Load default settings from localStorage
+function loadDefaultSettings() {
+    const storedRisk = localStorage.getItem('tradeTracker_defaultRisk');
+    const storedMax = localStorage.getItem('tradeTracker_defaultMax');
+
+    if (storedRisk) {
+        defaultRiskPercent = parseFloat(storedRisk);
+        calcRiskPercent.value = defaultRiskPercent;
+        document.querySelectorAll('.risk-preset').forEach(btn => {
+            btn.classList.toggle('active', parseFloat(btn.dataset.value) === defaultRiskPercent);
+        });
+    }
+
+    if (storedMax) {
+        defaultMaxPercent = parseFloat(storedMax);
+        calcMaxPercent.value = defaultMaxPercent;
+        document.querySelectorAll('.max-preset').forEach(btn => {
+            btn.classList.toggle('active', parseFloat(btn.dataset.value) === defaultMaxPercent);
+        });
+    }
+}
+
+// Load account size from localStorage
+function loadAccountSize() {
+    const stored = localStorage.getItem(CALC_ACCOUNT_KEY);
+    if (stored) {
+        accountSize = parseFloat(stored) || 0;
+        if (accountSize > 0) {
+            calcAccountSize.value = formatNumber(accountSize);
+        }
+    }
+}
+
+// Sync settings (account size) to Gist
+let settingsSyncTimeout = null;
+function syncSettingsToGist() {
+    const token = localStorage.getItem(GIST_TOKEN_KEY);
+    const gistId = localStorage.getItem(GIST_ID_KEY);
+
+    if (!token || !gistId) return;
+
+    clearTimeout(settingsSyncTimeout);
+    settingsSyncTimeout = setTimeout(async () => {
+        try {
+            await pushSettingsToGist();
+        } catch (err) {
+            console.error('Failed to sync settings to Gist:', err);
+        }
+    }, 2000);
+}
+
+// Push settings to Gist
+async function pushSettingsToGist() {
+    const token = localStorage.getItem(GIST_TOKEN_KEY);
+    const gistId = localStorage.getItem(GIST_ID_KEY);
+
+    if (!token || !gistId) return;
+
+    const settings = {
+        accountSize: accountSize,
+        defaultRiskPercent: defaultRiskPercent,
+        defaultMaxPercent: defaultMaxPercent
+    };
+
+    const response = await fetch(`https://api.github.com/gists/${gistId}`, {
+        method: 'PATCH',
+        headers: {
+            'Authorization': `token ${token}`,
+            'Accept': 'application/vnd.github.v3+json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            files: {
+                'settings.json': {
+                    content: JSON.stringify(settings, null, 2)
+                }
+            }
+        })
+    });
+
+    if (!response.ok) {
+        throw new Error(`Failed to update Gist settings: ${response.status}`);
+    }
+}
+
+// Load settings from Gist
+async function loadSettingsFromGist() {
+    const token = localStorage.getItem(GIST_TOKEN_KEY);
+    const gistId = localStorage.getItem(GIST_ID_KEY);
+
+    if (!token || !gistId) return;
+
+    try {
+        const response = await fetch(`https://api.github.com/gists/${gistId}`, {
+            headers: {
+                'Authorization': `token ${token}`,
+                'Accept': 'application/vnd.github.v3+json'
+            }
+        });
+
+        if (!response.ok) return;
+
+        const gist = await response.json();
+        const content = gist.files['settings.json']?.content;
+
+        if (content) {
+            const settings = JSON.parse(content);
+            if (settings.accountSize && settings.accountSize > 0) {
+                accountSize = settings.accountSize;
+                localStorage.setItem(CALC_ACCOUNT_KEY, accountSize.toString());
+                calcAccountSize.value = formatNumber(accountSize);
+            }
+            if (settings.defaultRiskPercent) {
+                defaultRiskPercent = settings.defaultRiskPercent;
+                localStorage.setItem('tradeTracker_defaultRisk', defaultRiskPercent.toString());
+                calcRiskPercent.value = defaultRiskPercent;
+                document.querySelectorAll('.risk-preset').forEach(btn => {
+                    btn.classList.toggle('active', parseFloat(btn.dataset.value) === defaultRiskPercent);
+                });
+            }
+            if (settings.defaultMaxPercent) {
+                defaultMaxPercent = settings.defaultMaxPercent;
+                localStorage.setItem('tradeTracker_defaultMax', defaultMaxPercent.toString());
+                calcMaxPercent.value = defaultMaxPercent;
+                document.querySelectorAll('.max-preset').forEach(btn => {
+                    btn.classList.toggle('active', parseFloat(btn.dataset.value) === defaultMaxPercent);
+                });
+            }
+        }
+    } catch (err) {
+        console.error('Failed to load settings from Gist:', err);
+    }
+}
+
+// Initialize calculator on page load
+document.addEventListener('DOMContentLoaded', async () => {
+    loadAccountSize();
+    loadDefaultSettings();
+
+    // If connected to Gist, also load settings from there
+    const token = localStorage.getItem(GIST_TOKEN_KEY);
+    const gistId = localStorage.getItem(GIST_ID_KEY);
+    if (token && gistId) {
+        await loadSettingsFromGist();
     }
 });
