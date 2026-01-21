@@ -1403,8 +1403,8 @@ calculatorPanel.addEventListener('click', (e) => {
         // Update active state
         document.querySelectorAll('.risk-preset').forEach(b => b.classList.remove('active'));
         target.classList.add('active');
-        document.getElementById('calcCustomRisk').classList.remove('active');
-        document.getElementById('calcCustomRisk').classList.add('hidden');
+        document.getElementById('customRiskWrapper').classList.remove('active');
+        document.getElementById('customRiskWrapper').classList.add('hidden');
         document.getElementById('calcCustomRisk').value = '';
         document.getElementById('customRiskToggle').classList.remove('hidden');
 
@@ -1420,8 +1420,8 @@ calculatorPanel.addEventListener('click', (e) => {
         // Update active state
         document.querySelectorAll('.max-preset').forEach(b => b.classList.remove('active'));
         target.classList.add('active');
-        document.getElementById('calcCustomMax').classList.remove('active');
-        document.getElementById('calcCustomMax').classList.add('hidden');
+        document.getElementById('customMaxWrapper').classList.remove('active');
+        document.getElementById('customMaxWrapper').classList.add('hidden');
         document.getElementById('calcCustomMax').value = '';
         document.getElementById('customMaxToggle').classList.remove('hidden');
 
@@ -1433,10 +1433,11 @@ calculatorPanel.addEventListener('click', (e) => {
 // Custom toggle buttons
 document.getElementById('customRiskToggle').addEventListener('click', () => {
     const toggle = document.getElementById('customRiskToggle');
+    const wrapper = document.getElementById('customRiskWrapper');
     const input = document.getElementById('calcCustomRisk');
 
     toggle.classList.add('hidden');
-    input.classList.remove('hidden');
+    wrapper.classList.remove('hidden');
     input.focus();
 
     document.querySelectorAll('.risk-preset').forEach(b => b.classList.remove('active'));
@@ -1444,10 +1445,11 @@ document.getElementById('customRiskToggle').addEventListener('click', () => {
 
 document.getElementById('customMaxToggle').addEventListener('click', () => {
     const toggle = document.getElementById('customMaxToggle');
+    const wrapper = document.getElementById('customMaxWrapper');
     const input = document.getElementById('calcCustomMax');
 
     toggle.classList.add('hidden');
-    input.classList.remove('hidden');
+    wrapper.classList.remove('hidden');
     input.focus();
 
     document.querySelectorAll('.max-preset').forEach(b => b.classList.remove('active'));
@@ -1456,20 +1458,25 @@ document.getElementById('customMaxToggle').addEventListener('click', () => {
 // Custom risk input
 document.getElementById('calcCustomRisk').addEventListener('input', (e) => {
     const value = parseFloat(e.target.value);
+    const wrapper = document.getElementById('customRiskWrapper');
     if (value > 0) {
         calcRiskPercent.value = value;
         document.querySelectorAll('.risk-preset').forEach(b => b.classList.remove('active'));
-        e.target.classList.add('active');
+        wrapper.classList.add('active');
         calculatePosition();
+    } else {
+        wrapper.classList.remove('active');
     }
 });
 
 document.getElementById('calcCustomRisk').addEventListener('blur', (e) => {
     const input = e.target;
+    const wrapper = document.getElementById('customRiskWrapper');
     const toggle = document.getElementById('customRiskToggle');
 
     if (!input.value) {
-        input.classList.add('hidden');
+        wrapper.classList.add('hidden');
+        wrapper.classList.remove('active');
         toggle.classList.remove('hidden');
         // Restore default active preset
         const value = parseFloat(calcRiskPercent.value);
@@ -1482,20 +1489,25 @@ document.getElementById('calcCustomRisk').addEventListener('blur', (e) => {
 // Custom max input
 document.getElementById('calcCustomMax').addEventListener('input', (e) => {
     const value = parseFloat(e.target.value);
+    const wrapper = document.getElementById('customMaxWrapper');
     if (value > 0) {
         calcMaxPercent.value = value;
         document.querySelectorAll('.max-preset').forEach(b => b.classList.remove('active'));
-        e.target.classList.add('active');
+        wrapper.classList.add('active');
         calculatePosition();
+    } else {
+        wrapper.classList.remove('active');
     }
 });
 
 document.getElementById('calcCustomMax').addEventListener('blur', (e) => {
     const input = e.target;
+    const wrapper = document.getElementById('customMaxWrapper');
     const toggle = document.getElementById('customMaxToggle');
 
     if (!input.value) {
-        input.classList.add('hidden');
+        wrapper.classList.add('hidden');
+        wrapper.classList.remove('active');
         toggle.classList.remove('hidden');
         // Restore default active preset
         const value = parseFloat(calcMaxPercent.value);
@@ -1509,6 +1521,7 @@ document.getElementById('calcCustomMax').addEventListener('blur', (e) => {
 calcRiskPercent.addEventListener('input', () => {
     const value = parseFloat(calcRiskPercent.value);
     const customRisk = document.getElementById('calcCustomRisk');
+    const customWrapper = document.getElementById('customRiskWrapper');
     const customToggle = document.getElementById('customRiskToggle');
     const hasPresetMatch = [...document.querySelectorAll('.risk-preset:not(.custom-toggle)')].some(btn => parseFloat(btn.dataset.value) === value);
 
@@ -1518,17 +1531,18 @@ calcRiskPercent.addEventListener('input', () => {
 
     if (!hasPresetMatch && value > 0) {
         customRisk.value = value;
-        customRisk.classList.add('active');
-        customRisk.classList.remove('hidden');
+        customWrapper.classList.add('active');
+        customWrapper.classList.remove('hidden');
         customToggle.classList.add('hidden');
     } else {
-        customRisk.classList.remove('active');
+        customWrapper.classList.remove('active');
     }
 });
 
 calcMaxPercent.addEventListener('input', () => {
     const value = parseFloat(calcMaxPercent.value);
     const customMax = document.getElementById('calcCustomMax');
+    const customWrapper = document.getElementById('customMaxWrapper');
     const customToggle = document.getElementById('customMaxToggle');
     const hasPresetMatch = [...document.querySelectorAll('.max-preset:not(.custom-toggle)')].some(btn => parseFloat(btn.dataset.value) === value);
 
@@ -1538,11 +1552,11 @@ calcMaxPercent.addEventListener('input', () => {
 
     if (!hasPresetMatch && value > 0) {
         customMax.value = value;
-        customMax.classList.add('active');
-        customMax.classList.remove('hidden');
+        customWrapper.classList.add('active');
+        customWrapper.classList.remove('hidden');
         customToggle.classList.add('hidden');
     } else {
-        customMax.classList.remove('active');
+        customWrapper.classList.remove('active');
     }
 });
 

@@ -1149,28 +1149,41 @@ tbody tr:last-child td {
     color: white;
 }
 
-.custom-preset-input {
-    width: 50px;
+.custom-input-wrapper {
+    display: inline-flex;
+    align-items: center;
     padding: 4px 8px;
     font-size: 0.7rem;
     border: 1px solid var(--color-gray-300);
     border-radius: 20px;
-    text-align: center;
     background-color: var(--color-gray-50);
     color: var(--color-gray-700);
     transition: all 0.2s;
 }
 
-.custom-preset-input:focus {
-    outline: none;
+.custom-input-wrapper:focus-within {
     border-color: var(--color-primary);
     box-shadow: 0 0 0 2px rgba(26, 54, 93, 0.15);
 }
 
-.custom-preset-input.active {
+.custom-input-wrapper.active {
     background-color: var(--color-primary);
     border-color: var(--color-primary);
     color: white;
+}
+
+.custom-preset-input {
+    width: 35px;
+    padding: 0;
+    font-size: 0.7rem;
+    border: none;
+    text-align: center;
+    background: transparent;
+    color: inherit;
+}
+
+.custom-preset-input:focus {
+    outline: none;
 }
 
 .set-default-btn {

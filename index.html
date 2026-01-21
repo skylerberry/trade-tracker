@@ -62,7 +62,7 @@
                             <button type="button" class="preset-btn risk-preset" data-value="0.5" tabindex="-1">.5%</button>
                             <button type="button" class="preset-btn risk-preset active" data-value="1" tabindex="-1">1%</button>
                             <button type="button" class="preset-btn custom-toggle" id="customRiskToggle" tabindex="-1">Custom</button>
-                            <input type="text" id="calcCustomRisk" class="custom-preset-input hidden" placeholder="%" autocomplete="off" tabindex="-1">
+                            <span class="custom-input-wrapper hidden" id="customRiskWrapper"><input type="text" id="calcCustomRisk" class="custom-preset-input" autocomplete="off" tabindex="-1">%</span>
                         </div>
                         <button type="button" class="set-default-btn" id="setDefaultRisk" tabindex="-1">Set as default</button>
                         <input type="number" id="calcRiskPercent" step="0.1" value="1" min="0.1" max="100" class="hidden">
@@ -76,7 +76,7 @@
                             <button type="button" class="preset-btn max-preset" data-value="50" tabindex="-1">50%</button>
                             <button type="button" class="preset-btn max-preset active" data-value="100" tabindex="-1">100%</button>
                             <button type="button" class="preset-btn custom-toggle" id="customMaxToggle" tabindex="-1">Custom</button>
-                            <input type="text" id="calcCustomMax" class="custom-preset-input hidden" placeholder="%" autocomplete="off" tabindex="-1">
+                            <span class="custom-input-wrapper hidden" id="customMaxWrapper"><input type="text" id="calcCustomMax" class="custom-preset-input" autocomplete="off" tabindex="-1">%</span>
                         </div>
                         <button type="button" class="set-default-btn" id="setDefaultMax" tabindex="-1">Set as default</button>
                         <input type="number" id="calcMaxPercent" step="1" value="100" min="1" max="100" class="hidden">
