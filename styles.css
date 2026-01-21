@@ -1279,6 +1279,7 @@ tbody tr:last-child td {
 }
 
 .btn-copy-input {
+    position: relative;
     padding: 0 10px;
     border: 1px solid var(--color-gray-300);
     border-left: none;
@@ -1289,10 +1290,40 @@ tbody tr:last-child td {
     font-weight: 600;
     cursor: pointer;
     transition: background-color 0.2s;
+    overflow: hidden;
 }
 
 .btn-copy-input:hover {
     background-color: var(--color-gray-200);
+}
+
+.btn-copy-input .copy-text,
+.btn-copy-input .copy-check {
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.btn-copy-input .copy-text {
+    display: inline-block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.btn-copy-input .copy-check {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 0;
+}
+
+.btn-copy-input.copied .copy-text {
+    opacity: 0;
+    transform: translateY(-10px);
+}
+
+.btn-copy-input.copied .copy-check {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
 }
 
 .input-with-buttons:has(.btn-copy-input) .increment-btn-top {

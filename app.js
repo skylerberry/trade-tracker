@@ -1349,8 +1349,8 @@ document.getElementById('copyCalcStopLoss').addEventListener('click', async () =
     const btn = document.getElementById('copyCalcStopLoss');
     try {
         await navigator.clipboard.writeText(value);
-        btn.textContent = 'Copied!';
-        setTimeout(() => btn.textContent = 'Copy', 1500);
+        btn.classList.add('copied');
+        setTimeout(() => btn.classList.remove('copied'), 1500);
     } catch (err) {
         console.error('Failed to copy:', err);
     }
