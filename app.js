@@ -509,8 +509,8 @@ function renderTrades() {
             <td><strong>${trade.ticker}</strong></td>
             <td>${trade.entryPrice.toFixed(2)}</td>
             <td>${formatDate(trade.entryDate)}</td>
-            <td class="sl-cell"><span class="sl-value">${trade.initialSL.toFixed(2)}</span><button class="btn-copy-sl" onclick="copySLValue(event, '${trade.initialSL.toFixed(2)}')" title="Copy to clipboard"><svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg><svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></button></td>
-            <td class="sl-cell"><span class="sl-value">${trade.currentSL.toFixed(2)}</span><button class="btn-copy-sl" onclick="copySLValue(event, '${trade.currentSL.toFixed(2)}')" title="Copy to clipboard"><svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg><svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></button></td>
+            <td>${trade.initialSL.toFixed(2)}</td>
+            <td>${trade.currentSL.toFixed(2)}</td>
             <td class="sale-display">${formatSale(sales[0])}</td>
             <td class="sale-display">${formatSale(sales[1])}</td>
             <td class="sale-display">${formatSale(sales[2])}</td>
@@ -990,20 +990,6 @@ document.getElementById('disconnectGist').addEventListener('click', () => {
     updateSyncStatus('not-synced', 'Not synced');
     gistModal.classList.add('hidden');
 });
-
-// Copy stop loss value to clipboard
-async function copySLValue(event, value) {
-    event.stopPropagation();
-    const btn = event.currentTarget;
-
-    try {
-        await navigator.clipboard.writeText(value);
-        btn.classList.add('copied');
-        setTimeout(() => btn.classList.remove('copied'), 1500);
-    } catch (err) {
-        console.error('Failed to copy:', err);
-    }
-}
 
 // Copy Gist ID to clipboard
 document.getElementById('copyGistId').addEventListener('click', async () => {
