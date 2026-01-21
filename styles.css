@@ -205,9 +205,9 @@ header h1 {
 }
 
 .sync-status.not-synced {
-    background: rgba(255,255,255,0.15);
-    color: rgba(255,255,255,0.7);
-    border: 1px dashed rgba(255,255,255,0.4);
+    background: rgba(251, 191, 36, 0.2);
+    color: rgba(255,255,255,0.9);
+    border: 1.5px solid var(--color-warning);
 }
 
 .sync-status.not-synced:hover {

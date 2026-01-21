@@ -730,7 +730,7 @@ async function initGistSync() {
         }
     } else {
         loadTrades();
-        updateSyncStatus('not-synced', 'Not synced');
+        updateSyncStatus('not-synced', 'Enable Sync');
     }
 }
 
