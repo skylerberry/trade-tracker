@@ -7,11 +7,13 @@ A simple web app for logging and managing swing trades. Designed as a replacemen
 - **Trade Logging**: Track ticker, entry price, entry date, initial/current stop loss
 - **Sale Tracking**: Log unlimited partial sales with portion (1/5, 1/4, 1/3, 1/2), price, and date
 - **Status Management**: Filter by open, partially closed, fully closed, or stopped out
+- **Current R Tracking**: See your unrealized R-multiple for each trade in the table
 - **Position Size Calculator**: Calculate position size based on account size, risk %, and stop loss
   - R-multiple calculations (1R-5R levels)
-  - Target price profit projections
-  - Max position % limit
-  - Preset buttons for common risk/max values
+  - Target price profit projections with color-coded cards (green/red/grey)
+  - Max position % limit with original → adjusted shares display
+  - Preset buttons + custom input fields for risk/max values
+  - Copy stop loss value to clipboard
 - **PDF Export**: Generate shareable PDF reports of open trades
 - **Cross-Device Sync**: Sync trades and calculator settings across devices using GitHub Gist
 - **Dark Mode**: Auto-detects system preference with manual toggle override

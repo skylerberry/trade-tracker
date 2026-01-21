@@ -930,6 +930,10 @@ tbody tr:last-child td {
     margin-bottom: 20px;
 }
 
+.modal-content .form-group input {
+    width: 100%;
+}
+
 .modal-actions {
     display: flex;
     gap: 10px;
