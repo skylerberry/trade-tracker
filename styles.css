@@ -397,6 +397,73 @@ header h1 {
     background-color: var(--color-gray-300);
 }
 
+/* Stop Loss Copy Button in Table */
+.sl-cell {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-copy-sl {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    padding: 3px;
+    border: 1px solid var(--color-gray-300);
+    border-radius: 4px;
+    background: var(--color-gray-50);
+    color: var(--color-gray-400);
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+    opacity: 0;
+}
+
+tr:hover .btn-copy-sl {
+    opacity: 1;
+}
+
+.btn-copy-sl:hover {
+    background: var(--color-gray-200);
+    color: var(--color-gray-700);
+    border-color: var(--color-gray-400);
+}
+
+.btn-copy-sl .icon-copy,
+.btn-copy-sl .icon-check {
+    position: absolute;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.btn-copy-sl .icon-copy {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.btn-copy-sl .icon-check {
+    opacity: 0;
+    transform: scale(0.5);
+}
+
+.btn-copy-sl.copied {
+    opacity: 1;
+    background: var(--color-success-light);
+    color: var(--color-success-hover);
+    border-color: var(--color-success-light);
+}
+
+.btn-copy-sl.copied .icon-copy {
+    opacity: 0;
+    transform: scale(0.5);
+}
+
+.btn-copy-sl.copied .icon-check {
+    opacity: 1;
+    transform: scale(1);
+}
+
 .form-group input,
 .form-group select {
     padding: 10px 12px;
