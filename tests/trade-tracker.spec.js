@@ -10,7 +10,7 @@ test.describe('Trade Tracker App', () => {
 
     test('should load the page with correct title', async ({ page }) => {
         await expect(page).toHaveTitle('Trade Tracker');
-        await expect(page.locator('h1')).toContainText('Trade Management for Swing Trades');
+        await expect(page.locator('h1')).toContainText('Trade Management Dashboard');
     });
 
     test('should show "No trades" message when empty', async ({ page }) => {
