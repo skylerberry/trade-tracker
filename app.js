@@ -1399,6 +1399,8 @@ calculatorPanel.addEventListener('click', (e) => {
         // Update active state
         document.querySelectorAll('.risk-preset').forEach(b => b.classList.remove('active'));
         target.classList.add('active');
+        document.getElementById('calcCustomRisk').classList.remove('active');
+        document.getElementById('calcCustomRisk').value = '';
 
         calculatePosition();
         return;
@@ -1412,25 +1414,69 @@ calculatorPanel.addEventListener('click', (e) => {
         // Update active state
         document.querySelectorAll('.max-preset').forEach(b => b.classList.remove('active'));
         target.classList.add('active');
+        document.getElementById('calcCustomMax').classList.remove('active');
+        document.getElementById('calcCustomMax').value = '';
 
         calculatePosition();
         return;
     }
 });
 
+// Custom risk input
+document.getElementById('calcCustomRisk').addEventListener('input', (e) => {
+    const value = parseFloat(e.target.value);
+    if (value > 0) {
+        calcRiskPercent.value = value;
+        document.querySelectorAll('.risk-preset').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        calculatePosition();
+    }
+});
+
+// Custom max input
+document.getElementById('calcCustomMax').addEventListener('input', (e) => {
+    const value = parseFloat(e.target.value);
+    if (value > 0) {
+        calcMaxPercent.value = value;
+        document.querySelectorAll('.max-preset').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        calculatePosition();
+    }
+});
+
 // Update preset button active states when input changes
 calcRiskPercent.addEventListener('input', () => {
     const value = parseFloat(calcRiskPercent.value);
+    const customRisk = document.getElementById('calcCustomRisk');
+    const hasPresetMatch = [...document.querySelectorAll('.risk-preset')].some(btn => parseFloat(btn.dataset.value) === value);
+
     document.querySelectorAll('.risk-preset').forEach(btn => {
         btn.classList.toggle('active', parseFloat(btn.dataset.value) === value);
     });
+
+    if (!hasPresetMatch && value > 0) {
+        customRisk.value = value;
+        customRisk.classList.add('active');
+    } else {
+        customRisk.classList.remove('active');
+    }
 });
 
 calcMaxPercent.addEventListener('input', () => {
     const value = parseFloat(calcMaxPercent.value);
+    const customMax = document.getElementById('calcCustomMax');
+    const hasPresetMatch = [...document.querySelectorAll('.max-preset')].some(btn => parseFloat(btn.dataset.value) === value);
+
     document.querySelectorAll('.max-preset').forEach(btn => {
         btn.classList.toggle('active', parseFloat(btn.dataset.value) === value);
     });
+
+    if (!hasPresetMatch && value > 0) {
+        customMax.value = value;
+        customMax.classList.add('active');
+    } else {
+        customMax.classList.remove('active');
+    }
 });
 
 // Default settings
