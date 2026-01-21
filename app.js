@@ -1341,6 +1341,21 @@ calcEntryPrice.addEventListener('input', calculatePosition);
 calcStopLoss.addEventListener('input', calculatePosition);
 calcTargetPrice.addEventListener('input', calculatePosition);
 
+// Copy stop loss to clipboard
+document.getElementById('copyCalcStopLoss').addEventListener('click', async () => {
+    const value = calcStopLoss.value;
+    if (!value) return;
+
+    const btn = document.getElementById('copyCalcStopLoss');
+    try {
+        await navigator.clipboard.writeText(value);
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = 'Copy', 1500);
+    } catch (err) {
+        console.error('Failed to copy:', err);
+    }
+});
+
 // Calculator click event delegation
 calculatorPanel.addEventListener('click', (e) => {
     const target = e.target;
