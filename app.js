@@ -1169,7 +1169,11 @@ function calculatePosition() {
     const percentOfAccount = (limitedPositionSize / account) * 100;
 
     // Update Position Card UI
-    calcShares.textContent = formatNumber(limitedShares);
+    if (isLimited) {
+        calcShares.innerHTML = `<span class="original-shares">${formatNumber(shares)}</span> → ${formatNumber(limitedShares)}`;
+    } else {
+        calcShares.textContent = formatNumber(limitedShares);
+    }
     calcShares.classList.toggle('limited', isLimited);
     calcStopDistance.textContent = `${formatCurrency(riskPerShare)} (${stopDistancePercent.toFixed(1)}%)`;
     calcPositionSize.textContent = formatCurrency(limitedPositionSize);

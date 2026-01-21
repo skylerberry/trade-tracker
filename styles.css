@@ -1431,8 +1431,13 @@ tbody tr:last-child td {
 }
 
 .calc-big-value.limited {
+    font-size: 1.8rem;
+}
+
+.calc-big-value.limited .original-shares {
     text-decoration: line-through;
     text-decoration-thickness: 2px;
+    opacity: 0.5;
 }
 
 /* Target Card (Green) */
