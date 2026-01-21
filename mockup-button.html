@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Trade Button Mockups</title>
+    <style>
+        :root {
+            --color-primary: #1a365d;
+            --color-gray-100: #f3f4f6;
+            --color-gray-200: #e5e7eb;
+            --color-gray-300: #d1d5db;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8fafc;
+            padding: 40px;
+        }
+
+        h2 {
+            margin-bottom: 10px;
+            color: #1a365d;
+        }
+
+        h3 {
+            margin-bottom: 20px;
+            color: #6b7280;
+            font-weight: 400;
+            font-size: 0.9rem;
+        }
+
+        .section {
+            margin-bottom: 60px;
+        }
+
+        .row {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            align-items: flex-start;
+        }
+
+        .card-wrapper {
+            text-align: center;
+        }
+
+        .card-wrapper p {
+            margin-top: 10px;
+            font-size: 0.8rem;
+            color: #6b7280;
+            max-width: 180px;
+        }
+
+        /* Context container to simulate the app header */
+        .context {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        /* Base button styles */
+        .btn {
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+
+        /* Current Style */
+        .btn-current {
+            background-color: #4299e1;
+            color: white;
+        }
+        .btn-current:hover {
+            background-color: #3182ce;
+        }
+
+        /* Option 1: Monochrome (main navy) */
+        .btn-mono {
+            background-color: #1a365d;
+            color: white;
+            box-shadow: 0 2px 4px rgba(26, 54, 93, 0.3);
+        }
+        .btn-mono:hover {
+            background-color: #2c4a7c;
+        }
+
+        /* Option 2a: Desaturated Slate */
+        .btn-slate {
+            background-color: #334155;
+            color: white;
+        }
+        .btn-slate:hover {
+            background-color: #475569;
+        }
+
+        /* Option 2b: Light Slate */
+        .btn-light-slate {
+            background-color: #475569;
+            color: white;
+        }
+        .btn-light-slate:hover {
+            background-color: #64748b;
+        }
+
+        /* Option 3a: Ghost/Outline */
+        .btn-ghost {
+            background-color: transparent;
+            color: #1a365d;
+            border: 2px solid #1a365d;
+        }
+        .btn-ghost:hover {
+            background-color: #1a365d;
+            color: white;
+        }
+
+        /* Option 3b: Ghost with lighter border */
+        .btn-ghost-light {
+            background-color: transparent;
+            color: #1a365d;
+            border: 2px solid #cbd5e1;
+        }
+        .btn-ghost-light:hover {
+            background-color: #1a365d;
+            color: white;
+            border-color: #1a365d;
+        }
+
+        /* Option 4: Subtle fill */
+        .btn-subtle {
+            background-color: #e2e8f0;
+            color: #1a365d;
+            border: 1px solid #cbd5e1;
+        }
+        .btn-subtle:hover {
+            background-color: #1a365d;
+            color: white;
+        }
+
+        /* Option 5: Navy with accent */
+        .btn-accent {
+            background-color: #1a365d;
+            color: white;
+            border-left: 4px solid #4299e1;
+        }
+        .btn-accent:hover {
+            background-color: #2c4a7c;
+        }
+
+        /* Simulated Position Calculator button */
+        .btn-calculator {
+            background-color: #1a365d;
+            color: white;
+        }
+
+        /* Header simulation */
+        header {
+            background: linear-gradient(135deg, #1a365d 0%, #2d4a6f 100%);
+            padding: 20px 30px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            color: white;
+            font-size: 1.3rem;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .header-btn {
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            border: none;
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="section">
+        <h2>Current Style</h2>
+        <h3>The lighter blue that feels "stock"</h3>
+        <div class="row">
+            <div class="card-wrapper">
+                <div class="context">
+                    <button class="btn btn-calculator">Position Calculator</button>
+                    <button class="btn btn-current">+ Add New Trade</button>
+                </div>
+                <p>Current: #4299e1 (Electric Blue)</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Option 1: Monochrome</h2>
+        <h3>Use main navy with shadow for emphasis</h3>
+        <div class="row">
+            <div class="card-wrapper">
+                <div class="context">
+                    <button class="btn btn-calculator">Position Calculator</button>
+                    <button class="btn btn-mono">+ Add New Trade</button>
+                </div>
+                <p>Same navy #1a365d with subtle shadow to distinguish</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Option 2: Desaturated Slate</h2>
+        <h3>Shift away from electric blue toward slate</h3>
+        <div class="row">
+            <div class="card-wrapper">
+                <div class="context">
+                    <button class="btn btn-calculator">Position Calculator</button>
+                    <button class="btn btn-slate">+ Add New Trade</button>
+                </div>
+                <p>#334155 (Slate)</p>
+            </div>
+            <div class="card-wrapper">
+                <div class="context">
+                    <button class="btn btn-calculator">Position Calculator</button>
+                    <button class="btn btn-light-slate">+ Add New Trade</button>
+                </div>
+                <p>#475569 (Light Slate)</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Option 3: Ghost/Outline</h2>
+        <h3>Transparent with border, fills on hover</h3>
+        <div class="row">
+            <div class="card-wrapper">
+                <div class="context">
+                    <button class="btn btn-calculator">Position Calculator</button>
+                    <button class="btn btn-ghost">+ Add New Trade</button>
+                </div>
+                <p>Navy border, fills on hover</p>
+            </div>
+            <div class="card-wrapper">
+                <div class="context">
+                    <button class="btn btn-calculator">Position Calculator</button>
+                    <button class="btn btn-ghost-light">+ Add New Trade</button>
+                </div>
+                <p>Light border, more subtle</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Option 4: Subtle Fill</h2>
+        <h3>Light background, navy text</h3>
+        <div class="row">
+            <div class="card-wrapper">
+                <div class="context">
+                    <button class="btn btn-calculator">Position Calculator</button>
+                    <button class="btn btn-subtle">+ Add New Trade</button>
+                </div>
+                <p>Gray fill, inverts on hover</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Option 5: Navy with Accent</h2>
+        <h3>Keep the blue as a small accent</h3>
+        <div class="row">
+            <div class="card-wrapper">
+                <div class="context">
+                    <button class="btn btn-calculator">Position Calculator</button>
+                    <button class="btn btn-accent">+ Add New Trade</button>
+                </div>
+                <p>Navy base with blue left border</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>In Context (with header)</h2>
+        <h3>See how each option looks with the full header</h3>
+
+        <div style="margin-bottom: 30px;">
+            <header>
+                <h1>Trade Management Dashboard</h1>
+                <div class="header-actions">
+                    <button class="header-btn">Sync</button>
+                    <button class="header-btn">☀</button>
+                </div>
+            </header>
+            <div class="context" style="border-radius: 0 0 12px 12px; margin-top: -12px;">
+                <button class="btn btn-calculator">Position Calculator</button>
+                <button class="btn btn-ghost">+ Add New Trade</button>
+            </div>
+            <p style="margin-top: 10px; font-size: 0.8rem; color: #6b7280;">Ghost button recommendation</p>
+        </div>
+
+        <div style="margin-bottom: 30px;">
+            <header>
+                <h1>Trade Management Dashboard</h1>
+                <div class="header-actions">
+                    <button class="header-btn">Sync</button>
+                    <button class="header-btn">☀</button>
+                </div>
+            </header>
+            <div class="context" style="border-radius: 0 0 12px 12px; margin-top: -12px;">
+                <button class="btn btn-calculator">Position Calculator</button>
+                <button class="btn btn-subtle">+ Add New Trade</button>
+            </div>
+            <p style="margin-top: 10px; font-size: 0.8rem; color: #6b7280;">Subtle fill recommendation</p>
+        </div>
+    </div>
+</body>
+</html>

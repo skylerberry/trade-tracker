@@ -145,7 +145,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="calc-target-card">
+                    <div class="calc-target-card inactive">
                         <div class="calc-target-header">At Target (<span id="calcRMultiple">-</span>)</div>
                         <div class="calc-target-big-value" id="calcTargetProfit">-</div>
                         <div class="calc-target-list">
@@ -201,7 +201,7 @@
         </section>
 
         <section class="add-trade-section">
-            <button id="toggleFormBtn" class="btn btn-primary">+ Add New Trade</button>
+            <button id="toggleFormBtn" class="btn btn-ghost">+ Add New Trade</button>
 
             <form id="tradeForm" class="trade-form hidden" autocomplete="off">
                 <h2 id="formTitle">Add New Trade</h2>
@@ -305,7 +305,7 @@
                     <details class="help-section">
                         <summary>How to get a token (first time setup)</summary>
                         <ol class="help-steps">
-                            <li>Click the <a href="https://github.com/settings/tokens/new?scopes=gist&description=Trade%20Tracker" target="_blank">Create token</a> link below</li>
+                            <li>Click <a href="https://github.com/settings/tokens/new?scopes=gist&description=Trade%20Tracker" target="_blank">Create token</a> to open GitHub</li>
                             <li>Log in to GitHub if prompted</li>
                             <li>Set expiration to <strong>"No expiration"</strong> (recommended)</li>
                             <li>The "gist" checkbox should already be selected</li>
@@ -323,7 +323,7 @@
                     </div>
                     <div class="form-group" id="gistIdGroup">
                         <label for="gistId">Gist ID <span class="optional-label">(leave empty for new setup)</span></label>
-                        <input type="text" id="gistId" placeholder="Only needed to sync existing trades" autocomplete="off">
+                        <input type="text" id="gistId" placeholder="For syncing existing trades" autocomplete="off">
                     </div>
                     <div class="modal-actions">
                         <button id="saveGistSettings" class="btn btn-primary">Save & Sync</button>
@@ -360,6 +360,7 @@
                             <th scope="col">Entry Date</th>
                             <th scope="col">Initial SL</th>
                             <th scope="col">Current SL</th>
+                            <th scope="col">Current R</th>
                             <th scope="col">Sale 1</th>
                             <th scope="col">Sale 2</th>
                             <th scope="col">Sale 3</th>

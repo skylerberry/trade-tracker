@@ -296,6 +296,17 @@ header h1 {
     background-color: var(--color-accent-hover);
 }
 
+.btn-ghost {
+    background-color: transparent;
+    color: var(--color-primary);
+    border: 2px solid var(--color-primary);
+}
+
+.btn-ghost:hover {
+    background-color: var(--color-primary);
+    color: white;
+}
+
 .btn-secondary {
     background-color: var(--color-gray-500);
     color: white;
@@ -688,6 +699,20 @@ tbody tr:last-child td {
 
 .status-stopped_out {
     background-color: var(--color-error-light);
+    color: var(--color-error-dark);
+}
+
+/* Current R */
+.current-r {
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.current-r.positive {
+    color: var(--color-success-dark);
+}
+
+.current-r.negative {
     color: var(--color-error-dark);
 }
 
@@ -1455,10 +1480,34 @@ tbody tr:last-child td {
 
 /* Target Card (Green) */
 .calc-target-card {
-    background: linear-gradient(135deg, var(--color-success-dark) 0%, var(--color-success-hover) 100%);
     border-radius: 12px;
     padding: 25px;
     color: white;
+    transition: background 0.3s ease;
+}
+
+.calc-target-card.inactive {
+    background: var(--color-gray-100);
+    color: var(--color-gray-500);
+    border: 2px dashed var(--color-gray-300);
+}
+
+.calc-target-card.inactive .calc-target-header,
+.calc-target-card.inactive .calc-target-row span:first-child {
+    color: var(--color-gray-400);
+}
+
+.calc-target-card.inactive .calc-target-big-value,
+.calc-target-card.inactive .calc-target-row span:last-child {
+    color: var(--color-gray-500);
+}
+
+.calc-target-card.gain {
+    background: #2d6a4f;
+}
+
+.calc-target-card.loss {
+    background: #9b2226;
 }
 
 .calc-target-header {

@@ -478,6 +478,24 @@ function formatStatus(status) {
     return `<span class="status-badge status-${status}">${STATUS_LABELS[status] || status}</span>`;
 }
 
+// Calculate current R-multiple for a trade
+function calculateCurrentR(trade) {
+    if (!trade.currentPrice || !trade.entryPrice || !trade.initialSL) return null;
+
+    const riskPerShare = trade.entryPrice - trade.initialSL;
+    if (riskPerShare <= 0) return null;
+
+    const currentGain = trade.currentPrice - trade.entryPrice;
+    return currentGain / riskPerShare;
+}
+
+// Format current R-multiple for display
+function formatCurrentR(r) {
+    if (r === null) return '-';
+    const sign = r >= 0 ? '+' : '';
+    return `${sign}${r.toFixed(1)}R`;
+}
+
 // Render trades table
 function renderTrades() {
     const filter = statusFilter.value;
@@ -504,6 +522,7 @@ function renderTrades() {
 
     tradesBody.innerHTML = filteredTrades.map(trade => {
         const sales = getTradeSales(trade);
+        const currentR = calculateCurrentR(trade);
         return `
         <tr data-id="${trade.id}">
             <td><strong>${trade.ticker}</strong></td>
@@ -511,6 +530,7 @@ function renderTrades() {
             <td>${formatDate(trade.entryDate)}</td>
             <td>${trade.initialSL.toFixed(2)}</td>
             <td>${trade.currentSL.toFixed(2)}</td>
+            <td class="current-r ${currentR !== null ? (currentR >= 0 ? 'positive' : 'negative') : ''}">${formatCurrentR(currentR)}</td>
             <td class="sale-display">${formatSale(sales[0])}</td>
             <td class="sale-display">${formatSale(sales[1])}</td>
             <td class="sale-display">${formatSale(sales[2])}</td>
@@ -535,7 +555,7 @@ function editTrade(id) {
     document.getElementById('entryPrice').value = trade.entryPrice;
     document.getElementById('initialSL').value = trade.initialSL;
     document.getElementById('currentSL').value = trade.currentSL;
-    document.getElementById('status').value = trade.status;
+        document.getElementById('status').value = trade.status;
 
     // Set dates using Flatpickr
     if (datePickers.entryDate) datePickers.entryDate.setDate(trade.entryDate);
@@ -1215,14 +1235,18 @@ function updateRLevels(entry, riskPerShare, shares, target) {
 
 // Update Target Card
 function updateTargetCard(entry, riskPerShare, shares, target) {
-    if (!target || target <= entry) {
-        // Reset target card
+    const targetCard = document.querySelector('.calc-target-card');
+
+    if (!target || target <= 0 || !entry || entry <= 0) {
+        // Reset target card to inactive state
         calcRMultiple.textContent = '-';
         calcTargetProfit.textContent = '-';
         calcTargetPriceDisplay.textContent = '-';
         calcProfitPerShare.textContent = '-';
         calcROI.textContent = '-';
         calcRRMultiple.textContent = '-';
+        targetCard.classList.remove('gain', 'loss');
+        targetCard.classList.add('inactive');
         return;
     }
 
@@ -1231,12 +1255,21 @@ function updateTargetCard(entry, riskPerShare, shares, target) {
     const roi = (profitPerShare / entry) * 100;
     const rMultiple = profitPerShare / riskPerShare;
 
+    const sign = totalProfit >= 0 ? '+' : '';
     calcRMultiple.textContent = `${rMultiple.toFixed(1)}R`;
-    calcTargetProfit.textContent = `+${formatCurrency(totalProfit)}`;
+    calcTargetProfit.textContent = `${sign}${formatCurrency(totalProfit)}`;
     calcTargetPriceDisplay.textContent = formatCurrency(target);
-    calcProfitPerShare.textContent = formatCurrency(profitPerShare);
-    calcROI.textContent = `+${roi.toFixed(1)}%`;
+    calcProfitPerShare.textContent = `${sign}${formatCurrency(profitPerShare)}`;
+    calcROI.textContent = `${sign}${roi.toFixed(1)}%`;
     calcRRMultiple.textContent = `${rMultiple.toFixed(1)}R`;
+
+    // Update card color based on gain/loss
+    targetCard.classList.remove('inactive', 'gain', 'loss');
+    if (totalProfit >= 0) {
+        targetCard.classList.add('gain');
+    } else {
+        targetCard.classList.add('loss');
+    }
 }
 
 // Format compact currency (e.g., $10k instead of $10,000)
@@ -1267,6 +1300,9 @@ function resetCalcResults() {
     calcProfitPerShare.textContent = '-';
     calcROI.textContent = '-';
     calcRRMultiple.textContent = '-';
+    const targetCard = document.querySelector('.calc-target-card');
+    targetCard.classList.remove('gain', 'loss');
+    targetCard.classList.add('inactive');
 
     // R-levels
     for (let i = 1; i <= 5; i++) {
