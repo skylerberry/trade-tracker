@@ -36,7 +36,7 @@ python3 -m http.server 8000
 
 ### Cross-Device Sync (GitHub Gist)
 
-1. Click "Configure Sync" in the app
+1. Click "Enable Sync" in the header (amber button)
 2. Follow the setup guide to create a GitHub Personal Access Token
 3. Save & Sync to create a new Gist
 4. On other devices, use the same token and Gist ID to sync
