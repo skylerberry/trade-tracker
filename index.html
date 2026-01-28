@@ -131,6 +131,13 @@
                         <div class="calc-big-result">
                             <span class="calc-big-value" id="calcShares">-</span>
                             <span class="calc-big-label">shares</span>
+                            <button type="button" class="btn-export-card" id="exportTradeCard" title="Export trade card" disabled>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="7 10 12 15 17 10"></polyline>
+                                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                                </svg>
+                            </button>
                         </div>
                         <div class="calc-result-list">
                             <div class="calc-result-row">
@@ -382,7 +389,77 @@
         </section>
     </div>
 
+    <!-- Trade Card Export Modal -->
+    <div class="modal hidden" id="exportModal">
+        <div class="modal-content export-modal-content">
+            <button type="button" class="btn-modal-close" id="closeExportModal">&times;</button>
+            <h2>Export Trade Card</h2>
+            <div class="export-preview-container">
+                <div class="trade-card" id="tradeCardPreview">
+                    <div class="trade-card-header">
+                        <div class="trade-card-ticker" id="cardTicker">AAPL</div>
+                        <div class="trade-card-date" id="cardDate">Jan 28, 2026</div>
+                    </div>
+                    <div class="trade-card-main">
+                        <div class="trade-card-shares" id="cardShares">150</div>
+                        <div class="trade-card-shares-label">Shares</div>
+                        <div class="trade-card-position" id="cardPosition">$27,825 position</div>
+                    </div>
+                    <div class="trade-card-details" id="cardDetails">
+                        <div class="trade-card-detail">
+                            <span class="trade-card-detail-label">Entry Price</span>
+                            <span class="trade-card-detail-value" id="cardEntry">$185.50</span>
+                        </div>
+                        <div class="trade-card-detail">
+                            <span class="trade-card-detail-label">Stop Loss</span>
+                            <span class="trade-card-detail-value" id="cardStop">$182.00</span>
+                        </div>
+                        <div class="trade-card-detail">
+                            <span class="trade-card-detail-label">Account Risk</span>
+                            <span class="trade-card-detail-value" id="cardRisk">1%</span>
+                        </div>
+                        <div class="trade-card-detail" id="cardPercentAccountRow">
+                            <span class="trade-card-detail-label">% of Account</span>
+                            <span class="trade-card-detail-value" id="cardPercentAccount">52.9%</span>
+                        </div>
+                    </div>
+                    <div class="trade-card-divider"></div>
+                    <div class="trade-card-footer">
+                        <div class="trade-card-account" id="cardAccountRow">
+                            Account: <span class="trade-card-account-value" id="cardAccount">$52,500</span>
+                        </div>
+                        <div class="trade-card-watermark">Skyler's Trade Tracker</div>
+                    </div>
+                </div>
+            </div>
+            <div class="export-options">
+                <label class="toggle-label">
+                    <input type="checkbox" id="privacyMode">
+                    <span class="toggle-text">Privacy mode (hide $ amounts)</span>
+                </label>
+            </div>
+            <div class="export-actions">
+                <button type="button" class="btn btn-secondary" id="copyCardBtn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                    Copy to Clipboard
+                </button>
+                <button type="button" class="btn btn-primary" id="downloadCardBtn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    Download PNG
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.1/jspdf.plugin.autotable.min.js"></script>
     <script src="app.js"></script>

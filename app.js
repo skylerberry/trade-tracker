@@ -1205,6 +1205,11 @@ function calculatePosition() {
 
     // Calculate and update Target Card
     updateTargetCard(entry, riskPerShare, limitedShares, target);
+
+    // Update export state
+    if (typeof updateExportState === 'function') {
+        updateExportState();
+    }
 }
 
 // Update R-levels bar
@@ -1314,6 +1319,10 @@ function resetCalcResults() {
         if (profitEl) profitEl.textContent = '-';
         if (itemEl) itemEl.classList.remove('active');
     }
+
+    // Disable export button
+    const exportBtn = document.getElementById('exportTradeCard');
+    if (exportBtn) exportBtn.disabled = true;
 }
 
 // Show calculator error
@@ -1779,3 +1788,257 @@ document.addEventListener('DOMContentLoaded', async () => {
         await loadSettingsFromGist();
     }
 });
+
+// ============================================
+// Trade Card Export Feature
+// ============================================
+
+const exportTradeCardBtn = document.getElementById('exportTradeCard');
+const exportModal = document.getElementById('exportModal');
+const closeExportModal = document.getElementById('closeExportModal');
+const privacyModeCheckbox = document.getElementById('privacyMode');
+const copyCardBtn = document.getElementById('copyCardBtn');
+const downloadCardBtn = document.getElementById('downloadCardBtn');
+const tradeCardPreview = document.getElementById('tradeCardPreview');
+
+// Track current calculator state for export
+let currentCalcState = {
+    ticker: '',
+    shares: 0,
+    positionSize: 0,
+    entryPrice: 0,
+    stopLoss: 0,
+    riskPercent: 0,
+    percentOfAccount: 0,
+    accountSize: 0,
+    hasValidData: false
+};
+
+// Update export button state and current calc state
+function updateExportState() {
+    const shares = parseInt(calcShares.textContent.replace(/,/g, '')) || 0;
+    const entry = parseFloat(calcEntryPrice.value) || 0;
+    const stopLoss = parseFloat(calcStopLoss.value) || 0;
+    const ticker = document.getElementById('calcTicker').value.trim().toUpperCase() || 'N/A';
+
+    // Parse position size from display
+    const positionSizeText = calcPositionSize.textContent;
+    const positionSize = parseFloat(positionSizeText.replace(/[$,]/g, '')) || 0;
+
+    // Parse percent of account from display
+    const percentAccountText = calcPercentAccount.textContent;
+    const percentOfAccount = parseFloat(percentAccountText.replace('%', '')) || 0;
+
+    const riskPercent = parseFloat(calcRiskPercent.value) || 0;
+
+    const hasTicker = ticker && ticker !== 'N/A';
+    const hasValidData = shares > 0 && entry > 0 && stopLoss > 0 && accountSize > 0 && hasTicker;
+
+    currentCalcState = {
+        ticker,
+        shares,
+        positionSize,
+        entryPrice: entry,
+        stopLoss,
+        riskPercent,
+        percentOfAccount,
+        accountSize,
+        hasValidData
+    };
+
+    exportTradeCardBtn.disabled = !hasValidData;
+
+    // Update tooltip based on what's missing
+    if (!hasValidData) {
+        const missing = [];
+        if (!entry) missing.push('entry price');
+        if (!stopLoss) missing.push('stop loss');
+        if (!hasTicker) missing.push('ticker');
+        if (!accountSize) missing.push('account size');
+
+        if (missing.length > 0) {
+            exportTradeCardBtn.title = `Add ${missing.join(', ')} to export`;
+        } else {
+            exportTradeCardBtn.title = 'Export trade card';
+        }
+    } else {
+        exportTradeCardBtn.title = 'Export trade card';
+    }
+}
+
+// Format date for card
+function formatCardDate(date) {
+    return date.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric'
+    });
+}
+
+// Update trade card preview with current data
+function updateTradeCardPreview() {
+    const state = currentCalcState;
+    const privacyMode = privacyModeCheckbox.checked;
+
+    // Update card content
+    document.getElementById('cardTicker').textContent = state.ticker;
+    document.getElementById('cardDate').textContent = formatCardDate(new Date());
+    document.getElementById('cardShares').textContent = formatNumber(state.shares);
+    document.getElementById('cardEntry').textContent = formatCurrency(state.entryPrice);
+    document.getElementById('cardStop').textContent = formatCurrency(state.stopLoss);
+    document.getElementById('cardRisk').textContent = state.riskPercent + '%';
+
+    // Privacy mode elements
+    const positionEl = document.getElementById('cardPosition');
+    const percentAccountRow = document.getElementById('cardPercentAccountRow');
+    const percentAccountEl = document.getElementById('cardPercentAccount');
+    const accountRowEl = document.getElementById('cardAccountRow');
+    const accountEl = document.getElementById('cardAccount');
+
+    if (privacyMode) {
+        tradeCardPreview.classList.add('privacy-mode');
+        positionEl.style.display = 'none';
+        percentAccountRow.style.display = 'none';
+        accountRowEl.style.display = 'none';
+    } else {
+        tradeCardPreview.classList.remove('privacy-mode');
+        positionEl.style.display = '';
+        positionEl.textContent = formatCurrency(state.positionSize) + ' position';
+        percentAccountRow.style.display = '';
+        percentAccountEl.textContent = state.percentOfAccount.toFixed(1) + '%';
+        accountRowEl.style.display = '';
+        accountEl.textContent = formatCurrency(state.accountSize);
+    }
+}
+
+// Open export modal
+exportTradeCardBtn.addEventListener('click', () => {
+    if (!currentCalcState.hasValidData) return;
+
+    updateTradeCardPreview();
+    exportModal.classList.remove('hidden');
+});
+
+// Close export modal
+closeExportModal.addEventListener('click', () => {
+    exportModal.classList.add('hidden');
+});
+
+exportModal.addEventListener('click', (e) => {
+    if (e.target === exportModal) {
+        exportModal.classList.add('hidden');
+    }
+});
+
+// Privacy mode toggle
+privacyModeCheckbox.addEventListener('change', updateTradeCardPreview);
+
+// Generate card image using html2canvas
+async function generateCardImage() {
+    const card = tradeCardPreview;
+
+    // Temporarily set explicit dimensions for rendering
+    const originalWidth = card.style.width;
+    card.style.width = '280px';
+
+    try {
+        const canvas = await html2canvas(card, {
+            scale: 4, // 4x resolution for high quality
+            backgroundColor: null, // Transparent background
+            logging: false,
+            useCORS: true
+        });
+
+        card.style.width = originalWidth;
+        return canvas;
+    } catch (err) {
+        card.style.width = originalWidth;
+        throw err;
+    }
+}
+
+// Copy to clipboard
+copyCardBtn.addEventListener('click', async () => {
+    try {
+        const canvas = await generateCardImage();
+
+        canvas.toBlob(async (blob) => {
+            try {
+                await navigator.clipboard.write([
+                    new ClipboardItem({ 'image/png': blob })
+                ]);
+
+                // Show success feedback
+                const originalText = copyCardBtn.innerHTML;
+                copyCardBtn.innerHTML = `
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    Copied!
+                `;
+                copyCardBtn.classList.add('btn-success');
+
+                setTimeout(() => {
+                    copyCardBtn.innerHTML = originalText;
+                    copyCardBtn.classList.remove('btn-success');
+                }, 2000);
+            } catch (err) {
+                console.error('Failed to copy to clipboard:', err);
+                alert('Failed to copy to clipboard. Try downloading instead.');
+            }
+        }, 'image/png');
+    } catch (err) {
+        console.error('Failed to generate card image:', err);
+        alert('Failed to generate card image.');
+    }
+});
+
+// Download PNG
+downloadCardBtn.addEventListener('click', async () => {
+    try {
+        const canvas = await generateCardImage();
+
+        // Create download link
+        const link = document.createElement('a');
+        const ticker = currentCalcState.ticker || 'trade';
+        const date = new Date().toISOString().split('T')[0];
+        link.download = `${ticker}-${date}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+
+        // Show success feedback
+        const originalText = downloadCardBtn.innerHTML;
+        downloadCardBtn.innerHTML = `
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            Downloaded!
+        `;
+        downloadCardBtn.classList.add('btn-success');
+
+        setTimeout(() => {
+            downloadCardBtn.innerHTML = originalText;
+            downloadCardBtn.classList.remove('btn-success');
+        }, 2000);
+    } catch (err) {
+        console.error('Failed to generate card image:', err);
+        alert('Failed to generate card image.');
+    }
+});
+
+// Listen for calculator updates to update export state
+const calcInputs = [calcEntryPrice, calcStopLoss, calcTargetPrice, document.getElementById('calcTicker')];
+calcInputs.forEach(input => {
+    if (input) {
+        input.addEventListener('input', () => {
+            setTimeout(updateExportState, 100);
+        });
+    }
+});
+
+// Also update when risk/max changes
+calcRiskPercent.addEventListener('input', () => setTimeout(updateExportState, 100));
+calcMaxPercent.addEventListener('input', () => setTimeout(updateExportState, 100));
+
+// Update state when account size changes
+calcAccountSize.addEventListener('input', () => setTimeout(updateExportState, 100));
