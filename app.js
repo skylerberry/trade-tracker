@@ -1397,6 +1397,33 @@ calcEntryPrice.addEventListener('input', calculatePosition);
 calcStopLoss.addEventListener('input', calculatePosition);
 calcTargetPrice.addEventListener('input', calculatePosition);
 
+// Mobile keyboard navigation - Enter key moves to next field
+const calcFieldOrder = ['calcAccountSize', 'calcEntryPrice', 'calcStopLoss', 'calcTicker', 'calcTargetPrice'];
+
+calcFieldOrder.forEach((fieldId, index) => {
+    const field = document.getElementById(fieldId);
+    if (field) {
+        field.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                const nextIndex = index + 1;
+                if (nextIndex < calcFieldOrder.length) {
+                    // Move to next field
+                    const nextField = document.getElementById(calcFieldOrder[nextIndex]);
+                    if (nextField) {
+                        nextField.focus();
+                        // Select all text for easy replacement
+                        if (nextField.select) nextField.select();
+                    }
+                } else {
+                    // Last field - blur to dismiss keyboard
+                    field.blur();
+                }
+            }
+        });
+    }
+});
+
 // Copy stop loss to clipboard
 document.getElementById('copyCalcStopLoss').addEventListener('click', async () => {
     const value = calcStopLoss.value;

@@ -59,7 +59,7 @@
                 <div class="calc-settings-header">
                     <div class="setting-item">
                         <label for="calcAccountSize">Account:</label>
-                        <input type="text" id="calcAccountSize" placeholder="e.g., 50k" autocomplete="off">
+                        <input type="text" id="calcAccountSize" placeholder="e.g., 50k" autocomplete="off" enterkeyhint="next">
                     </div>
                     <div class="setting-item">
                         <span class="setting-label">Risk:</span>
@@ -95,7 +95,7 @@
                     <div class="form-group">
                         <label for="calcEntryPrice">Entry Price</label>
                         <div class="input-with-buttons">
-                            <input type="number" id="calcEntryPrice" step="0.01" placeholder="0.00" autocomplete="off">
+                            <input type="number" id="calcEntryPrice" step="0.01" placeholder="0.00" autocomplete="off" enterkeyhint="next">
                             <div class="increment-btn-stack">
                                 <button type="button" class="increment-btn increment-btn-top" data-target="calcEntryPrice" data-delta="0.01" tabindex="-1">+</button>
                                 <button type="button" class="increment-btn increment-btn-bottom" data-target="calcEntryPrice" data-delta="-0.01" tabindex="-1">-</button>
@@ -105,7 +105,7 @@
                     <div class="form-group">
                         <label for="calcStopLoss">Stop Loss</label>
                         <div class="input-with-buttons">
-                            <input type="number" id="calcStopLoss" step="0.01" placeholder="0.00" autocomplete="off">
+                            <input type="number" id="calcStopLoss" step="0.01" placeholder="0.00" autocomplete="off" enterkeyhint="next">
                             <div class="increment-btn-stack">
                                 <button type="button" class="increment-btn increment-btn-top" data-target="calcStopLoss" data-delta="0.01" tabindex="-1">+</button>
                                 <button type="button" class="increment-btn increment-btn-bottom" data-target="calcStopLoss" data-delta="-0.01" tabindex="-1">-</button>
@@ -117,7 +117,7 @@
                     <div class="form-group ticker-group">
                         <label for="calcTicker">Ticker <span class="optional-tag">optional</span></label>
                         <div class="input-with-buttons ticker-input-wrapper">
-                            <input type="text" id="calcTicker" placeholder="e.g., AAPL" autocomplete="off">
+                            <input type="text" id="calcTicker" placeholder="e.g., AAPL" autocomplete="off" enterkeyhint="next">
                             <button type="button" class="btn-chart-link" id="openTickerChart" title="Open in TradingView (Shift+Enter)" tabindex="-1" disabled>
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
@@ -130,7 +130,7 @@
                     <div class="form-group target-group">
                         <label for="calcTargetPrice">Target Price <span class="optional-tag">optional</span></label>
                         <div class="input-with-buttons">
-                            <input type="number" id="calcTargetPrice" step="0.01" placeholder="0.00" autocomplete="off">
+                            <input type="number" id="calcTargetPrice" step="0.01" placeholder="0.00" autocomplete="off" enterkeyhint="done">
                             <div class="increment-btn-stack">
                                 <button type="button" class="increment-btn increment-btn-top" data-target="calcTargetPrice" data-delta="0.01" tabindex="-1">+</button>
                                 <button type="button" class="increment-btn increment-btn-bottom" data-target="calcTargetPrice" data-delta="-0.01" tabindex="-1">-</button>
