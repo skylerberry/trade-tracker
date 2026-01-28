@@ -1239,9 +1239,14 @@ tbody tr:last-child td {
 /* Inputs Row */
 .calc-inputs-row {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
+    grid-template-columns: repeat(4, minmax(200px, 1fr));
+    gap: 16px;
     margin-bottom: 20px;
+}
+
+.calc-inputs-row .form-group {
+    min-width: 0;
+    overflow: visible;
 }
 
 .calc-inputs-row .form-group label {
@@ -1255,9 +1260,23 @@ tbody tr:last-child td {
     font-size: 1.1rem;
 }
 
+.ticker-group label,
 .target-group label {
     color: var(--color-gray-500) !important;
     font-weight: 500 !important;
+}
+
+.ticker-group input {
+    text-transform: uppercase;
+}
+
+.ticker-group input::placeholder {
+    text-transform: none;
+}
+
+/* Ticker input has no buttons, so restore full border-radius */
+.ticker-input-wrapper input {
+    border-radius: 6px;
 }
 
 .optional-tag {
@@ -1270,19 +1289,29 @@ tbody tr:last-child td {
 .input-with-buttons {
     display: flex;
     gap: 0;
+    width: 100%;
+    min-width: 0;
+    border: 1px solid var(--color-gray-300);
     border-radius: 6px;
-    transition: box-shadow 0.2s;
+    transition: box-shadow 0.2s, border-color 0.2s;
+    background-color: var(--color-gray-50);
+    overflow: hidden;
 }
 
 .input-with-buttons:focus-within {
     box-shadow: 0 0 0 3px rgba(26, 54, 93, 0.15);
+    border-color: var(--color-primary);
 }
 
 .input-with-buttons input {
     flex: 1;
+    min-width: 100px;
+    border: none;
     border-radius: 6px 0 0 6px;
-    border-right: none;
     -moz-appearance: textfield;
+    background-color: white;
+    margin: 0;
+    padding: 14px 16px;
 }
 
 .input-with-buttons input:focus {
@@ -1296,24 +1325,31 @@ tbody tr:last-child td {
     margin: 0;
 }
 
-.input-with-buttons:focus-within input {
+.input-with-buttons:focus-within {
     border-color: var(--color-primary);
 }
 
-.input-with-buttons:focus-within .increment-btn {
+.input-with-buttons:focus-within .increment-btn,
+.input-with-buttons:focus-within .btn-copy-input,
+.input-with-buttons:focus-within .btn-copy-spacer {
     border-color: var(--color-primary);
 }
 
 .increment-btn-stack {
     display: flex;
     flex-direction: column;
+    flex-shrink: 0;
+    margin: 0;
+    padding: 0;
 }
 
 .increment-btn {
     width: 28px;
     padding: 0;
-    border: 1px solid var(--color-gray-300);
-    background-color: var(--color-gray-50);
+    margin: 0;
+    border: none;
+    border-left: 1px solid var(--color-gray-300);
+    background-color: transparent;
     color: var(--color-gray-700);
     font-size: 0.75rem;
     font-weight: 600;
@@ -1323,16 +1359,17 @@ tbody tr:last-child td {
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
 }
 
 .increment-btn-top {
-    border-radius: 0 6px 0 0;
+    border-radius: 0;
     flex: 1;
-    border-bottom: none;
+    border-bottom: 1px solid var(--color-gray-300);
 }
 
 .increment-btn-bottom {
-    border-radius: 0 0 6px 0;
+    border-radius: 0;
     flex: 1;
 }
 
@@ -1344,19 +1381,53 @@ tbody tr:last-child td {
     background-color: var(--color-gray-300);
 }
 
+/* Spacer elements for consistent input widths */
+.increment-btn-spacer,
+.btn-copy-spacer {
+    visibility: hidden;
+}
+
+.increment-btn-stack.spacer-stack {
+    width: 28px;
+    display: flex;
+    flex-direction: column;
+}
+
+.increment-btn-spacer {
+    flex: 1;
+}
+
+.btn-copy-spacer {
+    padding: 0 10px;
+    margin: 0;
+    border: none;
+    border-left: 1px solid var(--color-gray-300);
+    border-radius: 0 6px 6px 0;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background-color: transparent;
+    flex-shrink: 0;
+}
+
+.btn-copy-spacer::before {
+    content: "Copy";
+}
+
 .btn-copy-input {
     position: relative;
     padding: 0 10px;
-    border: 1px solid var(--color-gray-300);
-    border-left: none;
+    margin: 0;
+    border: none;
+    border-left: 1px solid var(--color-gray-300);
     border-radius: 0 6px 6px 0;
-    background-color: var(--color-gray-50);
+    background-color: transparent;
     color: var(--color-gray-600);
     font-size: 0.75rem;
     font-weight: 600;
     cursor: pointer;
     transition: background-color 0.2s;
     overflow: hidden;
+    flex-shrink: 0;
 }
 
 .btn-copy-input:hover {
@@ -1398,6 +1469,16 @@ tbody tr:last-child td {
 
 .input-with-buttons:has(.btn-copy-input) .increment-btn-bottom {
     border-radius: 0;
+}
+
+.input-with-buttons:has(.btn-copy-input),
+.input-with-buttons:has(.btn-copy-spacer) {
+    border-radius: 6px 6px 6px 6px;
+}
+
+.input-with-buttons:has(.btn-copy-input) .btn-copy-input,
+.input-with-buttons:has(.btn-copy-spacer) .btn-copy-spacer {
+    border-radius: 0 6px 6px 0;
 }
 
 .calc-error {
@@ -1614,6 +1695,12 @@ tbody tr:last-child td {
 }
 
 /* Calculator responsive */
+@media (max-width: 1100px) {
+    .calc-inputs-row {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
 @media (max-width: 768px) {
     .calc-settings-header {
         flex-wrap: wrap;
@@ -1622,10 +1709,6 @@ tbody tr:last-child td {
 
     .calc-inputs-row {
         grid-template-columns: 1fr 1fr;
-    }
-
-    .calc-inputs-row .target-group {
-        grid-column: span 2;
     }
 
     .calc-r-levels {
@@ -1663,10 +1746,6 @@ tbody tr:last-child td {
 
     .calc-inputs-row {
         grid-template-columns: 1fr;
-    }
-
-    .calc-inputs-row .target-group {
-        grid-column: span 1;
     }
 
     .calc-cards-row {
