@@ -1044,6 +1044,7 @@ document.addEventListener('keydown', (e) => {
 // =====================
 
 const CALC_ACCOUNT_KEY = 'tradeTracker_accountSize';
+const CALC_EXPANDED_KEY = 'tradeTracker_calcExpanded';
 
 // Calculator DOM Elements
 const toggleCalculatorBtn = document.getElementById('toggleCalculatorBtn');
@@ -1076,11 +1077,15 @@ let accountSize = 0;
 // Toggle calculator panel
 toggleCalculatorBtn.addEventListener('click', () => {
     calculatorPanel.classList.toggle('hidden');
-    if (!calculatorPanel.classList.contains('hidden')) {
+    const isExpanded = !calculatorPanel.classList.contains('hidden');
+    if (isExpanded) {
         toggleCalculatorBtn.textContent = '- Hide Calculator';
     } else {
         toggleCalculatorBtn.textContent = 'Position Calculator';
     }
+    // Save state
+    localStorage.setItem(CALC_EXPANDED_KEY, isExpanded.toString());
+    syncSettingsToGist();
 });
 
 // Convert K/M shorthand notation
@@ -1682,6 +1687,15 @@ function loadAccountSize() {
     }
 }
 
+// Load calculator expanded state from localStorage
+function loadCalcExpandedState() {
+    const stored = localStorage.getItem(CALC_EXPANDED_KEY);
+    if (stored === 'true') {
+        calculatorPanel.classList.remove('hidden');
+        toggleCalculatorBtn.textContent = '- Hide Calculator';
+    }
+}
+
 // Sync settings (account size) to Gist
 let settingsSyncTimeout = null;
 function syncSettingsToGist() {
@@ -1710,7 +1724,8 @@ async function pushSettingsToGist() {
     const settings = {
         accountSize: accountSize,
         defaultRiskPercent: defaultRiskPercent,
-        defaultMaxPercent: defaultMaxPercent
+        defaultMaxPercent: defaultMaxPercent,
+        calcExpanded: localStorage.getItem(CALC_EXPANDED_KEY) === 'true'
     };
 
     const response = await fetch(`https://api.github.com/gists/${gistId}`, {
@@ -1770,6 +1785,16 @@ async function loadSettingsFromGist() {
                     btn.classList.toggle('active', parseFloat(btn.dataset.value) === defaultMaxPercent);
                 });
             }
+            if (settings.calcExpanded !== undefined) {
+                localStorage.setItem(CALC_EXPANDED_KEY, settings.calcExpanded.toString());
+                if (settings.calcExpanded) {
+                    calculatorPanel.classList.remove('hidden');
+                    toggleCalculatorBtn.textContent = '- Hide Calculator';
+                } else {
+                    calculatorPanel.classList.add('hidden');
+                    toggleCalculatorBtn.textContent = 'Position Calculator';
+                }
+            }
         }
     } catch (err) {
         console.error('Failed to load settings from Gist:', err);
@@ -1780,6 +1805,7 @@ async function loadSettingsFromGist() {
 document.addEventListener('DOMContentLoaded', async () => {
     loadAccountSize();
     loadDefaultSettings();
+    loadCalcExpandedState();
 
     // If connected to Gist, also load settings from there
     const token = localStorage.getItem(GIST_TOKEN_KEY);
