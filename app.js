@@ -1415,6 +1415,16 @@ calcFieldOrder.forEach((fieldId, index) => {
                         // Select all text for easy replacement
                         if (nextField.select) nextField.select();
                     }
+
+                    // After stop loss, scroll to show calculation results
+                    if (fieldId === 'calcStopLoss') {
+                        setTimeout(() => {
+                            const resultsCard = document.querySelector('.calc-position-card');
+                            if (resultsCard) {
+                                resultsCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            }
+                        }, 100);
+                    }
                 } else {
                     // Last field - blur to dismiss keyboard
                     field.blur();
