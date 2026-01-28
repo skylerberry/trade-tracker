@@ -43,7 +43,14 @@
         </header>
 
         <section class="calculator-section">
-            <button id="toggleCalculatorBtn" class="btn btn-calculator">Position Calculator</button>
+            <div class="calc-header-buttons">
+                <button id="toggleCalculatorBtn" class="btn btn-calculator">Position Calculator</button>
+                <button id="manageWatchlistBtn" class="btn btn-ghost btn-sm">Manage Watchlist</button>
+            </div>
+
+            <div id="watchlistBar" class="watchlist-bar hidden">
+                <!-- Pills rendered by JS -->
+            </div>
 
             <div id="calculatorPanel" class="calculator-panel hidden">
                 <h2>Position Size Calculator</h2>
@@ -111,6 +118,13 @@
                         <label for="calcTicker">Ticker <span class="optional-tag">optional</span></label>
                         <div class="input-with-buttons ticker-input-wrapper">
                             <input type="text" id="calcTicker" placeholder="e.g., AAPL" autocomplete="off">
+                            <button type="button" class="btn-chart-link" id="openTickerChart" title="Open in TradingView (Shift+Enter)" tabindex="-1" disabled>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                    <polyline points="15 3 21 3 21 9"></polyline>
+                                    <line x1="10" y1="14" x2="21" y2="3"></line>
+                                </svg>
+                            </button>
                         </div>
                     </div>
                     <div class="form-group target-group">
@@ -454,6 +468,20 @@
                     </svg>
                     Download PNG
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Watchlist Modal -->
+    <div id="watchlistModal" class="modal hidden">
+        <div class="modal-content watchlist-modal-content">
+            <button type="button" class="btn-modal-close" id="closeWatchlistModal">&times;</button>
+            <h2>Manage Watchlist</h2>
+            <p class="modal-description">Enter up to 10 tickers, separated by commas.</p>
+            <textarea id="watchlistInput" placeholder="AAPL, GOOGL, NVDA, TSLA" rows="3"></textarea>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" id="cancelWatchlistBtn">Cancel</button>
+                <button class="btn btn-primary" id="saveWatchlistBtn">Save Watchlist</button>
             </div>
         </div>
     </div>

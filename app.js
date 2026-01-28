@@ -4,6 +4,7 @@ const STORAGE_KEY = 'tradeTracker_trades';
 const GIST_TOKEN_KEY = 'tradeTracker_gistToken';
 const GIST_ID_KEY = 'tradeTracker_gistId';
 const THEME_KEY = 'tradeTracker_theme';
+const WATCHLIST_KEY = 'tradeTracker_watchlist';
 
 // Trade status constants
 const STATUS = {
@@ -70,6 +71,7 @@ let datePickers = {};
 let undoStack = [];
 let saleCount = 0;
 const MAX_UNDO = 50;
+let watchlist = [];
 
 // Flatpickr config
 const flatpickrConfig = {
@@ -1725,7 +1727,8 @@ async function pushSettingsToGist() {
         accountSize: accountSize,
         defaultRiskPercent: defaultRiskPercent,
         defaultMaxPercent: defaultMaxPercent,
-        calcExpanded: localStorage.getItem(CALC_EXPANDED_KEY) === 'true'
+        calcExpanded: localStorage.getItem(CALC_EXPANDED_KEY) === 'true',
+        watchlist: watchlist
     };
 
     const response = await fetch(`https://api.github.com/gists/${gistId}`, {
@@ -1795,6 +1798,11 @@ async function loadSettingsFromGist() {
                     toggleCalculatorBtn.textContent = 'Position Calculator';
                 }
             }
+            if (settings.watchlist && Array.isArray(settings.watchlist)) {
+                watchlist = settings.watchlist;
+                localStorage.setItem(WATCHLIST_KEY, JSON.stringify(watchlist));
+                renderWatchlistPills();
+            }
         }
     } catch (err) {
         console.error('Failed to load settings from Gist:', err);
@@ -1813,6 +1821,178 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (token && gistId) {
         await loadSettingsFromGist();
     }
+});
+
+// ============================================
+// Watchlist Feature
+// ============================================
+
+// Watchlist DOM elements
+const watchlistBar = document.getElementById('watchlistBar');
+const watchlistModal = document.getElementById('watchlistModal');
+const manageWatchlistBtn = document.getElementById('manageWatchlistBtn');
+const closeWatchlistModal = document.getElementById('closeWatchlistModal');
+const cancelWatchlistBtn = document.getElementById('cancelWatchlistBtn');
+const saveWatchlistBtn = document.getElementById('saveWatchlistBtn');
+const watchlistInput = document.getElementById('watchlistInput');
+
+// Load watchlist from localStorage
+function loadWatchlist() {
+    const stored = localStorage.getItem(WATCHLIST_KEY);
+    if (stored) {
+        try {
+            watchlist = JSON.parse(stored);
+            renderWatchlistPills();
+        } catch (e) {
+            console.error('Failed to parse watchlist:', e);
+            watchlist = [];
+        }
+    }
+}
+
+// Save watchlist to localStorage and sync to Gist
+function saveWatchlist() {
+    localStorage.setItem(WATCHLIST_KEY, JSON.stringify(watchlist));
+    renderWatchlistPills();
+    syncSettingsToGist();
+}
+
+// Open TradingView chart for a ticker
+function openTradingViewChart(ticker) {
+    // TradingView web URL format - on Windows, the desktop app will intercept this
+    const url = `https://www.tradingview.com/chart/?symbol=${encodeURIComponent(ticker)}`;
+    window.open(url, '_blank');
+}
+
+// Render watchlist pills
+function renderWatchlistPills() {
+    if (watchlist.length === 0) {
+        watchlistBar.classList.add('hidden');
+        return;
+    }
+
+    watchlistBar.classList.remove('hidden');
+    watchlistBar.innerHTML = `
+        <span class="watchlist-label">Watchlist:</span>
+        ${watchlist.map(ticker => `<button class="watchlist-pill" data-ticker="${ticker}" title="Click to fill ticker, Shift+Click to open TradingView">${ticker}</button>`).join('')}
+        <button class="watchlist-clear" id="clearWatchlist">× Clear All</button>
+    `;
+
+    // Add click listeners to pills
+    watchlistBar.querySelectorAll('.watchlist-pill').forEach(pill => {
+        pill.addEventListener('click', (e) => {
+            const ticker = pill.dataset.ticker;
+
+            // Shift+click opens TradingView chart
+            if (e.shiftKey) {
+                openTradingViewChart(ticker);
+                return;
+            }
+
+            // Regular click fills the ticker field
+            const tickerInput = document.getElementById('calcTicker');
+            if (tickerInput) {
+                tickerInput.value = ticker;
+                tickerInput.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+        });
+    });
+
+    // Clear all listener
+    const clearBtn = document.getElementById('clearWatchlist');
+    if (clearBtn) {
+        clearBtn.addEventListener('click', () => {
+            if (confirm('Clear all tickers from your watchlist?')) {
+                watchlist = [];
+                saveWatchlist();
+            }
+        });
+    }
+}
+
+// Parse tickers from input string
+function parseWatchlistInput(input) {
+    return input
+        .toUpperCase()
+        .split(/[,\s]+/)
+        .map(t => t.trim())
+        .filter(t => t.length > 0 && /^[A-Z]{1,5}$/.test(t))
+        .slice(0, 10); // Max 10 tickers
+}
+
+// Open watchlist modal
+manageWatchlistBtn.addEventListener('click', () => {
+    // Populate textarea with current watchlist
+    watchlistInput.value = watchlist.join(', ');
+    watchlistModal.classList.remove('hidden');
+    watchlistInput.focus();
+});
+
+// Close watchlist modal
+function closeWatchlistModalFn() {
+    watchlistModal.classList.add('hidden');
+}
+
+closeWatchlistModal.addEventListener('click', closeWatchlistModalFn);
+cancelWatchlistBtn.addEventListener('click', closeWatchlistModalFn);
+
+// Close modal on background click
+watchlistModal.addEventListener('click', (e) => {
+    if (e.target === watchlistModal) {
+        closeWatchlistModalFn();
+    }
+});
+
+// Close modal on ESC key
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !watchlistModal.classList.contains('hidden')) {
+        closeWatchlistModalFn();
+    }
+});
+
+// Save watchlist
+saveWatchlistBtn.addEventListener('click', () => {
+    const parsed = parseWatchlistInput(watchlistInput.value);
+
+    // Remove duplicates while preserving order
+    watchlist = [...new Set(parsed)];
+
+    saveWatchlist();
+    closeWatchlistModalFn();
+});
+
+// Initialize watchlist on page load
+document.addEventListener('DOMContentLoaded', () => {
+    loadWatchlist();
+
+    // Chart link button for ticker input
+    const openTickerChartBtn = document.getElementById('openTickerChart');
+    const calcTickerInput = document.getElementById('calcTicker');
+
+    // Enable/disable chart button based on ticker input
+    calcTickerInput.addEventListener('input', () => {
+        const ticker = calcTickerInput.value.trim();
+        openTickerChartBtn.disabled = !ticker;
+    });
+
+    // Click handler for chart button
+    openTickerChartBtn.addEventListener('click', () => {
+        const ticker = calcTickerInput.value.trim().toUpperCase();
+        if (ticker) {
+            openTradingViewChart(ticker);
+        }
+    });
+
+    // Shift+Enter to open chart from ticker input
+    calcTickerInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && e.shiftKey) {
+            e.preventDefault();
+            const ticker = calcTickerInput.value.trim().toUpperCase();
+            if (ticker) {
+                openTradingViewChart(ticker);
+            }
+        }
+    });
 });
 
 // ============================================
