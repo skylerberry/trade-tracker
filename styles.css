@@ -1110,41 +1110,17 @@ tbody tr:last-child td {
     font-size: 0.85rem;
 }
 
-/* Paste Alert Button */
+/* Paste Alert Button - matches btn-ghost style */
 .btn-paste-alert {
-    background-color: rgba(59, 130, 246, 0.1);
-    color: #3b82f6;
-    border: 1px solid rgba(59, 130, 246, 0.3);
+    background-color: transparent;
+    color: var(--color-primary);
+    border: 2px solid var(--color-primary);
     transition: all 0.2s;
 }
 
 .btn-paste-alert:hover {
-    background-color: rgba(59, 130, 246, 0.2);
-    border-color: rgba(59, 130, 246, 0.5);
-}
-
-[data-theme="dark"] .btn-paste-alert {
-    background-color: rgba(96, 165, 250, 0.15);
-    color: #93c5fd;
-    border-color: rgba(96, 165, 250, 0.3);
-}
-
-[data-theme="dark"] .btn-paste-alert:hover {
-    background-color: rgba(96, 165, 250, 0.25);
-    border-color: rgba(96, 165, 250, 0.5);
-}
-
-@media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) .btn-paste-alert {
-        background-color: rgba(96, 165, 250, 0.15);
-        color: #93c5fd;
-        border-color: rgba(96, 165, 250, 0.3);
-    }
-
-    :root:not([data-theme="light"]) .btn-paste-alert:hover {
-        background-color: rgba(96, 165, 250, 0.25);
-        border-color: rgba(96, 165, 250, 0.5);
-    }
+    background-color: var(--color-primary);
+    color: white;
 }
 
 /* Watchlist Pills Bar */
@@ -1244,7 +1220,7 @@ tbody tr:last-child td {
 
 /* Paste Alert Modal */
 .paste-alert-modal-content {
-    max-width: 500px;
+    max-width: 450px;
 }
 
 .paste-alert-textarea {
@@ -1252,11 +1228,11 @@ tbody tr:last-child td {
     padding: 12px;
     border: 1px solid var(--color-gray-300);
     border-radius: 6px;
-    font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
-    font-size: 0.9rem;
+    font-family: inherit;
+    font-size: 0.95rem;
     line-height: 1.5;
     resize: vertical;
-    min-height: 120px;
+    min-height: 140px;
     background-color: var(--color-gray-50);
     color: var(--color-gray-700);
 }
@@ -1264,25 +1240,22 @@ tbody tr:last-child td {
 .paste-alert-textarea:focus {
     outline: none;
     border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(26, 54, 93, 0.15);
 }
 
 .paste-alert-textarea.error {
     border-color: var(--color-error);
-    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15);
 }
 
 .paste-alert-textarea::placeholder {
     color: var(--color-gray-400);
-    font-style: italic;
 }
 
 .paste-alert-error {
-    margin-top: 10px;
+    margin-top: 12px;
     padding: 10px 12px;
-    background-color: rgba(220, 38, 38, 0.1);
-    border: 1px solid rgba(220, 38, 38, 0.3);
-    border-radius: 6px;
+    background-color: var(--color-gray-100);
+    border-left: 3px solid var(--color-error);
+    border-radius: 0 6px 6px 0;
     color: var(--color-error);
     font-size: 0.85rem;
 }
@@ -1293,14 +1266,8 @@ tbody tr:last-child td {
     border-color: #52525b;
 }
 
-[data-theme="dark"] .paste-alert-textarea:focus {
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-}
-
 [data-theme="dark"] .paste-alert-error {
-    background-color: rgba(239, 68, 68, 0.15);
-    border-color: rgba(239, 68, 68, 0.3);
+    background-color: #27272a;
     color: #fca5a5;
 }
 
@@ -1311,25 +1278,21 @@ tbody tr:last-child td {
         border-color: #52525b;
     }
 
-    :root:not([data-theme="light"]) .paste-alert-textarea:focus {
-        border-color: #3b82f6;
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-    }
-
     :root:not([data-theme="light"]) .paste-alert-error {
-        background-color: rgba(239, 68, 68, 0.15);
-        border-color: rgba(239, 68, 68, 0.3);
+        background-color: #27272a;
         color: #fca5a5;
     }
 }
 
-/* Toast notifications */
+/* Toast notifications - flat design */
 #toastHost {
     position: fixed;
-    right: 20px;
     bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 10px;
     z-index: 10000;
     pointer-events: none;
@@ -1337,14 +1300,14 @@ tbody tr:last-child td {
 
 .toast {
     opacity: 0;
-    transform: translateY(10px);
-    transition: all 0.3s ease;
-    background: #111827;
-    color: #fff;
-    padding: 12px 18px;
-    border-radius: 8px;
-    font-size: 14px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transform: translateY(8px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    background: var(--color-primary);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
     pointer-events: auto;
 }
 
@@ -1353,16 +1316,31 @@ tbody tr:last-child td {
     transform: translateY(0);
 }
 
+[data-theme="dark"] .toast {
+    background: var(--color-gray-700);
+    color: var(--color-gray-100);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .toast {
+        background: var(--color-gray-700);
+        color: var(--color-gray-100);
+    }
+}
+
 @media (max-width: 480px) {
     #toastHost {
-        right: 16px;
         bottom: 16px;
         left: 16px;
+        right: 16px;
+        transform: none;
     }
 
     .toast {
-        font-size: 13px;
-        padding: 10px 14px;
+        width: 100%;
+        text-align: center;
+        font-size: 0.85rem;
+        padding: 10px 16px;
     }
 }
 
