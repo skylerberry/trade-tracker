@@ -2286,14 +2286,14 @@ function renderWatchlistPills() {
             if (e.key === 'Enter') {
                 e.preventDefault();
                 const ticker = quickAddInput.value.trim().toUpperCase();
-                if (ticker && !watchlist.includes(ticker) && watchlist.length < 10) {
+                if (ticker && !watchlist.includes(ticker) && watchlist.length < 20) {
                     watchlist.push(ticker);
                     saveWatchlist();
                 } else if (watchlist.includes(ticker)) {
                     // Already exists - just clear input
                     quickAddInput.value = '';
-                } else if (watchlist.length >= 10) {
-                    showToast('Watchlist full (max 10)');
+                } else if (watchlist.length >= 20) {
+                    showToast('Watchlist full (max 20)');
                 }
             }
         });
@@ -2362,7 +2362,7 @@ function parseWatchlistInput(input) {
         .split(/[,\s]+/)
         .map(t => t.trim())
         .filter(t => t.length > 0 && /^[A-Z]{1,5}$/.test(t))
-        .slice(0, 10); // Max 10 tickers
+        .slice(0, 20); // Max 20 tickers
 }
 
 // Open watchlist modal
