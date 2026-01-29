@@ -1425,18 +1425,21 @@ tbody tr:last-child td {
     background: var(--color-primary-hover);
 }
 
-/* Clear Calculator Button - below settings header */
+/* Clear Calculator Row & Button */
+.calc-clear-row {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
 .btn-clear-calculator {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 20px;
-    font-size: 0.85rem;
+    padding: 6px 16px;
+    font-size: 0.8rem;
     font-weight: 500;
     border: 1px solid var(--color-gray-300);
-    border-radius: 6px;
+    border-radius: 4px;
     background: transparent;
-    color: var(--color-gray-500);
+    color: var(--color-gray-400);
     cursor: pointer;
     transition: all 0.2s;
 }
