@@ -1286,10 +1286,19 @@ tbody tr:last-child td {
     transition: all 0.2s;
 }
 
-.btn-clear-calc:hover {
+.btn-clear-calc:hover,
+.btn-clear-calc:active {
     border-color: var(--color-error);
     color: var(--color-error);
     background: rgba(220, 38, 38, 0.05);
+}
+
+@media (hover: none) {
+    .btn-clear-calc:hover {
+        border-color: var(--color-gray-300);
+        color: var(--color-gray-500);
+        background: transparent;
+    }
 }
 
 [data-theme="dark"] .btn-clear-calc {
@@ -1297,10 +1306,19 @@ tbody tr:last-child td {
     color: #a1a1aa;
 }
 
-[data-theme="dark"] .btn-clear-calc:hover {
+[data-theme="dark"] .btn-clear-calc:hover,
+[data-theme="dark"] .btn-clear-calc:active {
     border-color: #ef4444;
     color: #ef4444;
     background: rgba(239, 68, 68, 0.1);
+}
+
+@media (hover: none) {
+    [data-theme="dark"] .btn-clear-calc:hover {
+        border-color: #52525b;
+        color: #a1a1aa;
+        background: transparent;
+    }
 }
 
 @media (prefers-color-scheme: dark) {
@@ -1309,10 +1327,19 @@ tbody tr:last-child td {
         color: #a1a1aa;
     }
 
-    :root:not([data-theme="light"]) .btn-clear-calc:hover {
+    :root:not([data-theme="light"]) .btn-clear-calc:hover,
+    :root:not([data-theme="light"]) .btn-clear-calc:active {
         border-color: #ef4444;
         color: #ef4444;
         background: rgba(239, 68, 68, 0.1);
+    }
+}
+
+@media (prefers-color-scheme: dark) and (hover: none) {
+    :root:not([data-theme="light"]) .btn-clear-calc:hover {
+        border-color: #52525b;
+        color: #a1a1aa;
+        background: transparent;
     }
 }
 
