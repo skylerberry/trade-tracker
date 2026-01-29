@@ -1406,11 +1406,6 @@ tbody tr:last-child td {
     font-size: 1.25rem;
 }
 
-.calc-title-actions {
-    display: flex;
-    gap: 8px;
-}
-
 .btn-calc-action {
     padding: 6px 12px;
     font-size: 0.8rem;
@@ -1426,11 +1421,6 @@ tbody tr:last-child td {
 .btn-calc-action:hover {
     border-color: var(--color-primary);
     color: var(--color-primary);
-}
-
-.btn-calc-clear:hover {
-    border-color: var(--color-error);
-    color: var(--color-error);
 }
 
 @media (hover: none) {
@@ -1450,11 +1440,6 @@ tbody tr:last-child td {
     color: #93c5fd;
 }
 
-[data-theme="dark"] .btn-calc-clear:hover {
-    border-color: #ef4444;
-    color: #ef4444;
-}
-
 @media (hover: none) {
     [data-theme="dark"] .btn-calc-action:hover {
         border-color: #52525b;
@@ -1472,15 +1457,74 @@ tbody tr:last-child td {
         border-color: #93c5fd;
         color: #93c5fd;
     }
+}
 
-    :root:not([data-theme="light"]) .btn-calc-clear:hover {
+@media (prefers-color-scheme: dark) and (hover: none) {
+    :root:not([data-theme="light"]) .btn-calc-action:hover {
+        border-color: #52525b;
+        color: #a1a1aa;
+    }
+}
+
+/* Clear Calculator Button - below settings header */
+.btn-clear-calculator {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    border: 1px solid var(--color-gray-300);
+    border-radius: 6px;
+    background: transparent;
+    color: var(--color-gray-500);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-clear-calculator:hover {
+    border-color: var(--color-error);
+    color: var(--color-error);
+}
+
+@media (hover: none) {
+    .btn-clear-calculator:hover {
+        border-color: var(--color-gray-300);
+        color: var(--color-gray-500);
+    }
+}
+
+[data-theme="dark"] .btn-clear-calculator {
+    border-color: #52525b;
+    color: #a1a1aa;
+}
+
+[data-theme="dark"] .btn-clear-calculator:hover {
+    border-color: #ef4444;
+    color: #ef4444;
+}
+
+@media (hover: none) {
+    [data-theme="dark"] .btn-clear-calculator:hover {
+        border-color: #52525b;
+        color: #a1a1aa;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .btn-clear-calculator {
+        border-color: #52525b;
+        color: #a1a1aa;
+    }
+
+    :root:not([data-theme="light"]) .btn-clear-calculator:hover {
         border-color: #ef4444;
         color: #ef4444;
     }
 }
 
 @media (prefers-color-scheme: dark) and (hover: none) {
-    :root:not([data-theme="light"]) .btn-calc-action:hover {
+    :root:not([data-theme="light"]) .btn-clear-calculator:hover {
         border-color: #52525b;
         color: #a1a1aa;
     }
