@@ -1048,6 +1048,9 @@ document.addEventListener('keydown', (e) => {
 const CALC_ACCOUNT_KEY = 'tradeTracker_accountSize';
 const CALC_EXPANDED_KEY = 'tradeTracker_calcExpanded';
 
+// Flag to prevent syncing during initial load
+let isLoadingSettings = false;
+
 // Calculator DOM Elements
 const toggleCalculatorBtn = document.getElementById('toggleCalculatorBtn');
 const calculatorPanel = document.getElementById('calculatorPanel');
@@ -1760,6 +1763,9 @@ function loadCalcExpandedState() {
 // Sync settings (account size) to Gist
 let settingsSyncTimeout = null;
 function syncSettingsToGist() {
+    // Don't sync while loading settings from Gist
+    if (isLoadingSettings) return;
+
     const token = localStorage.getItem(GIST_TOKEN_KEY);
     const gistId = localStorage.getItem(GIST_ID_KEY);
 
@@ -1819,6 +1825,8 @@ async function loadSettingsFromGist() {
     const gistId = localStorage.getItem(GIST_ID_KEY);
 
     if (!token || !gistId) return;
+
+    isLoadingSettings = true;
 
     try {
         const response = await fetch(`https://api.github.com/gists/${gistId}`, {
@@ -1880,6 +1888,8 @@ async function loadSettingsFromGist() {
         }
     } catch (err) {
         console.error('Failed to load settings from Gist:', err);
+    } finally {
+        isLoadingSettings = false;
     }
 }
 
