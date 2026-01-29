@@ -2125,10 +2125,11 @@ function applyAlertToCalculator(data) {
     }
 
     // Scroll to entry price area on mobile for better visibility
+    // Target the Clear Calculator button (slightly above entry price) for better framing
     setTimeout(() => {
-        const entryPriceInput = document.getElementById('calcEntryPrice');
-        if (entryPriceInput) {
-            entryPriceInput.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        const clearBtn = document.getElementById('clearCalculatorBtn');
+        if (clearBtn) {
+            clearBtn.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
     }, 150);
 }
