@@ -45,7 +45,6 @@
         <section class="calculator-section">
             <div class="calc-header-buttons">
                 <button id="toggleCalculatorBtn" class="btn btn-calculator">Position Calculator</button>
-                <button id="pasteAlertBtn" class="btn btn-paste-alert btn-sm">📋 Paste Alert</button>
                 <button id="manageWatchlistBtn" class="btn btn-ghost btn-sm">Manage Watchlist</button>
             </div>
 
@@ -59,7 +58,10 @@
             <div id="calculatorPanel" class="calculator-panel hidden">
                 <div class="calc-title-row">
                     <h2>Position Size Calculator</h2>
-                    <button type="button" class="btn-clear-calc" id="clearCalculatorBtn" title="Clear all fields">Clear</button>
+                    <div class="calc-title-actions">
+                        <button type="button" class="btn-calc-action" id="pasteAlertBtn" title="Import Discord alert">Paste Alert</button>
+                        <button type="button" class="btn-calc-action btn-calc-clear" id="clearCalculatorBtn" title="Clear all fields">Clear</button>
+                    </div>
                 </div>
 
                 <!-- Settings Header -->
