@@ -1428,7 +1428,8 @@ document.getElementById('clearCalculatorBtn').addEventListener('click', () => {
 });
 
 // Mobile keyboard navigation - Enter key moves to next field
-const calcFieldOrder = ['calcAccountSize', 'calcEntryPrice', 'calcStopLoss', 'calcTicker', 'calcTargetPrice'];
+// Skip Ticker (optional) - go from Stop Loss straight to results
+const calcFieldOrder = ['calcAccountSize', 'calcEntryPrice', 'calcStopLoss'];
 
 calcFieldOrder.forEach((fieldId, index) => {
     const field = document.getElementById(fieldId);
@@ -1445,20 +1446,29 @@ calcFieldOrder.forEach((fieldId, index) => {
                         // Select all text for easy replacement
                         if (nextField.select) nextField.select();
                     }
-
-                    // After stop loss, scroll to show calculation results
-                    if (fieldId === 'calcStopLoss') {
-                        setTimeout(() => {
-                            const resultsCard = document.querySelector('.calc-position-card');
-                            if (resultsCard) {
-                                resultsCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                            }
-                        }, 100);
-                    }
                 } else {
-                    // Last field - blur to dismiss keyboard
+                    // After stop loss - dismiss keyboard and scroll to results
                     field.blur();
+                    setTimeout(() => {
+                        const resultsCard = document.querySelector('.calc-position-card');
+                        if (resultsCard) {
+                            resultsCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    }, 100);
                 }
+            }
+        });
+    }
+});
+
+// Ticker and Target Price - Enter dismisses keyboard
+['calcTicker', 'calcTargetPrice'].forEach(fieldId => {
+    const field = document.getElementById(fieldId);
+    if (field) {
+        field.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                field.blur();
             }
         });
     }
