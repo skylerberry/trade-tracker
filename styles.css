@@ -1444,6 +1444,30 @@ tbody tr:last-child td {
     transition: all 0.2s;
 }
 
+/* Desktop: show short text, hide full text */
+.btn-clear-calculator .clear-text-full {
+    display: none;
+}
+
+/* Mobile: full-width Clear Calculator button */
+@media (max-width: 768px) {
+    .btn-clear-calculator {
+        width: 100%;
+        padding: 10px;
+        font-size: 0.85rem;
+        border-radius: 6px;
+        color: var(--color-gray-500);
+    }
+
+    .btn-clear-calculator .clear-text-short {
+        display: none;
+    }
+
+    .btn-clear-calculator .clear-text-full {
+        display: inline;
+    }
+}
+
 .btn-clear-calculator:hover {
     border-color: var(--color-error);
     color: var(--color-error);
