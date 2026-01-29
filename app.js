@@ -2468,6 +2468,12 @@ function updateExportState() {
 
     exportTradeCardBtn.disabled = !hasValidData;
 
+    // Enable/disable Add to Tracker button
+    const addToTrackerBtn = document.getElementById('addToTrackerBtn');
+    if (addToTrackerBtn) {
+        addToTrackerBtn.disabled = !hasValidData;
+    }
+
     // Update tooltip based on what's missing
     if (!hasValidData) {
         const missing = [];
@@ -2543,6 +2549,44 @@ exportTradeCardBtn.addEventListener('click', () => {
 
     updateTradeCardPreview();
     exportModal.classList.remove('hidden');
+});
+
+// Add to Tracker - populate trade form with calculator values
+document.getElementById('addToTrackerBtn')?.addEventListener('click', () => {
+    if (!currentCalcState.hasValidData) return;
+
+    const state = currentCalcState;
+
+    // Reset form and set to add mode
+    resetForm();
+    editingId = null;
+    formTitle.textContent = 'Add New Trade';
+
+    // Populate form fields
+    document.getElementById('ticker').value = state.ticker;
+    document.getElementById('entryPrice').value = state.entryPrice.toFixed(2);
+    document.getElementById('initialSL').value = state.stopLoss.toFixed(2);
+    document.getElementById('currentSL').value = state.stopLoss.toFixed(2);
+
+    // Set entry date to today
+    const today = new Date().toISOString().split('T')[0];
+    if (datePickers.entryDate) {
+        datePickers.entryDate.setDate(today, true);
+    } else {
+        document.getElementById('entryDate').value = today;
+    }
+
+    // Set status to open
+    document.getElementById('status').value = 'open';
+
+    // Show the form
+    tradeForm.classList.remove('hidden');
+    toggleFormBtn.textContent = '- Hide Form';
+
+    // Scroll to form
+    tradeForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    showToast('Trade details added to form');
 });
 
 // Close export modal

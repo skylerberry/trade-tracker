@@ -2121,6 +2121,52 @@ tbody tr:last-child td {
     color: var(--color-success-light);
 }
 
+/* Add to Tracker Button */
+.btn-add-to-tracker {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    margin-top: 15px;
+    padding: 14px 20px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    background: var(--color-success);
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-add-to-tracker:hover:not(:disabled) {
+    background: var(--color-success-hover);
+}
+
+.btn-add-to-tracker:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+[data-theme="dark"] .btn-add-to-tracker {
+    background: #22c55e;
+}
+
+[data-theme="dark"] .btn-add-to-tracker:hover:not(:disabled) {
+    background: #16a34a;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .btn-add-to-tracker {
+        background: #22c55e;
+    }
+
+    :root:not([data-theme="light"]) .btn-add-to-tracker:hover:not(:disabled) {
+        background: #16a34a;
+    }
+}
+
 /* Export Trade Card Button */
 .btn-export-card {
     position: absolute;
