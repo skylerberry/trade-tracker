@@ -1954,6 +1954,14 @@ function renderWatchlistPills() {
 
     // Add click listeners to pills
     watchlistBar.querySelectorAll('.watchlist-pill').forEach(pill => {
+        // iOS keyboard trick: focus proxy input on touchstart to "prime" the keyboard
+        pill.addEventListener('touchstart', () => {
+            const proxyInput = document.getElementById('iosKeyboardProxy');
+            if (proxyInput) {
+                proxyInput.focus();
+            }
+        }, { passive: true });
+
         pill.addEventListener('click', (e) => {
             const ticker = pill.dataset.ticker;
 
@@ -1969,13 +1977,11 @@ function renderWatchlistPills() {
                 tickerInput.value = ticker;
                 tickerInput.dispatchEvent(new Event('input', { bubbles: true }));
 
-                // On mobile, focus entry price immediately (must be synchronous for iOS keyboard)
+                // Focus entry price - keyboard should already be primed from touchstart
                 const entryPriceInput = document.getElementById('calcEntryPrice');
                 if (entryPriceInput) {
-                    // Focus synchronously to trigger iOS keyboard
                     entryPriceInput.focus();
                     entryPriceInput.select();
-                    // Then scroll into view
                     entryPriceInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }
             }

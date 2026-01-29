@@ -1161,6 +1161,16 @@ tbody tr:last-child td {
     color: var(--color-error);
 }
 
+/* Hidden proxy input for iOS keyboard trick */
+.ios-keyboard-proxy {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+}
+
 /* Watchlist Modal */
 .watchlist-modal-content {
     max-width: 400px;
