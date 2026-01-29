@@ -1931,6 +1931,16 @@ function renderWatchlistPills() {
             if (tickerInput) {
                 tickerInput.value = ticker;
                 tickerInput.dispatchEvent(new Event('input', { bubbles: true }));
+
+                // On mobile, scroll to entry price and focus it for quick input
+                const entryPriceInput = document.getElementById('calcEntryPrice');
+                if (entryPriceInput) {
+                    setTimeout(() => {
+                        entryPriceInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        entryPriceInput.focus();
+                        entryPriceInput.select();
+                    }, 100);
+                }
             }
         });
     });
