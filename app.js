@@ -2037,7 +2037,7 @@ function showToast(message) {
     setTimeout(() => {
         el.classList.remove('visible');
         setTimeout(() => el.remove(), 250);
-    }, 2400);
+    }, 3500);
 }
 
 // Paste Alert Modal
