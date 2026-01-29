@@ -1932,14 +1932,14 @@ function renderWatchlistPills() {
                 tickerInput.value = ticker;
                 tickerInput.dispatchEvent(new Event('input', { bubbles: true }));
 
-                // On mobile, scroll to entry price and focus it for quick input
+                // On mobile, focus entry price immediately (must be synchronous for iOS keyboard)
                 const entryPriceInput = document.getElementById('calcEntryPrice');
                 if (entryPriceInput) {
-                    setTimeout(() => {
-                        entryPriceInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        entryPriceInput.focus();
-                        entryPriceInput.select();
-                    }, 100);
+                    // Focus synchronously to trigger iOS keyboard
+                    entryPriceInput.focus();
+                    entryPriceInput.select();
+                    // Then scroll into view
+                    entryPriceInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }
             }
         });
