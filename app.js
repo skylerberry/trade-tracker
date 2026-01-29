@@ -163,6 +163,19 @@ function initDatePickers() {
 const salesContainer = document.getElementById('salesContainer');
 const addSaleBtn = document.getElementById('addSaleBtn');
 
+// R-level defaults: Sale 1 = 1R @ 1/2, Sale 2 = 2R @ 1/3, Sale 3 = 3R @ 1/4
+const SALE_DEFAULTS = {
+    1: { portion: '1/2', rLevel: 1 },
+    2: { portion: '1/3', rLevel: 2 },
+    3: { portion: '1/4', rLevel: 3 }
+};
+
+function calculateRLevelPrice(entry, stop, rLevel) {
+    // R = entry + (entry - stop) * rLevel
+    const riskPerShare = entry - stop;
+    return entry + (riskPerShare * rLevel);
+}
+
 function addSale(saleData = null) {
     saleCount++;
     const saleId = saleCount;
@@ -212,6 +225,24 @@ function addSale(saleData = null) {
         document.getElementById(`sale${saleId}Portion`).value = saleData.portion || '';
         if (saleData.price) document.getElementById(`sale${saleId}Price`).value = saleData.price;
         if (saleData.date) datePickers[`sale${saleId}Date`].setDate(saleData.date);
+    } else {
+        // Auto-fill defaults based on sale number (only for new sales, not editing)
+        const saleNumber = salesContainer.querySelectorAll('.sale-row').length;
+        const defaults = SALE_DEFAULTS[saleNumber];
+
+        if (defaults) {
+            // Set default portion
+            document.getElementById(`sale${saleId}Portion`).value = defaults.portion;
+
+            // Calculate and set R-level price if entry and stop are available
+            const entry = parseFloat(document.getElementById('entryPrice').value);
+            const stop = parseFloat(document.getElementById('initialSL').value);
+
+            if (entry && stop && entry > stop) {
+                const rPrice = calculateRLevelPrice(entry, stop, defaults.rLevel);
+                document.getElementById(`sale${saleId}Price`).value = rPrice.toFixed(2);
+            }
+        }
     }
 
     updateSaleNumbers();
