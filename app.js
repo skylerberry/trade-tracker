@@ -2124,13 +2124,13 @@ function applyAlertToCalculator(data) {
         localStorage.setItem(CALC_EXPANDED_KEY, 'true');
     }
 
-    // Scroll to results
+    // Scroll to entry price area on mobile for better visibility
     setTimeout(() => {
-        const resultsCard = document.querySelector('.calc-position-card');
-        if (resultsCard) {
-            resultsCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        const entryPriceInput = document.getElementById('calcEntryPrice');
+        if (entryPriceInput) {
+            entryPriceInput.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
-    }, 100);
+    }, 150);
 }
 
 // Smart paste - try clipboard first, fall back to modal
