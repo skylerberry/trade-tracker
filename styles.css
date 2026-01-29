@@ -1432,6 +1432,16 @@ tbody tr:last-child td {
     margin-bottom: 15px;
 }
 
+/* Mobile clear button - hidden on desktop */
+.calc-clear-mobile {
+    display: none;
+}
+
+/* Desktop clear button - shown on desktop */
+.calc-clear-desktop {
+    display: flex;
+}
+
 .btn-clear-calculator {
     padding: 6px 16px;
     font-size: 0.8rem;
@@ -1444,14 +1454,14 @@ tbody tr:last-child td {
     transition: all 0.2s;
 }
 
-/* Desktop: show short text, hide full text */
-.btn-clear-calculator .clear-text-full {
-    display: none;
-}
-
-/* Mobile: full-width Clear Calculator button */
+/* Mobile: show mobile button (above inputs), hide desktop button */
 @media (max-width: 768px) {
-    .btn-clear-calculator {
+    .calc-clear-mobile {
+        display: flex;
+        margin-bottom: 20px;
+    }
+
+    .calc-clear-mobile .btn-clear-calculator {
         width: 100%;
         padding: 10px;
         font-size: 0.85rem;
@@ -1459,12 +1469,8 @@ tbody tr:last-child td {
         color: var(--color-gray-500);
     }
 
-    .btn-clear-calculator .clear-text-short {
+    .calc-clear-desktop {
         display: none;
-    }
-
-    .btn-clear-calculator .clear-text-full {
-        display: inline;
     }
 }
 

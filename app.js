@@ -1413,8 +1413,8 @@ calcFieldInputs.forEach(input => {
     }
 });
 
-// Clear calculator button
-document.getElementById('clearCalculatorBtn').addEventListener('click', () => {
+// Clear calculator function
+function clearCalculator() {
     calcEntryPrice.value = '';
     calcStopLoss.value = '';
     calcTargetPrice.value = '';
@@ -1425,7 +1425,11 @@ document.getElementById('clearCalculatorBtn').addEventListener('click', () => {
     if (typeof updateExportState === 'function') {
         updateExportState();
     }
-});
+}
+
+// Clear calculator buttons (desktop and mobile)
+document.getElementById('clearCalculatorBtn')?.addEventListener('click', clearCalculator);
+document.getElementById('clearCalculatorBtnMobile')?.addEventListener('click', clearCalculator);
 
 // Mobile keyboard navigation - Enter key moves to next field
 // Skip Ticker (optional) - go from Stop Loss straight to results
@@ -2124,11 +2128,11 @@ function applyAlertToCalculator(data) {
         localStorage.setItem(CALC_EXPANDED_KEY, 'true');
     }
 
-    // Scroll to show results cards fully visible after paste
+    // Scroll to show calc fields and position card after paste
     setTimeout(() => {
-        const resultsRow = document.querySelector('.calc-cards-row');
-        if (resultsRow) {
-            resultsRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        const inputsRow = document.querySelector('.calc-inputs-row');
+        if (inputsRow) {
+            inputsRow.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
     }, 150);
 }
