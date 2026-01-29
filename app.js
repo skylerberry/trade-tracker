@@ -1977,6 +1977,14 @@ function renderWatchlistPills() {
                 tickerInput.value = ticker;
                 tickerInput.dispatchEvent(new Event('input', { bubbles: true }));
 
+                // Expand calculator if collapsed
+                if (calculatorPanel.classList.contains('hidden')) {
+                    calculatorPanel.classList.remove('hidden');
+                    toggleCalculatorBtn.textContent = '- Hide Calculator';
+                    localStorage.setItem(CALC_EXPANDED_KEY, 'true');
+                    syncSettingsToGist();
+                }
+
                 // Focus entry price - keyboard should already be primed from touchstart
                 const entryPriceInput = document.getElementById('calcEntryPrice');
                 if (entryPriceInput) {
