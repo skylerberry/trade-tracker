@@ -1080,7 +1080,7 @@ const calcRRMultiple = document.getElementById('calcRRMultiple');
 let accountSize = 0;
 
 // Toggle calculator panel
-toggleCalculatorBtn.addEventListener('click', () => {
+toggleCalculatorBtn.addEventListener('click', async () => {
     calculatorPanel.classList.toggle('hidden');
     const isExpanded = !calculatorPanel.classList.contains('hidden');
     if (isExpanded) {
@@ -1090,7 +1090,12 @@ toggleCalculatorBtn.addEventListener('click', () => {
     }
     // Save state
     localStorage.setItem(CALC_EXPANDED_KEY, isExpanded.toString());
-    syncSettingsToGist();
+    // Push immediately (no debounce) so collapse state persists on quick reload
+    try {
+        await pushSettingsToGist();
+    } catch (err) {
+        console.error('Failed to sync expanded state:', err);
+    }
 });
 
 // Convert K/M shorthand notation
