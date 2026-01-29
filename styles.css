@@ -2303,7 +2303,7 @@ tbody tr:last-child td {
 }
 
 .trade-card.privacy-mode .trade-card-footer {
-    justify-content: flex-end;
+    justify-content: center;
 }
 
 .trade-card-account {
@@ -2317,9 +2317,9 @@ tbody tr:last-child td {
 }
 
 .trade-card-watermark {
-    font-size: 0.6rem;
+    font-size: 0.65rem;
     color: var(--color-gray-400);
-    text-align: right;
+    text-align: center;
 }
 
 /* Calculator responsive */

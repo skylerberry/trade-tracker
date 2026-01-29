@@ -423,10 +423,14 @@
                         <div class="trade-card-ticker" id="cardTicker">AAPL</div>
                         <div class="trade-card-date" id="cardDate">Jan 28, 2026</div>
                     </div>
-                    <div class="trade-card-main">
+                    <div class="trade-card-main" id="cardMainNormal">
                         <div class="trade-card-shares" id="cardShares">150</div>
                         <div class="trade-card-shares-label">Shares</div>
                         <div class="trade-card-position" id="cardPosition">$27,825 position</div>
+                    </div>
+                    <div class="trade-card-main hidden" id="cardMainPrivacy">
+                        <div class="trade-card-shares" id="cardPercentAccountMain">52.9%</div>
+                        <div class="trade-card-shares-label">of Account</div>
                     </div>
                     <div class="trade-card-details" id="cardDetails">
                         <div class="trade-card-detail">
@@ -451,7 +455,7 @@
                         <div class="trade-card-account" id="cardAccountRow">
                             Account: <span class="trade-card-account-value" id="cardAccount">$52,500</span>
                         </div>
-                        <div class="trade-card-watermark">Skyler's Trade Tracker</div>
+                        <div class="trade-card-watermark">calc.skyler.tools</div>
                     </div>
                 </div>
             </div>

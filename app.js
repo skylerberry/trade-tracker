@@ -2500,34 +2500,40 @@ function updateTradeCardPreview() {
     const state = currentCalcState;
     const privacyMode = privacyModeCheckbox.checked;
 
-    // Update card content
+    // Update card content (always shown)
     document.getElementById('cardTicker').textContent = state.ticker;
     document.getElementById('cardDate').textContent = formatCardDate(new Date());
-    document.getElementById('cardShares').textContent = formatNumber(state.shares);
     document.getElementById('cardEntry').textContent = formatCurrency(state.entryPrice);
     document.getElementById('cardStop').textContent = formatCurrency(state.stopLoss);
     document.getElementById('cardRisk').textContent = state.riskPercent + '%';
 
-    // Privacy mode elements
-    const positionEl = document.getElementById('cardPosition');
+    // Elements for mode switching
+    const mainNormal = document.getElementById('cardMainNormal');
+    const mainPrivacy = document.getElementById('cardMainPrivacy');
     const percentAccountRow = document.getElementById('cardPercentAccountRow');
-    const percentAccountEl = document.getElementById('cardPercentAccount');
     const accountRowEl = document.getElementById('cardAccountRow');
-    const accountEl = document.getElementById('cardAccount');
 
     if (privacyMode) {
         tradeCardPreview.classList.add('privacy-mode');
-        positionEl.style.display = 'none';
+        // Hide normal main, show privacy main
+        mainNormal.classList.add('hidden');
+        mainPrivacy.classList.remove('hidden');
+        document.getElementById('cardPercentAccountMain').textContent = state.percentOfAccount.toFixed(1) + '%';
+        // Hide duplicate % of account row and account footer
         percentAccountRow.style.display = 'none';
         accountRowEl.style.display = 'none';
     } else {
         tradeCardPreview.classList.remove('privacy-mode');
-        positionEl.style.display = '';
-        positionEl.textContent = formatCurrency(state.positionSize) + ' position';
+        // Show normal main, hide privacy main
+        mainNormal.classList.remove('hidden');
+        mainPrivacy.classList.add('hidden');
+        document.getElementById('cardShares').textContent = formatNumber(state.shares);
+        document.getElementById('cardPosition').textContent = formatCurrency(state.positionSize) + ' position';
+        // Show % of account row and account footer
         percentAccountRow.style.display = '';
-        percentAccountEl.textContent = state.percentOfAccount.toFixed(1) + '%';
+        document.getElementById('cardPercentAccount').textContent = state.percentOfAccount.toFixed(1) + '%';
         accountRowEl.style.display = '';
-        accountEl.textContent = formatCurrency(state.accountSize);
+        document.getElementById('cardAccount').textContent = formatCurrency(state.accountSize);
     }
 }
 
