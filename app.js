@@ -2124,12 +2124,11 @@ function applyAlertToCalculator(data) {
         localStorage.setItem(CALC_EXPANDED_KEY, 'true');
     }
 
-    // Scroll to entry price area on mobile for better visibility
-    // Target the Clear Calculator button (slightly above entry price) for better framing
+    // Scroll to show results cards fully visible after paste
     setTimeout(() => {
-        const clearBtn = document.getElementById('clearCalculatorBtn');
-        if (clearBtn) {
-            clearBtn.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        const resultsRow = document.querySelector('.calc-cards-row');
+        if (resultsRow) {
+            resultsRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
     }, 150);
 }
