@@ -45,6 +45,7 @@
         <section class="calculator-section">
             <div class="calc-header-buttons">
                 <button id="toggleCalculatorBtn" class="btn btn-calculator">Position Calculator</button>
+                <button id="pasteAlertBtn" class="btn btn-paste-alert btn-sm">📋 Paste Alert</button>
                 <button id="manageWatchlistBtn" class="btn btn-ghost btn-sm">Manage Watchlist</button>
             </div>
 
@@ -474,6 +475,24 @@
                     </svg>
                     Download PNG
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Paste Alert Modal -->
+    <div id="pasteAlertModal" class="modal hidden">
+        <div class="modal-content paste-alert-modal-content">
+            <button type="button" class="btn-modal-close" id="closePasteAlertModal">&times;</button>
+            <h2>Import Discord Alert</h2>
+            <p class="modal-description">Paste a Discord trade alert to auto-fill the calculator.</p>
+            <textarea id="pasteAlertInput" class="paste-alert-textarea" placeholder="Adding $TSLA shares @ 243.10
+Stop loss @ 237.90
+Risking 1%
+@everyone" rows="5"></textarea>
+            <div id="pasteAlertError" class="paste-alert-error hidden"></div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" id="cancelPasteAlertBtn">Cancel</button>
+                <button class="btn btn-primary" id="importAlertBtn" disabled>Import</button>
             </div>
         </div>
     </div>

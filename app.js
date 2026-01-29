@@ -1923,6 +1923,297 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 // ============================================
+// Paste Alert Feature
+// ============================================
+
+// Discord Alert Parser
+function parseDiscordAlert(rawText) {
+    if (!rawText || typeof rawText !== 'string') {
+        throw new Error('Please paste a Discord alert first');
+    }
+
+    const text = rawText.trim();
+
+    // Helper function to convert string to number, removing commas
+    const toNumber = (str) => {
+        const cleaned = String(str).replace(/[, ]+/g, '');
+        return parseFloat(cleaned);
+    };
+
+    // Helper function to extract and normalize ticker
+    const extractTicker = (text) => {
+        const tickerMatch = text.match(/\$([A-Z0-9.-]+)/i);
+        if (tickerMatch) {
+            return tickerMatch[1].toUpperCase();
+        }
+        return null;
+    };
+
+    // Regex patterns to match various Discord alert formats
+    const patterns = [
+        // Pattern 1: Standard format
+        {
+            entry: /(?:adding|add|starter).*?(?:\$[A-Z]+)?.*?@\s*\$?([0-9,]+\.?[0-9]*)/i,
+            stop: /(?:stop\s*(?:loss)?|sl).*?@\s*\$?([0-9,]+\.?[0-9]*)/i,
+            risk: /(?:risk(?:ing)?)[^\d]*?([0-9]+(?:\.[0-9]+)?)\s*%/i
+        },
+        // Pattern 2: Multi-line format
+        {
+            entry: /(?:adding|add|starter)[\s\S]*?@\s*\$?([0-9,]+\.?[0-9]*)/i,
+            stop: /(?:stop[\s\S]*?loss|sl)[\s\S]*?@\s*\$?([0-9,]+\.?[0-9]*)/i,
+            risk: /(?:risk(?:ing)?)[\s\S]*?([0-9]+(?:\.[0-9]+)?)\s*%/i
+        }
+    ];
+
+    let entry, stop, riskPct, ticker;
+
+    // Extract ticker first
+    ticker = extractTicker(text);
+
+    // Try each pattern until we find a match
+    for (const pattern of patterns) {
+        const entryMatch = text.match(pattern.entry);
+        const stopMatch = text.match(pattern.stop);
+        const riskMatch = text.match(pattern.risk);
+
+        if (entryMatch) entry = toNumber(entryMatch[1]);
+        if (stopMatch) stop = toNumber(stopMatch[1]);
+        if (riskMatch) riskPct = parseFloat(riskMatch[1]);
+
+        // If we found both required values, break
+        if (!isNaN(entry) && !isNaN(stop)) {
+            break;
+        }
+    }
+
+    // Validation
+    if (isNaN(entry) || entry <= 0) {
+        throw new Error('Could not find a valid entry price. Look for "Adding @ $XX.XX" format.');
+    }
+
+    if (isNaN(stop) || stop <= 0) {
+        throw new Error('Could not find a valid stop loss. Look for "Stop loss @ $XX.XX" format.');
+    }
+
+    if (stop >= entry) {
+        throw new Error('Stop loss must be below entry price (long positions only).');
+    }
+
+    if (riskPct !== undefined) {
+        if (isNaN(riskPct) || riskPct <= 0 || riskPct > 100) {
+            throw new Error('Risk percentage must be between 0 and 100.');
+        }
+
+        if (riskPct > 10) {
+            throw new Error('Risk percentage seems high (>10%). Please verify.');
+        }
+    }
+
+    return {
+        entry: entry,
+        stop: stop,
+        riskPct: riskPct,
+        ticker: ticker
+    };
+}
+
+// Toast notification system
+function ensureToastHost() {
+    if (!document.getElementById('toastHost')) {
+        const host = document.createElement('div');
+        host.id = 'toastHost';
+        document.body.appendChild(host);
+    }
+}
+
+function showToast(message) {
+    ensureToastHost();
+    const host = document.getElementById('toastHost');
+    const el = document.createElement('div');
+    el.className = 'toast';
+    el.textContent = message;
+    host.appendChild(el);
+    requestAnimationFrame(() => el.classList.add('visible'));
+    setTimeout(() => {
+        el.classList.remove('visible');
+        setTimeout(() => el.remove(), 250);
+    }, 2400);
+}
+
+// Paste Alert Modal
+const pasteAlertModal = document.getElementById('pasteAlertModal');
+const pasteAlertBtn = document.getElementById('pasteAlertBtn');
+const closePasteAlertModalBtn = document.getElementById('closePasteAlertModal');
+const cancelPasteAlertBtn = document.getElementById('cancelPasteAlertBtn');
+const importAlertBtn = document.getElementById('importAlertBtn');
+const pasteAlertInput = document.getElementById('pasteAlertInput');
+const pasteAlertError = document.getElementById('pasteAlertError');
+
+function openPasteAlertModal() {
+    pasteAlertInput.value = '';
+    pasteAlertError.classList.add('hidden');
+    pasteAlertError.textContent = '';
+    pasteAlertInput.classList.remove('error');
+    importAlertBtn.disabled = true;
+    pasteAlertModal.classList.remove('hidden');
+    pasteAlertInput.focus();
+}
+
+function closePasteAlertModalFn() {
+    pasteAlertModal.classList.add('hidden');
+}
+
+function showPasteAlertError(msg) {
+    pasteAlertInput.classList.add('error');
+    pasteAlertError.textContent = msg;
+    pasteAlertError.classList.remove('hidden');
+}
+
+function clearPasteAlertError() {
+    pasteAlertInput.classList.remove('error');
+    pasteAlertError.textContent = '';
+    pasteAlertError.classList.add('hidden');
+}
+
+function applyAlertToCalculator(data) {
+    // Apply ticker
+    if (data.ticker) {
+        const tickerInput = document.getElementById('calcTicker');
+        if (tickerInput) {
+            tickerInput.value = data.ticker;
+            tickerInput.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+    }
+
+    // Apply entry price
+    calcEntryPrice.value = Number(data.entry).toFixed(2);
+    calcEntryPrice.dispatchEvent(new Event('input', { bubbles: true }));
+
+    // Apply stop loss
+    calcStopLoss.value = Number(data.stop).toFixed(2);
+    calcStopLoss.dispatchEvent(new Event('input', { bubbles: true }));
+
+    // Apply risk percentage if provided
+    if (data.riskPct !== undefined) {
+        // Find and click the matching preset button, or use custom
+        const presetBtns = document.querySelectorAll('.risk-preset');
+        let matched = false;
+        presetBtns.forEach(btn => {
+            if (parseFloat(btn.dataset.value) === data.riskPct) {
+                btn.click();
+                matched = true;
+            }
+        });
+
+        if (!matched) {
+            // Use custom risk input
+            const customToggle = document.getElementById('customRiskToggle');
+            const customInput = document.getElementById('calcCustomRisk');
+            if (customToggle && customInput) {
+                customToggle.click();
+                customInput.value = data.riskPct;
+                customInput.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+        }
+    }
+
+    // Expand calculator if collapsed
+    if (calculatorPanel.classList.contains('hidden')) {
+        calculatorPanel.classList.remove('hidden');
+        toggleCalculatorBtn.textContent = '- Hide Calculator';
+        localStorage.setItem(CALC_EXPANDED_KEY, 'true');
+    }
+
+    // Scroll to results
+    setTimeout(() => {
+        const resultsCard = document.querySelector('.calc-position-card');
+        if (resultsCard) {
+            resultsCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }, 100);
+}
+
+// Smart paste - try clipboard first, fall back to modal
+async function onSmartPaste() {
+    try {
+        if (!navigator.clipboard?.readText) {
+            showToast('Clipboard not available — opening paste box');
+            openPasteAlertModal();
+            return;
+        }
+        const txt = (await navigator.clipboard.readText())?.trim();
+        if (!txt) {
+            showToast('Clipboard empty — paste your alert');
+            openPasteAlertModal();
+            return;
+        }
+        const parsed = parseDiscordAlert(txt);
+        applyAlertToCalculator(parsed);
+        showToast('Alert imported! ⚡');
+    } catch (err) {
+        showToast('Couldn\'t parse — opening editor');
+        openPasteAlertModal();
+        // Try to prefill with clipboard content
+        try {
+            const txt = (await navigator.clipboard.readText())?.trim();
+            if (txt) {
+                pasteAlertInput.value = txt;
+                pasteAlertInput.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+        } catch { /* ignore */ }
+    }
+}
+
+// Event listeners for paste alert
+pasteAlertBtn.addEventListener('click', onSmartPaste);
+closePasteAlertModalBtn.addEventListener('click', closePasteAlertModalFn);
+cancelPasteAlertBtn.addEventListener('click', closePasteAlertModalFn);
+
+pasteAlertModal.addEventListener('click', (e) => {
+    if (e.target === pasteAlertModal) {
+        closePasteAlertModalFn();
+    }
+});
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !pasteAlertModal.classList.contains('hidden')) {
+        closePasteAlertModalFn();
+    }
+});
+
+// Validate textarea input
+pasteAlertInput.addEventListener('input', () => {
+    const text = pasteAlertInput.value.trim();
+    if (!text) {
+        importAlertBtn.disabled = true;
+        clearPasteAlertError();
+        return;
+    }
+    try {
+        parseDiscordAlert(text);
+        clearPasteAlertError();
+        importAlertBtn.disabled = false;
+    } catch (e) {
+        showPasteAlertError(e.message);
+        importAlertBtn.disabled = true;
+    }
+});
+
+// Import button
+importAlertBtn.addEventListener('click', () => {
+    const text = pasteAlertInput.value.trim();
+    if (!text) return;
+    try {
+        const parsed = parseDiscordAlert(text);
+        applyAlertToCalculator(parsed);
+        showToast('Alert imported ✓');
+        closePasteAlertModalFn();
+    } catch (e) {
+        showPasteAlertError(e.message);
+    }
+});
+
+// ============================================
 // Watchlist Feature
 // ============================================
 
