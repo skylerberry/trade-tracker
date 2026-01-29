@@ -1149,8 +1149,31 @@ tbody tr:last-child td {
     color: white;
 }
 
+.watchlist-quick-add {
+    width: 60px;
+    padding: 5px 8px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    border: 1px dashed var(--color-gray-300);
+    border-radius: 20px;
+    background: transparent;
+    color: var(--color-gray-600);
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.watchlist-quick-add::placeholder {
+    text-transform: none;
+    color: var(--color-gray-400);
+}
+
+.watchlist-quick-add:focus {
+    outline: none;
+    border-style: solid;
+    border-color: var(--color-primary);
+}
+
 .watchlist-clear {
-    margin-left: auto;
     font-size: 0.75rem;
     color: var(--color-gray-400);
     cursor: pointer;
@@ -1358,6 +1381,16 @@ tbody tr:last-child td {
     border-color: #52525b;
 }
 
+[data-theme="dark"] .watchlist-quick-add {
+    background-color: transparent;
+    color: #e4e4e7;
+    border-color: #52525b;
+}
+
+[data-theme="dark"] .watchlist-quick-add:focus {
+    border-color: #60a5fa;
+}
+
 @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) .watchlist-pill {
         background-color: #3f3f46;
@@ -1375,6 +1408,16 @@ tbody tr:last-child td {
         background-color: #27272a;
         color: #f4f4f5;
         border-color: #52525b;
+    }
+
+    :root:not([data-theme="light"]) .watchlist-quick-add {
+        background-color: transparent;
+        color: #e4e4e7;
+        border-color: #52525b;
+    }
+
+    :root:not([data-theme="light"]) .watchlist-quick-add:focus {
+        border-color: #60a5fa;
     }
 }
 

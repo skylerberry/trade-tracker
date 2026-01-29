@@ -2236,12 +2236,13 @@ function loadWatchlist() {
     if (stored) {
         try {
             watchlist = JSON.parse(stored);
-            renderWatchlistPills();
         } catch (e) {
             console.error('Failed to parse watchlist:', e);
             watchlist = [];
         }
     }
+    // Always render to show quick-add input
+    renderWatchlistPills();
 }
 
 // Save watchlist to localStorage and sync to Gist
@@ -2260,17 +2261,43 @@ function openTradingViewChart(ticker) {
 
 // Render watchlist pills
 function renderWatchlistPills() {
-    if (watchlist.length === 0) {
-        watchlistBar.classList.add('hidden');
-        return;
-    }
-
+    // Always show the bar (for quick-add input), but only show pills if watchlist has items
     watchlistBar.classList.remove('hidden');
+
+    const pillsHtml = watchlist.length > 0
+        ? watchlist.map(ticker => `<button class="watchlist-pill" data-ticker="${ticker}" title="Click to fill ticker, Shift+Click to open TradingView">${ticker}</button>`).join('')
+        : '';
+
+    const clearBtnHtml = watchlist.length > 0
+        ? '<button class="watchlist-clear" id="clearWatchlist">× Clear</button>'
+        : '';
+
     watchlistBar.innerHTML = `
         <span class="watchlist-label">Watchlist:</span>
-        ${watchlist.map(ticker => `<button class="watchlist-pill" data-ticker="${ticker}" title="Click to fill ticker, Shift+Click to open TradingView">${ticker}</button>`).join('')}
-        <button class="watchlist-clear" id="clearWatchlist">× Clear All</button>
+        ${pillsHtml}
+        <input type="text" id="watchlistQuickAdd" class="watchlist-quick-add" placeholder="+ Add" maxlength="5" enterkeyhint="done">
+        ${clearBtnHtml}
     `;
+
+    // Quick-add input handler
+    const quickAddInput = document.getElementById('watchlistQuickAdd');
+    if (quickAddInput) {
+        quickAddInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const ticker = quickAddInput.value.trim().toUpperCase();
+                if (ticker && !watchlist.includes(ticker) && watchlist.length < 10) {
+                    watchlist.push(ticker);
+                    saveWatchlist();
+                } else if (watchlist.includes(ticker)) {
+                    // Already exists - just clear input
+                    quickAddInput.value = '';
+                } else if (watchlist.length >= 10) {
+                    showToast('Watchlist full (max 10)');
+                }
+            }
+        });
+    }
 
     // Add click listeners to pills
     watchlistBar.querySelectorAll('.watchlist-pill').forEach(pill => {
