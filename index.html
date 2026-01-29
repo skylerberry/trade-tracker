@@ -52,6 +52,41 @@
                 <!-- Pills rendered by JS -->
             </div>
 
+            <!-- TEMP: TradingView URL scheme testing -->
+            <div style="background: #fff3cd; padding: 15px; border-radius: 8px; margin-bottom: 15px; font-size: 14px;">
+                <strong>TradingView URL Scheme Test (AAPL):</strong><br><br>
+                <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                    <a href="tradingview://symbol/AAPL" style="padding: 6px 10px; background: #e9ecef; border-radius: 4px; text-decoration: none; color: #333;">symbol/AAPL</a>
+                    <a href="tradingview://symbols/AAPL" style="padding: 6px 10px; background: #e9ecef; border-radius: 4px; text-decoration: none; color: #333;">symbols/AAPL</a>
+                    <a href="tradingview://chart/AAPL" style="padding: 6px 10px; background: #e9ecef; border-radius: 4px; text-decoration: none; color: #333;">chart/AAPL</a>
+                    <a href="tradingview://chart?symbol=AAPL" style="padding: 6px 10px; background: #e9ecef; border-radius: 4px; text-decoration: none; color: #333;">chart?symbol=AAPL</a>
+                    <a href="tradingview://open?symbol=AAPL" style="padding: 6px 10px; background: #e9ecef; border-radius: 4px; text-decoration: none; color: #333;">open?symbol=AAPL</a>
+                    <a href="tradingview://AAPL" style="padding: 6px 10px; background: #e9ecef; border-radius: 4px; text-decoration: none; color: #333;">AAPL</a>
+                    <a href="tradingview:///AAPL" style="padding: 6px 10px; background: #e9ecef; border-radius: 4px; text-decoration: none; color: #333;">///AAPL</a>
+                </div>
+                <br>
+                <strong>With Exchange:</strong><br><br>
+                <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                    <a href="tradingview://symbol/NASDAQ:AAPL" style="padding: 6px 10px; background: #e9ecef; border-radius: 4px; text-decoration: none; color: #333;">symbol/NASDAQ:AAPL</a>
+                    <a href="tradingview://symbols/NASDAQ:AAPL" style="padding: 6px 10px; background: #e9ecef; border-radius: 4px; text-decoration: none; color: #333;">symbols/NASDAQ:AAPL</a>
+                    <a href="tradingview://chart/NASDAQ:AAPL" style="padding: 6px 10px; background: #e9ecef; border-radius: 4px; text-decoration: none; color: #333;">chart/NASDAQ:AAPL</a>
+                    <a href="tradingview://chart?symbol=NASDAQ:AAPL" style="padding: 6px 10px; background: #e9ecef; border-radius: 4px; text-decoration: none; color: #333;">chart?symbol=NASDAQ:AAPL</a>
+                    <a href="tradingview://NASDAQ:AAPL" style="padding: 6px 10px; background: #e9ecef; border-radius: 4px; text-decoration: none; color: #333;">NASDAQ:AAPL</a>
+                </div>
+                <br>
+                <strong>Other Variations:</strong><br><br>
+                <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                    <a href="tradingview://chart/symbol/AAPL" style="padding: 6px 10px; background: #e9ecef; border-radius: 4px; text-decoration: none; color: #333;">chart/symbol/AAPL</a>
+                    <a href="tradingview://ticker/AAPL" style="padding: 6px 10px; background: #e9ecef; border-radius: 4px; text-decoration: none; color: #333;">ticker/AAPL</a>
+                    <a href="tradingview://quote/AAPL" style="padding: 6px 10px; background: #e9ecef; border-radius: 4px; text-decoration: none; color: #333;">quote/AAPL</a>
+                    <a href="tradingview://stock/AAPL" style="padding: 6px 10px; background: #e9ecef; border-radius: 4px; text-decoration: none; color: #333;">stock/AAPL</a>
+                    <a href="tradingview://?symbol=AAPL" style="padding: 6px 10px; background: #e9ecef; border-radius: 4px; text-decoration: none; color: #333;">?symbol=AAPL</a>
+                    <a href="tradingview://open?ticker=AAPL" style="padding: 6px 10px; background: #e9ecef; border-radius: 4px; text-decoration: none; color: #333;">open?ticker=AAPL</a>
+                    <a href="tradingview://chart/?symbol=AAPL" style="padding: 6px 10px; background: #e9ecef; border-radius: 4px; text-decoration: none; color: #333;">chart/?symbol=AAPL</a>
+                </div>
+            </div>
+            <!-- END TEMP -->
+
             <!-- Hidden input for iOS keyboard focus trick -->
             <input type="text" id="iosKeyboardProxy" class="ios-keyboard-proxy" aria-hidden="true" tabindex="-1">
 
