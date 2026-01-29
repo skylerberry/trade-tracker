@@ -288,12 +288,12 @@ header h1 {
 }
 
 .btn-primary {
-    background-color: var(--color-accent);
+    background-color: var(--color-primary);
     color: white;
 }
 
 .btn-primary:hover {
-    background-color: var(--color-accent-hover);
+    background-color: var(--color-primary-hover);
 }
 
 .btn-ghost {
@@ -308,12 +308,14 @@ header h1 {
 }
 
 .btn-secondary {
-    background-color: var(--color-gray-500);
-    color: white;
+    background-color: transparent;
+    color: var(--color-gray-600);
+    border: 1px solid var(--color-gray-300);
 }
 
 .btn-secondary:hover {
-    background-color: var(--color-gray-600);
+    background-color: var(--color-gray-100);
+    border-color: var(--color-gray-400);
 }
 
 .btn-success {
@@ -1406,64 +1408,21 @@ tbody tr:last-child td {
     font-size: 1.25rem;
 }
 
+/* Paste Alert button - matches btn-export style */
 .btn-calc-action {
-    padding: 6px 12px;
-    font-size: 0.8rem;
+    padding: 6px 14px;
+    font-size: 0.85rem;
     font-weight: 500;
-    border: 1px solid var(--color-gray-300);
+    border: none;
     border-radius: 6px;
-    background: transparent;
-    color: var(--color-gray-500);
+    background: var(--color-primary);
+    color: white;
     cursor: pointer;
     transition: all 0.2s;
 }
 
 .btn-calc-action:hover {
-    border-color: var(--color-primary);
-    color: var(--color-primary);
-}
-
-@media (hover: none) {
-    .btn-calc-action:hover {
-        border-color: var(--color-gray-300);
-        color: var(--color-gray-500);
-    }
-}
-
-[data-theme="dark"] .btn-calc-action {
-    border-color: #52525b;
-    color: #a1a1aa;
-}
-
-[data-theme="dark"] .btn-calc-action:hover {
-    border-color: #93c5fd;
-    color: #93c5fd;
-}
-
-@media (hover: none) {
-    [data-theme="dark"] .btn-calc-action:hover {
-        border-color: #52525b;
-        color: #a1a1aa;
-    }
-}
-
-@media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) .btn-calc-action {
-        border-color: #52525b;
-        color: #a1a1aa;
-    }
-
-    :root:not([data-theme="light"]) .btn-calc-action:hover {
-        border-color: #93c5fd;
-        color: #93c5fd;
-    }
-}
-
-@media (prefers-color-scheme: dark) and (hover: none) {
-    :root:not([data-theme="light"]) .btn-calc-action:hover {
-        border-color: #52525b;
-        color: #a1a1aa;
-    }
+    background: var(--color-primary-hover);
 }
 
 /* Clear Calculator Button - below settings header */
@@ -2738,14 +2697,27 @@ tbody tr:last-child td {
 }
 
 /* Button hierarchy - secondary buttons more subtle */
-[data-theme="dark"] .btn-calculator,
+[data-theme="dark"] .btn-calculator {
+    background-color: #3b82f6;
+}
+
 [data-theme="dark"] .btn-primary {
     background-color: #3b82f6;
 }
 
+[data-theme="dark"] .btn-primary:hover {
+    background-color: #2563eb;
+}
+
 [data-theme="dark"] .btn-secondary {
-    background-color: #3f3f46;
+    background-color: transparent;
+    color: #a1a1aa;
     border: 1px solid #52525b;
+}
+
+[data-theme="dark"] .btn-secondary:hover {
+    background-color: #3f3f46;
+    border-color: #71717a;
 }
 
 /* System preference dark mode overrides */
@@ -2866,13 +2838,26 @@ tbody tr:last-child td {
         border-color: #52525b;
     }
 
-    :root:not([data-theme="light"]) .btn-calculator,
+    :root:not([data-theme="light"]) .btn-calculator {
+        background-color: #3b82f6;
+    }
+
     :root:not([data-theme="light"]) .btn-primary {
         background-color: #3b82f6;
     }
 
+    :root:not([data-theme="light"]) .btn-primary:hover {
+        background-color: #2563eb;
+    }
+
     :root:not([data-theme="light"]) .btn-secondary {
-        background-color: #3f3f46;
+        background-color: transparent;
+        color: #a1a1aa;
         border: 1px solid #52525b;
+    }
+
+    :root:not([data-theme="light"]) .btn-secondary:hover {
+        background-color: #3f3f46;
+        border-color: #71717a;
     }
 }
