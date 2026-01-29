@@ -1397,6 +1397,28 @@ calcEntryPrice.addEventListener('input', calculatePosition);
 calcStopLoss.addEventListener('input', calculatePosition);
 calcTargetPrice.addEventListener('input', calculatePosition);
 
+// Save calculator fields on change (debounced via syncSettingsToGist)
+const calcFieldInputs = [calcEntryPrice, calcStopLoss, calcTargetPrice, document.getElementById('calcTicker')];
+calcFieldInputs.forEach(input => {
+    if (input) {
+        input.addEventListener('input', syncSettingsToGist);
+    }
+});
+
+// Clear calculator button
+document.getElementById('clearCalculatorBtn').addEventListener('click', () => {
+    calcEntryPrice.value = '';
+    calcStopLoss.value = '';
+    calcTargetPrice.value = '';
+    document.getElementById('calcTicker').value = '';
+    calculatePosition();
+    syncSettingsToGist();
+    // Update export button state
+    if (typeof updateExportState === 'function') {
+        updateExportState();
+    }
+});
+
 // Mobile keyboard navigation - Enter key moves to next field
 const calcFieldOrder = ['calcAccountSize', 'calcEntryPrice', 'calcStopLoss', 'calcTicker', 'calcTargetPrice'];
 
@@ -1765,7 +1787,13 @@ async function pushSettingsToGist() {
         defaultRiskPercent: defaultRiskPercent,
         defaultMaxPercent: defaultMaxPercent,
         calcExpanded: localStorage.getItem(CALC_EXPANDED_KEY) === 'true',
-        watchlist: watchlist
+        watchlist: watchlist,
+        calcFields: {
+            entryPrice: calcEntryPrice.value,
+            stopLoss: calcStopLoss.value,
+            ticker: document.getElementById('calcTicker').value,
+            targetPrice: calcTargetPrice.value
+        }
     };
 
     const response = await fetch(`https://api.github.com/gists/${gistId}`, {
@@ -1839,6 +1867,15 @@ async function loadSettingsFromGist() {
                 watchlist = settings.watchlist;
                 localStorage.setItem(WATCHLIST_KEY, JSON.stringify(watchlist));
                 renderWatchlistPills();
+            }
+            if (settings.calcFields) {
+                const fields = settings.calcFields;
+                if (fields.entryPrice) calcEntryPrice.value = fields.entryPrice;
+                if (fields.stopLoss) calcStopLoss.value = fields.stopLoss;
+                if (fields.ticker) document.getElementById('calcTicker').value = fields.ticker;
+                if (fields.targetPrice) calcTargetPrice.value = fields.targetPrice;
+                // Recalculate with restored values
+                calculatePosition();
             }
         }
     } catch (err) {
