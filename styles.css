@@ -323,6 +323,20 @@ header h1 {
     color: white !important;
 }
 
+.btn-view {
+    background-color: var(--color-gray-50);
+    color: var(--color-accent);
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    border: 1px solid var(--color-accent);
+}
+
+.btn-view:hover {
+    background-color: var(--color-accent);
+    color: white;
+    transform: none;
+}
+
 .btn-edit {
     background-color: var(--color-gray-50);
     color: var(--color-warning);
@@ -2756,6 +2770,7 @@ tbody tr:last-child td {
     color: #93c5fd;
 }
 
+[data-theme="dark"] .btn-view,
 [data-theme="dark"] .btn-edit,
 [data-theme="dark"] .btn-delete {
     background-color: #27272a;
@@ -2899,6 +2914,7 @@ tbody tr:last-child td {
         color: #93c5fd;
     }
 
+    :root:not([data-theme="light"]) .btn-view,
     :root:not([data-theme="light"]) .btn-edit,
     :root:not([data-theme="light"]) .btn-delete {
         background-color: #27272a;
@@ -3250,5 +3266,230 @@ tbody tr:last-child td {
     :root:not([data-theme="light"]) .btn-clear-shortcut:hover {
         color: #f87171;
         border-color: #f87171;
+    }
+}
+
+/* =====================
+   Trade Details Modal
+   ===================== */
+
+.trade-details-modal-content {
+    max-width: 480px;
+}
+
+.trade-details-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--color-gray-200);
+}
+
+.trade-details-ticker {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-primary);
+}
+
+.trade-details-status {
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.trade-details-status.status-open {
+    background: var(--color-info-light);
+    color: var(--color-info-dark);
+}
+
+.trade-details-status.status-partially_closed {
+    background: var(--color-warning-light);
+    color: var(--color-warning-dark);
+}
+
+.trade-details-status.status-closed {
+    background: var(--color-success-light);
+    color: var(--color-success-dark);
+}
+
+.trade-details-status.status-stopped_out {
+    background: var(--color-error-light);
+    color: var(--color-error-dark);
+}
+
+.trade-details-section {
+    margin-bottom: 20px;
+}
+
+.trade-details-section h3 {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-gray-500);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+}
+
+.trade-details-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.detail-label {
+    font-size: 0.8rem;
+    color: var(--color-gray-500);
+}
+
+.detail-value {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-primary);
+}
+
+.trade-details-sales {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.detail-sale-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: var(--color-gray-100);
+    border-radius: 6px;
+}
+
+.detail-sale-label {
+    font-size: 0.85rem;
+    color: var(--color-gray-500);
+}
+
+.detail-sale-value {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--color-primary);
+}
+
+.snapshot-empty {
+    text-align: center;
+    padding: 20px;
+    background: var(--color-gray-100);
+    border-radius: 8px;
+}
+
+.snapshot-empty p {
+    margin: 0 0 12px 0;
+    color: var(--color-gray-500);
+    font-size: 0.9rem;
+}
+
+/* Dark mode for trade details modal */
+[data-theme="dark"] .trade-details-header {
+    border-bottom-color: #3f3f46;
+}
+
+[data-theme="dark"] .trade-details-ticker {
+    color: #f4f4f5;
+}
+
+[data-theme="dark"] .trade-details-status.status-open {
+    background: rgba(59, 130, 246, 0.2);
+    color: #60a5fa;
+}
+
+[data-theme="dark"] .trade-details-status.status-partially_closed {
+    background: rgba(251, 191, 36, 0.2);
+    color: #fbbf24;
+}
+
+[data-theme="dark"] .trade-details-status.status-closed {
+    background: rgba(34, 197, 94, 0.2);
+    color: #4ade80;
+}
+
+[data-theme="dark"] .trade-details-status.status-stopped_out {
+    background: rgba(239, 68, 68, 0.2);
+    color: #f87171;
+}
+
+[data-theme="dark"] .detail-value {
+    color: #f4f4f5;
+}
+
+[data-theme="dark"] .detail-sale-item {
+    background: #27272a;
+}
+
+[data-theme="dark"] .detail-sale-value {
+    color: #f4f4f5;
+}
+
+[data-theme="dark"] .snapshot-empty {
+    background: #27272a;
+}
+
+[data-theme="dark"] .btn-view {
+    background-color: #27272a;
+}
+
+/* System dark mode preference */
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .trade-details-header {
+        border-bottom-color: #3f3f46;
+    }
+
+    :root:not([data-theme="light"]) .trade-details-ticker {
+        color: #f4f4f5;
+    }
+
+    :root:not([data-theme="light"]) .trade-details-status.status-open {
+        background: rgba(59, 130, 246, 0.2);
+        color: #60a5fa;
+    }
+
+    :root:not([data-theme="light"]) .trade-details-status.status-partially_closed {
+        background: rgba(251, 191, 36, 0.2);
+        color: #fbbf24;
+    }
+
+    :root:not([data-theme="light"]) .trade-details-status.status-closed {
+        background: rgba(34, 197, 94, 0.2);
+        color: #4ade80;
+    }
+
+    :root:not([data-theme="light"]) .trade-details-status.status-stopped_out {
+        background: rgba(239, 68, 68, 0.2);
+        color: #f87171;
+    }
+
+    :root:not([data-theme="light"]) .detail-value {
+        color: #f4f4f5;
+    }
+
+    :root:not([data-theme="light"]) .detail-sale-item {
+        background: #27272a;
+    }
+
+    :root:not([data-theme="light"]) .detail-sale-value {
+        color: #f4f4f5;
+    }
+
+    :root:not([data-theme="light"]) .snapshot-empty {
+        background: #27272a;
+    }
+
+    :root:not([data-theme="light"]) .btn-view {
+        background-color: #27272a;
     }
 }

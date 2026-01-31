@@ -434,7 +434,6 @@
                             <th scope="col">Entry Date</th>
                             <th scope="col">Initial SL</th>
                             <th scope="col">Current SL</th>
-                            <th scope="col">Current R</th>
                             <th scope="col">Sale 1</th>
                             <th scope="col">Sale 2</th>
                             <th scope="col">Sale 3</th>
@@ -567,6 +566,59 @@ Risking 1%
             <div class="modal-actions">
                 <button class="btn btn-ghost" id="resetShortcutsBtn">Reset All</button>
                 <button class="btn btn-secondary" id="closeShortcutsBtn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Trade Details Modal -->
+    <div id="tradeDetailsModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="tradeDetailsModalTitle">
+        <div class="modal-content trade-details-modal-content">
+            <button type="button" id="closeTradeDetailsModal" class="btn-modal-close" aria-label="Close">&times;</button>
+            <h2 id="tradeDetailsModalTitle">Trade Details</h2>
+
+            <div class="trade-details-header">
+                <span class="trade-details-ticker" id="detailsTicker">AAPL</span>
+                <span class="trade-details-status" id="detailsStatus">Open</span>
+            </div>
+
+            <div class="trade-details-section">
+                <h3>Trade Info</h3>
+                <div class="trade-details-grid">
+                    <div class="detail-item">
+                        <span class="detail-label">Entry Price</span>
+                        <span class="detail-value" id="detailsEntryPrice">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Entry Date</span>
+                        <span class="detail-value" id="detailsEntryDate">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Initial Stop</span>
+                        <span class="detail-value" id="detailsInitialSL">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Current Stop</span>
+                        <span class="detail-value" id="detailsCurrentSL">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="trade-details-section" id="detailsSalesSection">
+                <h3>Sales</h3>
+                <div class="trade-details-sales" id="detailsSales">
+                    <!-- Rendered by JS -->
+                </div>
+            </div>
+
+            <div class="trade-details-section">
+                <h3>Position Snapshot</h3>
+                <div id="snapshotContent">
+                    <!-- Rendered by JS: either snapshot data or "not recorded" message -->
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn btn-secondary" id="closeTradeDetailsBtn">Close</button>
             </div>
         </div>
     </div>

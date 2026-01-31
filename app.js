@@ -115,6 +115,7 @@ let undoStack = [];
 let saleCount = 0;
 const MAX_UNDO = 50;
 let watchlist = [];
+let pendingSnapshot = null; // Snapshot data when adding trade from calculator
 
 // Flatpickr config
 const flatpickrConfig = {
@@ -470,10 +471,20 @@ function handleFormSubmit(e) {
         sales: getSalesData()
     };
 
+    // Include snapshot if available (from calculator) and not editing
+    if (pendingSnapshot && !editingId) {
+        trade.snapshot = pendingSnapshot;
+    }
+
     if (editingId) {
         const index = trades.findIndex(t => t.id === editingId);
         if (index !== -1) {
+            // Preserve existing snapshot when editing
+            const existingSnapshot = trades[index].snapshot;
             trades[index] = trade;
+            if (existingSnapshot) {
+                trades[index].snapshot = existingSnapshot;
+            }
         }
     } else {
         trades.push(trade);
@@ -492,6 +503,7 @@ function resetForm() {
     tradeForm.reset();
     document.getElementById('tradeId').value = '';
     editingId = null;
+    pendingSnapshot = null;
     formTitle.textContent = 'Add New Trade';
 
     // Reset Flatpickr instances
@@ -554,24 +566,6 @@ function formatStatus(status) {
     return `<span class="status-badge status-${status}">${STATUS_LABELS[status] || status}</span>`;
 }
 
-// Calculate current R-multiple for a trade
-function calculateCurrentR(trade) {
-    if (!trade.currentPrice || !trade.entryPrice || !trade.initialSL) return null;
-
-    const riskPerShare = trade.entryPrice - trade.initialSL;
-    if (riskPerShare <= 0) return null;
-
-    const currentGain = trade.currentPrice - trade.entryPrice;
-    return currentGain / riskPerShare;
-}
-
-// Format current R-multiple for display
-function formatCurrentR(r) {
-    if (r === null) return '-';
-    const sign = r >= 0 ? '+' : '';
-    return `${sign}${r.toFixed(1)}R`;
-}
-
 // Render trades table
 function renderTrades() {
     const filter = statusFilter.value;
@@ -598,7 +592,6 @@ function renderTrades() {
 
     tradesBody.innerHTML = filteredTrades.map(trade => {
         const sales = getTradeSales(trade);
-        const currentR = calculateCurrentR(trade);
         return `
         <tr data-id="${trade.id}">
             <td><strong>${trade.ticker}</strong></td>
@@ -606,12 +599,12 @@ function renderTrades() {
             <td>${formatDate(trade.entryDate)}</td>
             <td>${trade.initialSL.toFixed(2)}</td>
             <td>${trade.currentSL.toFixed(2)}</td>
-            <td class="current-r ${currentR !== null ? (currentR >= 0 ? 'positive' : 'negative') : ''}">${formatCurrentR(currentR)}</td>
             <td class="sale-display">${formatSale(sales[0])}</td>
             <td class="sale-display">${formatSale(sales[1])}</td>
             <td class="sale-display">${formatSale(sales[2])}</td>
             <td>${formatStatus(trade.status)}</td>
             <td class="actions-cell">
+                <button class="btn btn-view" onclick="viewTrade('${trade.id}')">View</button>
                 <button class="btn btn-edit" onclick="editTrade('${trade.id}')">Edit</button>
                 <button class="btn btn-delete" onclick="deleteTrade('${trade.id}')">Delete</button>
             </td>
@@ -678,9 +671,147 @@ function deleteTrade(id) {
     renderTrades();
 }
 
+// View trade details
+let viewingTradeId = null;
+const tradeDetailsModal = document.getElementById('tradeDetailsModal');
+
+function viewTrade(id) {
+    const trade = trades.find(t => t.id === id);
+    if (!trade) return;
+
+    viewingTradeId = id;
+
+    // Populate header
+    document.getElementById('detailsTicker').textContent = trade.ticker;
+    document.getElementById('detailsStatus').textContent = STATUS_LABELS[trade.status] || trade.status;
+    document.getElementById('detailsStatus').className = 'trade-details-status status-' + trade.status;
+
+    // Populate trade info
+    document.getElementById('detailsEntryPrice').textContent = formatCurrency(trade.entryPrice);
+    document.getElementById('detailsEntryDate').textContent = formatDate(trade.entryDate);
+    document.getElementById('detailsInitialSL').textContent = formatCurrency(trade.initialSL);
+    document.getElementById('detailsCurrentSL').textContent = formatCurrency(trade.currentSL);
+
+    // Populate sales
+    const sales = getTradeSales(trade);
+    const salesContainer = document.getElementById('detailsSales');
+    const salesSection = document.getElementById('detailsSalesSection');
+
+    if (sales.length > 0 && sales.some(s => s && (s.portion || s.price))) {
+        salesSection.classList.remove('hidden');
+        salesContainer.innerHTML = sales.map((sale, i) => {
+            if (!sale || (!sale.portion && !sale.price)) return '';
+            return `
+                <div class="detail-sale-item">
+                    <span class="detail-sale-label">Sale ${i + 1}</span>
+                    <span class="detail-sale-value">${formatSale(sale, false)}</span>
+                </div>
+            `;
+        }).join('');
+    } else {
+        salesSection.classList.add('hidden');
+    }
+
+    // Populate snapshot
+    const snapshotContent = document.getElementById('snapshotContent');
+    if (trade.snapshot) {
+        const s = trade.snapshot;
+        snapshotContent.innerHTML = `
+            <div class="trade-details-grid">
+                <div class="detail-item">
+                    <span class="detail-label">Account Size</span>
+                    <span class="detail-value">${formatCurrency(s.accountSize)}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Shares</span>
+                    <span class="detail-value">${formatNumber(s.shares)}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Position Size</span>
+                    <span class="detail-value">${formatCurrency(s.positionSize)}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Risk %</span>
+                    <span class="detail-value">${s.riskPercent}%</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">% of Account</span>
+                    <span class="detail-value">${s.percentOfAccount.toFixed(1)}%</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Total Risk</span>
+                    <span class="detail-value">${formatCurrency(s.totalRisk)}</span>
+                </div>
+            </div>
+        `;
+    } else {
+        snapshotContent.innerHTML = `
+            <div class="snapshot-empty">
+                <p>No position data recorded for this trade.</p>
+                <button class="btn btn-secondary" id="recordSnapshotBtn">Record from Calculator</button>
+            </div>
+        `;
+        // Add click handler for record snapshot button
+        document.getElementById('recordSnapshotBtn')?.addEventListener('click', () => {
+            recordSnapshotForTrade(id);
+        });
+    }
+
+    tradeDetailsModal.classList.remove('hidden');
+}
+
+// Record snapshot for existing trade from current calculator state
+function recordSnapshotForTrade(tradeId) {
+    if (!currentCalcState.hasValidData) {
+        showToast('Enter position data in calculator first');
+        return;
+    }
+
+    const trade = trades.find(t => t.id === tradeId);
+    if (!trade) return;
+
+    const state = currentCalcState;
+    const riskPerShare = state.entryPrice - state.stopLoss;
+
+    trade.snapshot = {
+        accountSize: state.accountSize,
+        shares: state.shares,
+        positionSize: state.positionSize,
+        riskPercent: state.riskPercent,
+        percentOfAccount: state.percentOfAccount,
+        riskPerShare: riskPerShare,
+        totalRisk: state.shares * riskPerShare
+    };
+
+    saveTrades();
+    showToast('Snapshot recorded');
+
+    // Refresh the modal
+    viewTrade(tradeId);
+}
+
+// Close trade details modal
+document.getElementById('closeTradeDetailsModal')?.addEventListener('click', () => {
+    tradeDetailsModal.classList.add('hidden');
+    viewingTradeId = null;
+});
+
+document.getElementById('closeTradeDetailsBtn')?.addEventListener('click', () => {
+    tradeDetailsModal.classList.add('hidden');
+    viewingTradeId = null;
+});
+
+tradeDetailsModal?.addEventListener('click', (e) => {
+    if (e.target === tradeDetailsModal) {
+        tradeDetailsModal.classList.add('hidden');
+        viewingTradeId = null;
+    }
+});
+
 // Export functions for global access (used in onclick handlers)
 window.editTrade = editTrade;
 window.deleteTrade = deleteTrade;
+window.viewTrade = viewTrade;
 
 // PDF Export
 document.getElementById('exportPdfBtn').addEventListener('click', exportToPdf);
@@ -2685,6 +2816,18 @@ document.getElementById('addToTrackerBtn')?.addEventListener('click', () => {
     resetForm();
     editingId = null;
     formTitle.textContent = 'Add New Trade';
+
+    // Store snapshot data to be saved with the trade
+    const riskPerShare = state.entryPrice - state.stopLoss;
+    pendingSnapshot = {
+        accountSize: state.accountSize,
+        shares: state.shares,
+        positionSize: state.positionSize,
+        riskPercent: state.riskPercent,
+        percentOfAccount: state.percentOfAccount,
+        riskPerShare: riskPerShare,
+        totalRisk: state.shares * riskPerShare
+    };
 
     // Populate form fields
     document.getElementById('ticker').value = state.ticker;
