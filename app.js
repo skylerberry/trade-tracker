@@ -2382,10 +2382,11 @@ async function loadSettingsFromGist() {
             }
             if (settings.calcFields) {
                 const fields = settings.calcFields;
-                if (fields.entryPrice) calcEntryPrice.value = fields.entryPrice;
-                if (fields.stopLoss) calcStopLoss.value = fields.stopLoss;
-                if (fields.ticker) document.getElementById('calcTicker').value = fields.ticker;
-                if (fields.targetPrice) calcTargetPrice.value = fields.targetPrice;
+                // Use !== undefined to allow empty strings (cleared fields)
+                if (fields.entryPrice !== undefined) calcEntryPrice.value = fields.entryPrice;
+                if (fields.stopLoss !== undefined) calcStopLoss.value = fields.stopLoss;
+                if (fields.ticker !== undefined) document.getElementById('calcTicker').value = fields.ticker;
+                if (fields.targetPrice !== undefined) calcTargetPrice.value = fields.targetPrice;
                 // Recalculate with restored values
                 calculatePosition();
             }
@@ -3769,10 +3770,11 @@ loadSettingsFromGist = async function() {
             }
             if (settings.calcFields) {
                 const fields = settings.calcFields;
-                if (fields.entryPrice) calcEntryPrice.value = fields.entryPrice;
-                if (fields.stopLoss) calcStopLoss.value = fields.stopLoss;
-                if (fields.ticker) document.getElementById('calcTicker').value = fields.ticker;
-                if (fields.targetPrice) calcTargetPrice.value = fields.targetPrice;
+                // Use !== undefined to allow empty strings (cleared fields)
+                if (fields.entryPrice !== undefined) calcEntryPrice.value = fields.entryPrice;
+                if (fields.stopLoss !== undefined) calcStopLoss.value = fields.stopLoss;
+                if (fields.ticker !== undefined) document.getElementById('calcTicker').value = fields.ticker;
+                if (fields.targetPrice !== undefined) calcTargetPrice.value = fields.targetPrice;
                 // Recalculate with restored values
                 calculatePosition();
             }
