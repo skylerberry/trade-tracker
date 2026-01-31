@@ -1492,8 +1492,8 @@ tbody tr:last-child td {
 }
 
 [data-theme="dark"] .watchlist-pill:hover {
-    background-color: #3b82f6;
-    border-color: #3b82f6;
+    background-color: #1e3a5f;
+    border-color: #1e3a5f;
     color: white;
 }
 
@@ -1521,8 +1521,8 @@ tbody tr:last-child td {
     }
 
     :root:not([data-theme="light"]) .watchlist-pill:hover {
-        background-color: #3b82f6;
-        border-color: #3b82f6;
+        background-color: #1e3a5f;
+        border-color: #1e3a5f;
         color: white;
     }
 
@@ -2725,6 +2725,22 @@ tbody tr:last-child td {
     background: var(--color-gray-50);
 }
 
+[data-theme="dark"] .flatpickr-months .flatpickr-prev-month,
+[data-theme="dark"] .flatpickr-months .flatpickr-next-month {
+    color: #e4e4e7;
+    fill: #e4e4e7;
+}
+
+[data-theme="dark"] .flatpickr-months .flatpickr-prev-month:hover,
+[data-theme="dark"] .flatpickr-months .flatpickr-next-month:hover {
+    color: #60a5fa;
+}
+
+[data-theme="dark"] .flatpickr-months .flatpickr-prev-month:hover svg,
+[data-theme="dark"] .flatpickr-months .flatpickr-next-month:hover svg {
+    fill: #60a5fa;
+}
+
 [data-theme="dark"] .flatpickr-month,
 [data-theme="dark"] .flatpickr-current-month,
 [data-theme="dark"] .flatpickr-monthDropdown-months {
@@ -2791,6 +2807,22 @@ tbody tr:last-child td {
         color: #e4e4e7;
     }
 
+    :root:not([data-theme="light"]) .flatpickr-months .flatpickr-prev-month,
+    :root:not([data-theme="light"]) .flatpickr-months .flatpickr-next-month {
+        color: #e4e4e7;
+        fill: #e4e4e7;
+    }
+
+    :root:not([data-theme="light"]) .flatpickr-months .flatpickr-prev-month:hover,
+    :root:not([data-theme="light"]) .flatpickr-months .flatpickr-next-month:hover {
+        color: #60a5fa;
+    }
+
+    :root:not([data-theme="light"]) .flatpickr-months .flatpickr-prev-month:hover svg,
+    :root:not([data-theme="light"]) .flatpickr-months .flatpickr-next-month:hover svg {
+        fill: #60a5fa;
+    }
+
     :root:not([data-theme="light"]) .flatpickr-weekdays,
     :root:not([data-theme="light"]) .flatpickr-weekday {
         background: #27272a;
@@ -2834,6 +2866,11 @@ tbody tr:last-child td {
 /* ================================
    DARK MODE EXPLICIT OVERRIDES
    ================================ */
+
+/* Header and primary buttons should match - use same muted navy */
+[data-theme="dark"] header {
+    background-color: #1e3a5f;
+}
 
 [data-theme="dark"] input,
 [data-theme="dark"] select,
@@ -2897,7 +2934,7 @@ tbody tr:last-child td {
 }
 
 [data-theme="dark"] .r-level-item.active {
-    background: #3b82f6;
+    background: #1e3a5f;
     color: white;
 }
 
@@ -2925,14 +2962,14 @@ tbody tr:last-child td {
 }
 
 [data-theme="dark"] .preset-btn.active {
-    background-color: #3b82f6;
-    border-color: #3b82f6;
+    background-color: #1e3a5f;
+    border-color: #1e3a5f;
     color: white;
 }
 
 [data-theme="dark"] .custom-input-wrapper.active {
-    background-color: #3b82f6;
-    border-color: #3b82f6;
+    background-color: #1e3a5f;
+    border-color: #1e3a5f;
 }
 
 [data-theme="dark"] .custom-input-wrapper.active input {
@@ -3063,17 +3100,45 @@ tbody tr:last-child td {
     border-color: #52525b;
 }
 
+/* Select dropdown arrow - lighter for dark backgrounds */
+[data-theme="dark"] .form-group select,
+[data-theme="dark"] select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23a1a1aa' d='M2 4l4 4 4-4'/%3E%3C/svg%3E");
+}
+
+/* Focus rings - visible on dark backgrounds */
+[data-theme="dark"] .form-group input:focus,
+[data-theme="dark"] .form-group select:focus {
+    box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.25);
+}
+
+[data-theme="dark"] .input-with-buttons:focus-within {
+    box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.25);
+}
+
 /* Button hierarchy - secondary buttons more subtle */
 [data-theme="dark"] .btn-calculator {
-    background-color: #3b82f6;
+    background-color: #1e3a5f;
+}
+
+[data-theme="dark"] .btn-calculator:hover {
+    background-color: #2a4a6f;
 }
 
 [data-theme="dark"] .btn-primary {
-    background-color: #3b82f6;
+    background-color: #1e3a5f;
 }
 
 [data-theme="dark"] .btn-primary:hover {
-    background-color: #2563eb;
+    background-color: #2a4a6f;
+}
+
+[data-theme="dark"] .btn-calc-action {
+    background-color: #1e3a5f;
+}
+
+[data-theme="dark"] .btn-calc-action:hover {
+    background-color: #2a4a6f;
 }
 
 [data-theme="dark"] .btn-secondary {
@@ -3089,6 +3154,11 @@ tbody tr:last-child td {
 
 /* System preference dark mode overrides */
 @media (prefers-color-scheme: dark) {
+    /* Header - match primary buttons */
+    :root:not([data-theme="light"]) header {
+        background-color: #1e3a5f;
+    }
+
     /* Sync status - better contrast with blue header */
     :root:not([data-theme="light"]) .sync-status.synced {
         background: #166534;
@@ -3151,7 +3221,7 @@ tbody tr:last-child td {
     }
 
     :root:not([data-theme="light"]) .r-level-item.active {
-        background: #3b82f6;
+        background: #1e3a5f;
         color: white;
     }
 
@@ -3179,14 +3249,14 @@ tbody tr:last-child td {
     }
 
     :root:not([data-theme="light"]) .preset-btn.active {
-        background-color: #3b82f6;
-        border-color: #3b82f6;
+        background-color: #1e3a5f;
+        border-color: #1e3a5f;
         color: white;
     }
 
     :root:not([data-theme="light"]) .custom-input-wrapper.active {
-        background-color: #3b82f6;
-        border-color: #3b82f6;
+        background-color: #1e3a5f;
+        border-color: #1e3a5f;
     }
 
     :root:not([data-theme="light"]) .custom-input-wrapper.active input {
@@ -3283,16 +3353,36 @@ tbody tr:last-child td {
         border-color: #52525b;
     }
 
+    /* Select dropdown arrow - lighter for dark backgrounds */
+    :root:not([data-theme="light"]) .form-group select,
+    :root:not([data-theme="light"]) select {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23a1a1aa' d='M2 4l4 4 4-4'/%3E%3C/svg%3E");
+    }
+
+    /* Focus rings - visible on dark backgrounds */
+    :root:not([data-theme="light"]) .form-group input:focus,
+    :root:not([data-theme="light"]) .form-group select:focus {
+        box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.25);
+    }
+
+    :root:not([data-theme="light"]) .input-with-buttons:focus-within {
+        box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.25);
+    }
+
     :root:not([data-theme="light"]) .btn-calculator {
-        background-color: #3b82f6;
+        background-color: #1e3a5f;
+    }
+
+    :root:not([data-theme="light"]) .btn-calculator:hover {
+        background-color: #2a4a6f;
     }
 
     :root:not([data-theme="light"]) .btn-primary {
-        background-color: #3b82f6;
+        background-color: #1e3a5f;
     }
 
     :root:not([data-theme="light"]) .btn-primary:hover {
-        background-color: #2563eb;
+        background-color: #2a4a6f;
     }
 
     :root:not([data-theme="light"]) .btn-secondary {
@@ -3304,6 +3394,14 @@ tbody tr:last-child td {
     :root:not([data-theme="light"]) .btn-secondary:hover {
         background-color: #3f3f46;
         border-color: #71717a;
+    }
+
+    :root:not([data-theme="light"]) .btn-calc-action {
+        background-color: #1e3a5f;
+    }
+
+    :root:not([data-theme="light"]) .btn-calc-action:hover {
+        background-color: #2a4a6f;
     }
 
     /* Input with buttons - specific override for white background */
@@ -3536,9 +3634,9 @@ tbody tr:last-child td {
 }
 
 [data-theme="dark"] .shortcut-key.recording {
-    background: #3b82f6;
+    background: #1e3a5f;
     color: white;
-    border-color: #3b82f6;
+    border-color: #1e3a5f;
 }
 
 [data-theme="dark"] .shortcut-row {
@@ -3578,9 +3676,9 @@ tbody tr:last-child td {
     }
 
     :root:not([data-theme="light"]) .shortcut-key.recording {
-        background: #3b82f6;
+        background: #1e3a5f;
         color: white;
-        border-color: #3b82f6;
+        border-color: #1e3a5f;
     }
 
     :root:not([data-theme="light"]) .shortcut-row {

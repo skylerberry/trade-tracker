@@ -5,7 +5,25 @@
       "Bash(git commit:*)",
       "Bash(git push)",
       "Bash(git revert:*)",
-      "Bash(git checkout:*)"
+      "Bash(git checkout:*)",
+      "Bash(ls:*)",
+      "Bash(cd:*)",
+      "Bash(curl:*)",
+      "Bash(pkill:*)",
+      "WebSearch",
+      "WebFetch(domain:stackoverflow.com)",
+      "Bash(git clone:*)",
+      "Bash(agent-browser open https://trade.thinkorswim.com/)",
+      "Bash(agent-browser snapshot:*)",
+      "Bash(agent-browser frame:*)",
+      "Bash(agent-browser tab:*)",
+      "Bash(agent-browser close:*)",
+      "Bash(agent-browser open:*)",
+      "Bash(node --check:*)",
+      "Bash(python3:*)",
+      "Bash(lsof:*)",
+      "WebFetch(domain:github.com)",
+      "Bash(git reset:*)"
     ]
   }
 }

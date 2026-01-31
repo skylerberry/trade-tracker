@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticker Field Mockups</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            padding: 40px 20px;
+        }
+        .mockup-section {
+            max-width: 1000px;
+            margin: 0 auto 60px;
+            padding-bottom: 60px;
+            border-bottom: 3px solid var(--color-gray-200);
+        }
+        .mockup-section:last-child {
+            border-bottom: none;
+        }
+        .mockup-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 8px;
+        }
+        .mockup-description {
+            color: var(--color-gray-500);
+            margin-bottom: 24px;
+            font-size: 0.95rem;
+        }
+        .calculator-panel {
+            margin-top: 0;
+        }
+
+        /* Option 1: 4-column inputs row */
+        .calc-inputs-row-4col {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        .calc-inputs-row-4col .form-group label {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--color-primary);
+        }
+        .calc-inputs-row-4col input {
+            padding: 14px 16px;
+            font-size: 1.1rem;
+        }
+        .calc-inputs-row-4col .ticker-group input {
+            text-transform: uppercase;
+        }
+        .calc-inputs-row-4col .ticker-group input::placeholder {
+            text-transform: none;
+        }
+
+        /* Option 2: Above inputs, left-aligned */
+        .ticker-above-row {
+            margin-bottom: 12px;
+        }
+        .ticker-above-row .form-group {
+            max-width: 160px;
+        }
+        .ticker-above-row .form-group label {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--color-gray-500);
+        }
+        .ticker-above-row input {
+            padding: 8px 12px;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+        }
+        .ticker-above-row input::placeholder {
+            text-transform: none;
+        }
+
+        /* Option 3: Inline with h2 title */
+        .calc-header-with-ticker {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .calc-header-with-ticker h2 {
+            margin-bottom: 0;
+        }
+        .ticker-inline {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .ticker-inline label {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--color-gray-500);
+            margin-bottom: 0;
+        }
+        .ticker-inline input {
+            width: 100px;
+            padding: 6px 10px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            border: 1px solid var(--color-gray-300);
+            border-radius: 4px;
+        }
+        .ticker-inline input::placeholder {
+            text-transform: none;
+        }
+
+        /* Option 4: Inside result card */
+        .calc-result-card-with-ticker .ticker-in-card {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        .calc-result-card-with-ticker .ticker-in-card label {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.6);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0;
+        }
+        .calc-result-card-with-ticker .ticker-in-card input {
+            width: 80px;
+            padding: 4px 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            color: white;
+        }
+        .calc-result-card-with-ticker .ticker-in-card input::placeholder {
+            text-transform: none;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Responsive for 4-col */
+        @media (max-width: 900px) {
+            .calc-inputs-row-4col {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 500px) {
+            .calc-inputs-row-4col {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body data-theme="dark">
+    <div class="container">
+
+        <!-- OPTION 1: 4-column inputs row -->
+        <section class="mockup-section">
+            <h1 class="mockup-title">Option 1: Four-Column Inputs Row</h1>
+            <p class="mockup-description">Ticker added as first column in the inputs row: Entry Price, Stop Loss, Ticker, Target Price. Groups all per-calculation inputs together.</p>
+
+            <div class="calculator-panel">
+                <h2>Position Size Calculator</h2>
+
+                <div class="calc-settings-header">
+                    <div class="setting-item">
+                        <label for="opt1-account">Account:</label>
+                        <input type="text" id="opt1-account" value="65,000" autocomplete="off">
+                    </div>
+                    <div class="setting-item">
+                        <span class="setting-label">Risk:</span>
+                        <div class="preset-buttons">
+                            <button type="button" class="preset-btn">.1%</button>
+                            <button type="button" class="preset-btn active">.25%</button>
+                            <button type="button" class="preset-btn">.5%</button>
+                            <button type="button" class="preset-btn">1%</button>
+                            <button type="button" class="preset-btn">Custom</button>
+                        </div>
+                        <button type="button" class="set-default-btn">Set as default</button>
+                    </div>
+                    <div class="setting-item">
+                        <span class="setting-label">Max:</span>
+                        <div class="preset-buttons">
+                            <button type="button" class="preset-btn">5%</button>
+                            <button type="button" class="preset-btn">10%</button>
+                            <button type="button" class="preset-btn active">20%</button>
+                            <button type="button" class="preset-btn">50%</button>
+                            <button type="button" class="preset-btn">100%</button>
+                        </div>
+                        <button type="button" class="set-default-btn">Set as default</button>
+                    </div>
+                </div>
+
+                <div class="calc-inputs-row-4col">
+                    <div class="form-group">
+                        <label>Entry Price</label>
+                        <div class="input-with-buttons">
+                            <input type="number" step="0.01" placeholder="0.00" autocomplete="off">
+                            <div class="increment-btn-stack">
+                                <button type="button" class="increment-btn increment-btn-top">+</button>
+                                <button type="button" class="increment-btn increment-btn-bottom">-</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Stop Loss</label>
+                        <div class="input-with-buttons">
+                            <input type="number" step="0.01" placeholder="0.00" autocomplete="off">
+                            <div class="increment-btn-stack">
+                                <button type="button" class="increment-btn increment-btn-top">+</button>
+                                <button type="button" class="increment-btn increment-btn-bottom">-</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group ticker-group">
+                        <label>Ticker <span class="optional-tag">optional</span></label>
+                        <input type="text" placeholder="e.g., AAPL" autocomplete="off">
+                    </div>
+                    <div class="form-group target-group">
+                        <label>Target Price <span class="optional-tag">optional</span></label>
+                        <div class="input-with-buttons">
+                            <input type="number" step="0.01" placeholder="0.00" autocomplete="off">
+                            <div class="increment-btn-stack">
+                                <button type="button" class="increment-btn increment-btn-top">+</button>
+                                <button type="button" class="increment-btn increment-btn-bottom">-</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="calc-cards-row">
+                    <div class="calc-result-card">
+                        <div class="calc-big-result">
+                            <span class="calc-big-value">-</span>
+                            <span class="calc-big-label">shares</span>
+                        </div>
+                        <div class="calc-result-list">
+                            <div class="calc-result-row"><span>Stop Distance</span><span>-</span></div>
+                            <div class="calc-result-row"><span>Position Size</span><span>-</span></div>
+                            <div class="calc-result-row"><span>Total Risk</span><span>-</span></div>
+                            <div class="calc-result-row"><span>% of Account</span><span>-</span></div>
+                        </div>
+                    </div>
+                    <div class="calc-target-card inactive">
+                        <div class="calc-target-header">At Target (-)</div>
+                        <div class="calc-target-big-value">-</div>
+                        <div class="calc-target-list">
+                            <div class="calc-target-row"><span>Target Price</span><span>-</span></div>
+                            <div class="calc-target-row"><span>Profit Per Share</span><span>-</span></div>
+                            <div class="calc-target-row"><span>ROI</span><span>-</span></div>
+                            <div class="calc-target-row"><span>R/R Multiple</span><span>-</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="calc-r-levels">
+                    <div class="r-level-item"><div class="r-label">1R</div><div class="r-price">-</div><div class="r-profit">-</div></div>
+                    <div class="r-level-item"><div class="r-label">2R</div><div class="r-price">-</div><div class="r-profit">-</div></div>
+                    <div class="r-level-item"><div class="r-label">3R</div><div class="r-price">-</div><div class="r-profit">-</div></div>
+                    <div class="r-level-item"><div class="r-label">4R</div><div class="r-price">-</div><div class="r-profit">-</div></div>
+                    <div class="r-level-item"><div class="r-label">5R</div><div class="r-price">-</div><div class="r-profit">-</div></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- OPTION 2: Above inputs, left-aligned -->
+        <section class="mockup-section">
+            <h1 class="mockup-title">Option 2: Above Inputs Row (Left-Aligned)</h1>
+            <p class="mockup-description">Small ticker field sitting alone above the inputs row, almost like a "title" or label for the calculation. Subtle and out of the way.</p>
+
+            <div class="calculator-panel">
+                <h2>Position Size Calculator</h2>
+
+                <div class="calc-settings-header">
+                    <div class="setting-item">
+                        <label for="opt2-account">Account:</label>
+                        <input type="text" id="opt2-account" value="65,000" autocomplete="off">
+                    </div>
+                    <div class="setting-item">
+                        <span class="setting-label">Risk:</span>
+                        <div class="preset-buttons">
+                            <button type="button" class="preset-btn">.1%</button>
+                            <button type="button" class="preset-btn active">.25%</button>
+                            <button type="button" class="preset-btn">.5%</button>
+                            <button type="button" class="preset-btn">1%</button>
+                            <button type="button" class="preset-btn">Custom</button>
+                        </div>
+                        <button type="button" class="set-default-btn">Set as default</button>
+                    </div>
+                    <div class="setting-item">
+                        <span class="setting-label">Max:</span>
+                        <div class="preset-buttons">
+                            <button type="button" class="preset-btn">5%</button>
+                            <button type="button" class="preset-btn">10%</button>
+                            <button type="button" class="preset-btn active">20%</button>
+                            <button type="button" class="preset-btn">50%</button>
+                            <button type="button" class="preset-btn">100%</button>
+                        </div>
+                        <button type="button" class="set-default-btn">Set as default</button>
+                    </div>
+                </div>
+
+                <div class="ticker-above-row">
+                    <div class="form-group">
+                        <label>Ticker <span class="optional-tag">optional</span></label>
+                        <input type="text" placeholder="e.g., AAPL" autocomplete="off">
+                    </div>
+                </div>
+
+                <div class="calc-inputs-row">
+                    <div class="form-group">
+                        <label>Entry Price</label>
+                        <div class="input-with-buttons">
+                            <input type="number" step="0.01" placeholder="0.00" autocomplete="off">
+                            <div class="increment-btn-stack">
+                                <button type="button" class="increment-btn increment-btn-top">+</button>
+                                <button type="button" class="increment-btn increment-btn-bottom">-</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Stop Loss</label>
+                        <div class="input-with-buttons">
+                            <input type="number" step="0.01" placeholder="0.00" autocomplete="off">
+                            <div class="increment-btn-stack">
+                                <button type="button" class="increment-btn increment-btn-top">+</button>
+                                <button type="button" class="increment-btn increment-btn-bottom">-</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group target-group">
+                        <label>Target Price <span class="optional-tag">optional</span></label>
+                        <div class="input-with-buttons">
+                            <input type="number" step="0.01" placeholder="0.00" autocomplete="off">
+                            <div class="increment-btn-stack">
+                                <button type="button" class="increment-btn increment-btn-top">+</button>
+                                <button type="button" class="increment-btn increment-btn-bottom">-</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="calc-cards-row">
+                    <div class="calc-result-card">
+                        <div class="calc-big-result">
+                            <span class="calc-big-value">-</span>
+                            <span class="calc-big-label">shares</span>
+                        </div>
+                        <div class="calc-result-list">
+                            <div class="calc-result-row"><span>Stop Distance</span><span>-</span></div>
+                            <div class="calc-result-row"><span>Position Size</span><span>-</span></div>
+                            <div class="calc-result-row"><span>Total Risk</span><span>-</span></div>
+                            <div class="calc-result-row"><span>% of Account</span><span>-</span></div>
+                        </div>
+                    </div>
+                    <div class="calc-target-card inactive">
+                        <div class="calc-target-header">At Target (-)</div>
+                        <div class="calc-target-big-value">-</div>
+                        <div class="calc-target-list">
+                            <div class="calc-target-row"><span>Target Price</span><span>-</span></div>
+                            <div class="calc-target-row"><span>Profit Per Share</span><span>-</span></div>
+                            <div class="calc-target-row"><span>ROI</span><span>-</span></div>
+                            <div class="calc-target-row"><span>R/R Multiple</span><span>-</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="calc-r-levels">
+                    <div class="r-level-item"><div class="r-label">1R</div><div class="r-price">-</div><div class="r-profit">-</div></div>
+                    <div class="r-level-item"><div class="r-label">2R</div><div class="r-price">-</div><div class="r-profit">-</div></div>
+                    <div class="r-level-item"><div class="r-label">3R</div><div class="r-price">-</div><div class="r-profit">-</div></div>
+                    <div class="r-level-item"><div class="r-label">4R</div><div class="r-price">-</div><div class="r-profit">-</div></div>
+                    <div class="r-level-item"><div class="r-label">5R</div><div class="r-price">-</div><div class="r-profit">-</div></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- OPTION 3: Inline with h2 title -->
+        <section class="mockup-section">
+            <h1 class="mockup-title">Option 3: Inline with Title</h1>
+            <p class="mockup-description">Ticker field placed inline with the "Position Size Calculator" heading, using the unused horizontal space on the right. Minimal and out of the main flow.</p>
+
+            <div class="calculator-panel">
+                <div class="calc-header-with-ticker">
+                    <h2>Position Size Calculator</h2>
+                    <div class="ticker-inline">
+                        <label>Ticker:</label>
+                        <input type="text" placeholder="AAPL" autocomplete="off">
+                    </div>
+                </div>
+
+                <div class="calc-settings-header">
+                    <div class="setting-item">
+                        <label for="opt3-account">Account:</label>
+                        <input type="text" id="opt3-account" value="65,000" autocomplete="off">
+                    </div>
+                    <div class="setting-item">
+                        <span class="setting-label">Risk:</span>
+                        <div class="preset-buttons">
+                            <button type="button" class="preset-btn">.1%</button>
+                            <button type="button" class="preset-btn active">.25%</button>
+                            <button type="button" class="preset-btn">.5%</button>
+                            <button type="button" class="preset-btn">1%</button>
+                            <button type="button" class="preset-btn">Custom</button>
+                        </div>
+                        <button type="button" class="set-default-btn">Set as default</button>
+                    </div>
+                    <div class="setting-item">
+                        <span class="setting-label">Max:</span>
+                        <div class="preset-buttons">
+                            <button type="button" class="preset-btn">5%</button>
+                            <button type="button" class="preset-btn">10%</button>
+                            <button type="button" class="preset-btn active">20%</button>
+                            <button type="button" class="preset-btn">50%</button>
+                            <button type="button" class="preset-btn">100%</button>
+                        </div>
+                        <button type="button" class="set-default-btn">Set as default</button>
+                    </div>
+                </div>
+
+                <div class="calc-inputs-row">
+                    <div class="form-group">
+                        <label>Entry Price</label>
+                        <div class="input-with-buttons">
+                            <input type="number" step="0.01" placeholder="0.00" autocomplete="off">
+                            <div class="increment-btn-stack">
+                                <button type="button" class="increment-btn increment-btn-top">+</button>
+                                <button type="button" class="increment-btn increment-btn-bottom">-</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Stop Loss</label>
+                        <div class="input-with-buttons">
+                            <input type="number" step="0.01" placeholder="0.00" autocomplete="off">
+                            <div class="increment-btn-stack">
+                                <button type="button" class="increment-btn increment-btn-top">+</button>
+                                <button type="button" class="increment-btn increment-btn-bottom">-</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group target-group">
+                        <label>Target Price <span class="optional-tag">optional</span></label>
+                        <div class="input-with-buttons">
+                            <input type="number" step="0.01" placeholder="0.00" autocomplete="off">
+                            <div class="increment-btn-stack">
+                                <button type="button" class="increment-btn increment-btn-top">+</button>
+                                <button type="button" class="increment-btn increment-btn-bottom">-</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="calc-cards-row">
+                    <div class="calc-result-card">
+                        <div class="calc-big-result">
+                            <span class="calc-big-value">-</span>
+                            <span class="calc-big-label">shares</span>
+                        </div>
+                        <div class="calc-result-list">
+                            <div class="calc-result-row"><span>Stop Distance</span><span>-</span></div>
+                            <div class="calc-result-row"><span>Position Size</span><span>-</span></div>
+                            <div class="calc-result-row"><span>Total Risk</span><span>-</span></div>
+                            <div class="calc-result-row"><span>% of Account</span><span>-</span></div>
+                        </div>
+                    </div>
+                    <div class="calc-target-card inactive">
+                        <div class="calc-target-header">At Target (-)</div>
+                        <div class="calc-target-big-value">-</div>
+                        <div class="calc-target-list">
+                            <div class="calc-target-row"><span>Target Price</span><span>-</span></div>
+                            <div class="calc-target-row"><span>Profit Per Share</span><span>-</span></div>
+                            <div class="calc-target-row"><span>ROI</span><span>-</span></div>
+                            <div class="calc-target-row"><span>R/R Multiple</span><span>-</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="calc-r-levels">
+                    <div class="r-level-item"><div class="r-label">1R</div><div class="r-price">-</div><div class="r-profit">-</div></div>
+                    <div class="r-level-item"><div class="r-label">2R</div><div class="r-price">-</div><div class="r-profit">-</div></div>
+                    <div class="r-level-item"><div class="r-label">3R</div><div class="r-price">-</div><div class="r-profit">-</div></div>
+                    <div class="r-level-item"><div class="r-label">4R</div><div class="r-price">-</div><div class="r-profit">-</div></div>
+                    <div class="r-level-item"><div class="r-label">5R</div><div class="r-price">-</div><div class="r-profit">-</div></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- OPTION 4: Inside result card -->
+        <section class="mockup-section">
+            <h1 class="mockup-title">Option 4: Inside Result Card</h1>
+            <p class="mockup-description">Ticker input at the top of the position result card. It becomes part of the "output" context - labeling what this calculation is for. Unconventional but contextually interesting.</p>
+
+            <div class="calculator-panel">
+                <h2>Position Size Calculator</h2>
+
+                <div class="calc-settings-header">
+                    <div class="setting-item">
+                        <label for="opt4-account">Account:</label>
+                        <input type="text" id="opt4-account" value="65,000" autocomplete="off">
+                    </div>
+                    <div class="setting-item">
+                        <span class="setting-label">Risk:</span>
+                        <div class="preset-buttons">
+                            <button type="button" class="preset-btn">.1%</button>
+                            <button type="button" class="preset-btn active">.25%</button>
+                            <button type="button" class="preset-btn">.5%</button>
+                            <button type="button" class="preset-btn">1%</button>
+                            <button type="button" class="preset-btn">Custom</button>
+                        </div>
+                        <button type="button" class="set-default-btn">Set as default</button>
+                    </div>
+                    <div class="setting-item">
+                        <span class="setting-label">Max:</span>
+                        <div class="preset-buttons">
+                            <button type="button" class="preset-btn">5%</button>
+                            <button type="button" class="preset-btn">10%</button>
+                            <button type="button" class="preset-btn active">20%</button>
+                            <button type="button" class="preset-btn">50%</button>
+                            <button type="button" class="preset-btn">100%</button>
+                        </div>
+                        <button type="button" class="set-default-btn">Set as default</button>
+                    </div>
+                </div>
+
+                <div class="calc-inputs-row">
+                    <div class="form-group">
+                        <label>Entry Price</label>
+                        <div class="input-with-buttons">
+                            <input type="number" step="0.01" placeholder="0.00" autocomplete="off">
+                            <div class="increment-btn-stack">
+                                <button type="button" class="increment-btn increment-btn-top">+</button>
+                                <button type="button" class="increment-btn increment-btn-bottom">-</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Stop Loss</label>
+                        <div class="input-with-buttons">
+                            <input type="number" step="0.01" placeholder="0.00" autocomplete="off">
+                            <div class="increment-btn-stack">
+                                <button type="button" class="increment-btn increment-btn-top">+</button>
+                                <button type="button" class="increment-btn increment-btn-bottom">-</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group target-group">
+                        <label>Target Price <span class="optional-tag">optional</span></label>
+                        <div class="input-with-buttons">
+                            <input type="number" step="0.01" placeholder="0.00" autocomplete="off">
+                            <div class="increment-btn-stack">
+                                <button type="button" class="increment-btn increment-btn-top">+</button>
+                                <button type="button" class="increment-btn increment-btn-bottom">-</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="calc-cards-row">
+                    <div class="calc-result-card calc-result-card-with-ticker">
+                        <div class="ticker-in-card">
+                            <label>Ticker:</label>
+                            <input type="text" placeholder="AAPL" autocomplete="off">
+                        </div>
+                        <div class="calc-big-result">
+                            <span class="calc-big-value">-</span>
+                            <span class="calc-big-label">shares</span>
+                        </div>
+                        <div class="calc-result-list">
+                            <div class="calc-result-row"><span>Stop Distance</span><span>-</span></div>
+                            <div class="calc-result-row"><span>Position Size</span><span>-</span></div>
+                            <div class="calc-result-row"><span>Total Risk</span><span>-</span></div>
+                            <div class="calc-result-row"><span>% of Account</span><span>-</span></div>
+                        </div>
+                    </div>
+                    <div class="calc-target-card inactive">
+                        <div class="calc-target-header">At Target (-)</div>
+                        <div class="calc-target-big-value">-</div>
+                        <div class="calc-target-list">
+                            <div class="calc-target-row"><span>Target Price</span><span>-</span></div>
+                            <div class="calc-target-row"><span>Profit Per Share</span><span>-</span></div>
+                            <div class="calc-target-row"><span>ROI</span><span>-</span></div>
+                            <div class="calc-target-row"><span>R/R Multiple</span><span>-</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="calc-r-levels">
+                    <div class="r-level-item"><div class="r-label">1R</div><div class="r-price">-</div><div class="r-profit">-</div></div>
+                    <div class="r-level-item"><div class="r-label">2R</div><div class="r-price">-</div><div class="r-profit">-</div></div>
+                    <div class="r-level-item"><div class="r-label">3R</div><div class="r-price">-</div><div class="r-profit">-</div></div>
+                    <div class="r-level-item"><div class="r-label">4R</div><div class="r-price">-</div><div class="r-profit">-</div></div>
+                    <div class="r-level-item"><div class="r-label">5R</div><div class="r-price">-</div><div class="r-profit">-</div></div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+</body>
+</html>
