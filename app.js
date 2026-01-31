@@ -2774,3 +2774,487 @@ calcMaxPercent.addEventListener('input', () => setTimeout(updateExportState, 100
 
 // Update state when account size changes
 calcAccountSize.addEventListener('input', () => setTimeout(updateExportState, 100));
+
+// ============================================
+// Keyboard Shortcuts Feature
+// ============================================
+
+const SHORTCUTS_KEY = 'tradeTracker_shortcuts';
+
+// Action definitions - maps action IDs to their label and handler
+const SHORTCUT_ACTIONS = {
+    'clear-calculator': {
+        label: 'Clear calculator',
+        action: () => clearCalculator()
+    },
+    'copy-entry': {
+        label: 'Copy entry price',
+        action: () => {
+            const value = document.getElementById('calcEntryPrice').value;
+            if (value) copyToClipboardWithFeedback(value, 'Entry price copied');
+        }
+    },
+    'copy-stop': {
+        label: 'Copy stop loss',
+        action: () => {
+            const value = document.getElementById('calcStopLoss').value;
+            if (value) copyToClipboardWithFeedback(value, 'Stop loss copied');
+        }
+    },
+    'copy-shares': {
+        label: 'Copy shares',
+        action: () => {
+            const sharesEl = document.getElementById('calcShares');
+            if (sharesEl && sharesEl.textContent !== '-') {
+                const value = sharesEl.textContent.replace(/,/g, '').replace(/[^0-9]/g, '');
+                if (value) copyToClipboardWithFeedback(value, 'Shares copied');
+            }
+        }
+    },
+    'toggle-calculator': {
+        label: 'Toggle calculator',
+        action: () => document.getElementById('toggleCalculatorBtn').click()
+    },
+    'open-paste-alert': {
+        label: 'Open paste alert',
+        action: () => document.getElementById('pasteAlertBtn').click()
+    },
+    'open-watchlist': {
+        label: 'Open watchlist',
+        action: () => document.getElementById('manageWatchlistBtn').click()
+    },
+    'open-export': {
+        label: 'Open export modal',
+        action: () => {
+            const btn = document.getElementById('exportTradeCard');
+            if (btn && !btn.disabled) btn.click();
+        }
+    },
+    'toggle-theme': {
+        label: 'Toggle dark mode',
+        action: () => toggleTheme()
+    },
+    'add-trade': {
+        label: 'Add new trade',
+        action: () => document.getElementById('toggleFormBtn').click()
+    }
+};
+
+// Stored shortcuts: { actionId: 'Ctrl+K', ... }
+let shortcuts = {};
+let isRecordingShortcut = false;
+let recordingActionId = null;
+
+// Helper to copy to clipboard with toast feedback
+async function copyToClipboardWithFeedback(value, message) {
+    try {
+        await navigator.clipboard.writeText(value);
+        showToast(message);
+    } catch (err) {
+        console.error('Failed to copy:', err);
+    }
+}
+
+// Load shortcuts from localStorage
+function loadShortcuts() {
+    const stored = localStorage.getItem(SHORTCUTS_KEY);
+    if (stored) {
+        try {
+            shortcuts = JSON.parse(stored);
+        } catch (e) {
+            console.error('Failed to parse shortcuts:', e);
+            shortcuts = {};
+        }
+    } else {
+        shortcuts = {};
+    }
+}
+
+// Save shortcuts to localStorage and sync to Gist
+function saveShortcuts() {
+    localStorage.setItem(SHORTCUTS_KEY, JSON.stringify(shortcuts));
+    syncSettingsToGist();
+}
+
+// Parse shortcut string to components
+function parseShortcut(shortcutStr) {
+    const parts = shortcutStr.split('+');
+    const key = parts[parts.length - 1].toLowerCase();
+    return {
+        ctrl: parts.includes('Ctrl') || parts.includes('Cmd'),
+        shift: parts.includes('Shift'),
+        alt: parts.includes('Alt'),
+        key: key
+    };
+}
+
+// Check if a keyboard event matches a shortcut string
+function matchesShortcut(event, shortcutStr) {
+    const shortcut = parseShortcut(shortcutStr);
+    const modifierMatch =
+        (event.ctrlKey || event.metaKey) === shortcut.ctrl &&
+        event.shiftKey === shortcut.shift &&
+        event.altKey === shortcut.alt;
+    return modifierMatch && event.key.toLowerCase() === shortcut.key;
+}
+
+// Build shortcut string from keyboard event
+function buildShortcutString(event) {
+    const parts = [];
+
+    // Use Cmd on Mac, Ctrl elsewhere
+    if (event.metaKey) {
+        parts.push('Cmd');
+    } else if (event.ctrlKey) {
+        parts.push('Ctrl');
+    }
+
+    if (event.shiftKey) parts.push('Shift');
+    if (event.altKey) parts.push('Alt');
+
+    // Only accept if there's at least one modifier
+    if (parts.length === 0) return null;
+
+    // Get the key - accept letters, numbers, and some special keys
+    let key = event.key;
+
+    // Normalize special keys
+    if (key === ' ') key = 'Space';
+    else if (key.length === 1) key = key.toUpperCase();
+    else if (['Enter', 'Escape', 'Tab', 'Backspace', 'Delete', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(key)) {
+        // Keep these as-is
+    } else {
+        // Don't accept other keys
+        return null;
+    }
+
+    // Don't allow standalone modifier keys
+    if (['Control', 'Meta', 'Shift', 'Alt'].includes(key)) return null;
+
+    parts.push(key);
+    return parts.join('+');
+}
+
+// Check for conflicting shortcuts
+function checkShortcutConflict(shortcutStr, excludeActionId = null) {
+    for (const [actionId, existingShortcut] of Object.entries(shortcuts)) {
+        if (actionId !== excludeActionId && existingShortcut === shortcutStr) {
+            return SHORTCUT_ACTIONS[actionId]?.label || actionId;
+        }
+    }
+    return null;
+}
+
+// List of browser shortcuts to warn about
+const BROWSER_SHORTCUTS = [
+    'Ctrl+C', 'Ctrl+V', 'Ctrl+X', 'Ctrl+A', 'Ctrl+Z', 'Ctrl+Y',
+    'Ctrl+S', 'Ctrl+P', 'Ctrl+F', 'Ctrl+N', 'Ctrl+T', 'Ctrl+W',
+    'Ctrl+R', 'Ctrl+L', 'Ctrl+H', 'Ctrl+B', 'Ctrl+I', 'Ctrl+U',
+    'Cmd+C', 'Cmd+V', 'Cmd+X', 'Cmd+A', 'Cmd+Z', 'Cmd+Y',
+    'Cmd+S', 'Cmd+P', 'Cmd+F', 'Cmd+N', 'Cmd+T', 'Cmd+W',
+    'Cmd+R', 'Cmd+L', 'Cmd+H', 'Cmd+B', 'Cmd+I', 'Cmd+U'
+];
+
+function isBrowserShortcut(shortcutStr) {
+    return BROWSER_SHORTCUTS.includes(shortcutStr);
+}
+
+// Global keydown handler for shortcuts
+document.addEventListener('keydown', (e) => {
+    // Skip if recording a new shortcut (handled separately)
+    if (isRecordingShortcut) return;
+
+    // Skip if typing in input/textarea/select
+    if (e.target.matches('input, textarea, select')) return;
+
+    // Skip if any modal is open
+    const openModals = document.querySelectorAll('.modal:not(.hidden)');
+    if (openModals.length > 0) return;
+
+    // Check each shortcut
+    for (const [actionId, shortcutStr] of Object.entries(shortcuts)) {
+        if (matchesShortcut(e, shortcutStr)) {
+            e.preventDefault();
+            SHORTCUT_ACTIONS[actionId]?.action();
+            return;
+        }
+    }
+});
+
+// Shortcuts Modal DOM elements
+const shortcutsModal = document.getElementById('shortcutsModal');
+const shortcutsSettingsBtn = document.getElementById('shortcutsSettingsBtn');
+const closeShortcutsModal = document.getElementById('closeShortcutsModal');
+const closeShortcutsBtn = document.getElementById('closeShortcutsBtn');
+const resetShortcutsBtn = document.getElementById('resetShortcutsBtn');
+const shortcutsList = document.getElementById('shortcutsList');
+
+// Render shortcuts list in modal
+function renderShortcutsList() {
+    const html = Object.entries(SHORTCUT_ACTIONS).map(([actionId, { label }]) => {
+        const shortcutStr = shortcuts[actionId];
+        const hasShortcut = !!shortcutStr;
+        const isRecording = isRecordingShortcut && recordingActionId === actionId;
+
+        return `
+            <div class="shortcut-row" data-action-id="${actionId}">
+                <span class="shortcut-label">${label}</span>
+                <span class="shortcut-key ${isRecording ? 'recording' : ''} ${!hasShortcut && !isRecording ? 'not-set' : ''}" id="shortcut-key-${actionId}">
+                    ${isRecording ? 'Press keys...' : (hasShortcut ? shortcutStr : 'Not set')}
+                </span>
+                <div class="shortcut-actions">
+                    ${hasShortcut && !isRecording ? `
+                        <button class="btn-clear-shortcut" data-action-id="${actionId}">Clear</button>
+                    ` : ''}
+                    ${!isRecording ? `
+                        <button class="btn-record" data-action-id="${actionId}" ${isRecordingShortcut ? 'disabled' : ''}>Record</button>
+                    ` : ''}
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    shortcutsList.innerHTML = html;
+
+    // Add click listeners
+    shortcutsList.querySelectorAll('.btn-record').forEach(btn => {
+        btn.addEventListener('click', () => startRecording(btn.dataset.actionId));
+    });
+
+    shortcutsList.querySelectorAll('.btn-clear-shortcut').forEach(btn => {
+        btn.addEventListener('click', () => clearShortcut(btn.dataset.actionId));
+    });
+}
+
+// Start recording a new shortcut
+function startRecording(actionId) {
+    isRecordingShortcut = true;
+    recordingActionId = actionId;
+    renderShortcutsList();
+
+    // Add recording keydown listener
+    document.addEventListener('keydown', handleRecordKeydown);
+}
+
+// Stop recording
+function stopRecording() {
+    isRecordingShortcut = false;
+    recordingActionId = null;
+    document.removeEventListener('keydown', handleRecordKeydown);
+    renderShortcutsList();
+}
+
+// Handle keydown while recording
+function handleRecordKeydown(e) {
+    if (!isRecordingShortcut) return;
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    // Escape cancels recording
+    if (e.key === 'Escape') {
+        stopRecording();
+        return;
+    }
+
+    // Build shortcut string
+    const shortcutStr = buildShortcutString(e);
+
+    if (!shortcutStr) {
+        // Invalid shortcut (no modifier or invalid key)
+        return;
+    }
+
+    // Check for browser shortcut conflict
+    if (isBrowserShortcut(shortcutStr)) {
+        showToast(`${shortcutStr} is a browser shortcut - try a different combo`);
+        return;
+    }
+
+    // Check for existing shortcut conflict
+    const conflict = checkShortcutConflict(shortcutStr, recordingActionId);
+    if (conflict) {
+        showToast(`${shortcutStr} is already used for "${conflict}"`);
+        return;
+    }
+
+    // Save the shortcut
+    shortcuts[recordingActionId] = shortcutStr;
+    saveShortcuts();
+    stopRecording();
+    showToast(`Shortcut set: ${shortcutStr}`);
+}
+
+// Clear a shortcut
+function clearShortcut(actionId) {
+    delete shortcuts[actionId];
+    saveShortcuts();
+    renderShortcutsList();
+}
+
+// Reset all shortcuts
+function resetAllShortcuts() {
+    if (!confirm('Clear all keyboard shortcuts?')) return;
+    shortcuts = {};
+    saveShortcuts();
+    renderShortcutsList();
+    showToast('All shortcuts cleared');
+}
+
+// Open shortcuts modal
+function openShortcutsModal() {
+    renderShortcutsList();
+    shortcutsModal.classList.remove('hidden');
+}
+
+// Close shortcuts modal
+function closeShortcutsModalFn() {
+    if (isRecordingShortcut) {
+        stopRecording();
+    }
+    shortcutsModal.classList.add('hidden');
+}
+
+// Event listeners for shortcuts modal
+shortcutsSettingsBtn?.addEventListener('click', openShortcutsModal);
+closeShortcutsModal?.addEventListener('click', closeShortcutsModalFn);
+closeShortcutsBtn?.addEventListener('click', closeShortcutsModalFn);
+resetShortcutsBtn?.addEventListener('click', resetAllShortcuts);
+
+// Close modal on background click
+shortcutsModal?.addEventListener('click', (e) => {
+    if (e.target === shortcutsModal) {
+        closeShortcutsModalFn();
+    }
+});
+
+// Close modal on ESC key (when not recording)
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !shortcutsModal.classList.contains('hidden') && !isRecordingShortcut) {
+        closeShortcutsModalFn();
+    }
+});
+
+// Initialize shortcuts on page load
+document.addEventListener('DOMContentLoaded', () => {
+    loadShortcuts();
+});
+
+// Update pushSettingsToGist to include shortcuts
+const originalPushSettingsToGist = pushSettingsToGist;
+pushSettingsToGist = async function() {
+    const token = localStorage.getItem(GIST_TOKEN_KEY);
+    const gistId = localStorage.getItem(GIST_ID_KEY);
+
+    if (!token || !gistId) return;
+
+    const settings = {
+        accountSize: accountSize,
+        defaultRiskPercent: defaultRiskPercent,
+        defaultMaxPercent: defaultMaxPercent,
+        calcExpanded: localStorage.getItem(CALC_EXPANDED_KEY) === 'true',
+        watchlist: watchlist,
+        shortcuts: shortcuts,
+        calcFields: {
+            entryPrice: calcEntryPrice.value,
+            stopLoss: calcStopLoss.value,
+            ticker: document.getElementById('calcTicker').value,
+            targetPrice: calcTargetPrice.value
+        }
+    };
+
+    const response = await fetch(`https://api.github.com/gists/${gistId}`, {
+        method: 'PATCH',
+        headers: getGistHeaders(true),
+        body: JSON.stringify({
+            files: {
+                'settings.json': {
+                    content: JSON.stringify(settings, null, 2)
+                }
+            }
+        })
+    });
+
+    if (!response.ok) {
+        throw new Error(`Failed to update Gist settings: ${response.status}`);
+    }
+};
+
+// Update loadSettingsFromGist to include shortcuts
+const originalLoadSettingsFromGist = loadSettingsFromGist;
+loadSettingsFromGist = async function() {
+    const token = localStorage.getItem(GIST_TOKEN_KEY);
+    const gistId = localStorage.getItem(GIST_ID_KEY);
+
+    if (!token || !gistId) return;
+
+    isLoadingSettings = true;
+
+    try {
+        const response = await fetch(`https://api.github.com/gists/${gistId}`, {
+            headers: getGistHeaders()
+        });
+
+        if (!response.ok) return;
+
+        const gist = await response.json();
+        const content = gist.files['settings.json']?.content;
+
+        if (content) {
+            const settings = JSON.parse(content);
+            if (settings.accountSize && settings.accountSize > 0) {
+                accountSize = settings.accountSize;
+                localStorage.setItem(CALC_ACCOUNT_KEY, accountSize.toString());
+                calcAccountSize.value = formatNumber(accountSize);
+            }
+            if (settings.defaultRiskPercent) {
+                defaultRiskPercent = settings.defaultRiskPercent;
+                localStorage.setItem('tradeTracker_defaultRisk', defaultRiskPercent.toString());
+                calcRiskPercent.value = defaultRiskPercent;
+                document.querySelectorAll('.risk-preset').forEach(btn => {
+                    btn.classList.toggle('active', parseFloat(btn.dataset.value) === defaultRiskPercent);
+                });
+            }
+            if (settings.defaultMaxPercent) {
+                defaultMaxPercent = settings.defaultMaxPercent;
+                localStorage.setItem('tradeTracker_defaultMax', defaultMaxPercent.toString());
+                calcMaxPercent.value = defaultMaxPercent;
+                document.querySelectorAll('.max-preset').forEach(btn => {
+                    btn.classList.toggle('active', parseFloat(btn.dataset.value) === defaultMaxPercent);
+                });
+            }
+            if (settings.calcExpanded !== undefined) {
+                localStorage.setItem(CALC_EXPANDED_KEY, settings.calcExpanded.toString());
+                if (settings.calcExpanded) {
+                    calculatorPanel.classList.remove('hidden');
+                    toggleCalculatorBtn.textContent = '- Hide Calculator';
+                } else {
+                    calculatorPanel.classList.add('hidden');
+                    toggleCalculatorBtn.textContent = 'Position Calculator';
+                }
+            }
+            if (settings.watchlist && Array.isArray(settings.watchlist)) {
+                watchlist = settings.watchlist;
+                localStorage.setItem(WATCHLIST_KEY, JSON.stringify(watchlist));
+                renderWatchlistPills();
+            }
+            if (settings.shortcuts && typeof settings.shortcuts === 'object') {
+                shortcuts = settings.shortcuts;
+                localStorage.setItem(SHORTCUTS_KEY, JSON.stringify(shortcuts));
+            }
+            if (settings.calcFields) {
+                const fields = settings.calcFields;
+                if (fields.entryPrice) calcEntryPrice.value = fields.entryPrice;
+                if (fields.stopLoss) calcStopLoss.value = fields.stopLoss;
+                if (fields.ticker) document.getElementById('calcTicker').value = fields.ticker;
+                if (fields.targetPrice) calcTargetPrice.value = fields.targetPrice;
+                // Recalculate with restored values
+                calculatePosition();
+            }
+        }
+    } catch (err) {
+        console.error('Failed to load settings from Gist:', err);
+    } finally {
+        isLoadingSettings = false;
+    }
+};

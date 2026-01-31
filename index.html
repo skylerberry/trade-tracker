@@ -58,7 +58,22 @@
             <div id="calculatorPanel" class="calculator-panel hidden">
                 <div class="calc-title-row">
                     <h2>Position Size Calculator</h2>
-                    <button type="button" class="btn-calc-action" id="pasteAlertBtn" title="Import Discord alert">Paste Alert</button>
+                    <div class="calc-title-actions">
+                        <button type="button" class="btn-calc-action" id="pasteAlertBtn" title="Import Discord alert">Paste Alert</button>
+                        <button type="button" class="btn-icon" id="shortcutsSettingsBtn" title="Keyboard Shortcuts">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect>
+                                <path d="M6 8h.01"></path>
+                                <path d="M10 8h.01"></path>
+                                <path d="M14 8h.01"></path>
+                                <path d="M18 8h.01"></path>
+                                <path d="M8 12h.01"></path>
+                                <path d="M12 12h.01"></path>
+                                <path d="M16 12h.01"></path>
+                                <path d="M7 16h10"></path>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Settings Header -->
@@ -529,6 +544,22 @@ Risking 1%
             <div class="modal-actions">
                 <button class="btn btn-secondary" id="cancelWatchlistBtn">Cancel</button>
                 <button class="btn btn-primary" id="saveWatchlistBtn">Save Watchlist</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Keyboard Shortcuts Modal -->
+    <div id="shortcutsModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="shortcutsModalTitle">
+        <div class="modal-content shortcuts-modal-content">
+            <button type="button" id="closeShortcutsModal" class="btn-modal-close" aria-label="Close">&times;</button>
+            <h2 id="shortcutsModalTitle">Keyboard Shortcuts</h2>
+            <div id="shortcutsList" class="shortcuts-list">
+                <!-- Rendered by JS -->
+            </div>
+            <p class="shortcuts-tip">Click Record, then press your shortcut keys (e.g., Ctrl+K)</p>
+            <div class="modal-actions">
+                <button class="btn btn-ghost" id="resetShortcutsBtn">Reset All</button>
+                <button class="btn btn-secondary" id="closeShortcutsBtn">Close</button>
             </div>
         </div>
     </div>
