@@ -117,6 +117,10 @@ const MAX_UNDO = 50;
 let watchlist = [];
 let pendingSnapshot = null; // Snapshot data when adding trade from calculator
 
+// Pagination
+const TRADES_PER_PAGE = 10;
+let currentPage = 1;
+
 // Flatpickr config
 const flatpickrConfig = {
     dateFormat: 'Y-m-d',
@@ -371,7 +375,10 @@ cancelBtn.addEventListener('click', () => {
 });
 
 tradeForm.addEventListener('submit', handleFormSubmit);
-statusFilter.addEventListener('change', renderTrades);
+statusFilter.addEventListener('change', () => {
+    currentPage = 1; // Reset to first page when filter changes
+    renderTrades();
+});
 
 // Load trades from localStorage
 function loadTrades() {
@@ -584,13 +591,25 @@ function renderTrades() {
         noTradesMsg.textContent = filter === 'all'
             ? 'No trades logged yet. Click "Add New Trade" to get started.'
             : `No ${STATUS_LABELS[filter] || filter} trades found.`;
+        hidePagination();
         return;
     }
 
     tradesTable.classList.remove('hidden');
     noTradesMsg.classList.add('hidden');
 
-    tradesBody.innerHTML = filteredTrades.map(trade => {
+    // Pagination
+    const totalPages = Math.ceil(filteredTrades.length / TRADES_PER_PAGE);
+
+    // Ensure current page is valid
+    if (currentPage > totalPages) currentPage = totalPages;
+    if (currentPage < 1) currentPage = 1;
+
+    const startIndex = (currentPage - 1) * TRADES_PER_PAGE;
+    const endIndex = startIndex + TRADES_PER_PAGE;
+    const paginatedTrades = filteredTrades.slice(startIndex, endIndex);
+
+    tradesBody.innerHTML = paginatedTrades.map(trade => {
         const sales = getTradeSales(trade);
         return `
         <tr data-id="${trade.id}">
@@ -610,6 +629,52 @@ function renderTrades() {
             </td>
         </tr>
     `}).join('');
+
+    // Update pagination controls
+    updatePagination(filteredTrades.length, totalPages);
+}
+
+// Update pagination controls
+function updatePagination(totalTrades, totalPages) {
+    const paginationEl = document.getElementById('pagination');
+    if (!paginationEl) return;
+
+    if (totalPages <= 1) {
+        hidePagination();
+        return;
+    }
+
+    paginationEl.classList.remove('hidden');
+
+    document.getElementById('pageInfo').textContent = `Page ${currentPage} of ${totalPages}`;
+    document.getElementById('totalTrades').textContent = `${totalTrades} trades`;
+
+    document.getElementById('prevPageBtn').disabled = currentPage === 1;
+    document.getElementById('nextPageBtn').disabled = currentPage === totalPages;
+}
+
+// Hide pagination
+function hidePagination() {
+    const paginationEl = document.getElementById('pagination');
+    if (paginationEl) paginationEl.classList.add('hidden');
+}
+
+// Pagination handlers
+function goToPage(page) {
+    currentPage = page;
+    renderTrades();
+}
+
+function prevPage() {
+    if (currentPage > 1) {
+        currentPage--;
+        renderTrades();
+    }
+}
+
+function nextPage() {
+    currentPage++;
+    renderTrades();
 }
 
 // Edit trade
@@ -866,6 +931,8 @@ document.getElementById('copyTradeDetailsBtn')?.addEventListener('click', async 
 window.editTrade = editTrade;
 window.deleteTrade = deleteTrade;
 window.viewTrade = viewTrade;
+window.prevPage = prevPage;
+window.nextPage = nextPage;
 
 // PDF Export
 document.getElementById('exportPdfBtn').addEventListener('click', exportToPdf);

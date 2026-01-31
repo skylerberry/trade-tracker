@@ -263,13 +263,13 @@
                     </div>
                 </div>
 
-                <!-- Add to Tracker Button -->
+                <!-- Log Trade Button -->
                 <button type="button" class="btn-add-to-tracker" id="addToTrackerBtn" disabled>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="12" y1="5" x2="12" y2="19"></line>
                         <line x1="5" y1="12" x2="19" y2="12"></line>
                     </svg>
-                    Add to Tracker
+                    Log Trade
                 </button>
             </div>
         </section>
@@ -444,6 +444,14 @@
                     <tbody id="tradesBody">
                     </tbody>
                 </table>
+            </div>
+            <div id="pagination" class="pagination hidden">
+                <span class="pagination-total" id="totalTrades">0 trades</span>
+                <div class="pagination-controls">
+                    <button type="button" class="btn-pagination" id="prevPageBtn" onclick="prevPage()">&larr; Prev</button>
+                    <span class="pagination-info" id="pageInfo">Page 1 of 1</span>
+                    <button type="button" class="btn-pagination" id="nextPageBtn" onclick="nextPage()">Next &rarr;</button>
+                </div>
             </div>
             <p id="noTrades" class="no-trades hidden">No trades logged yet. Click "Add New Trade" to get started.</p>
         </section>
