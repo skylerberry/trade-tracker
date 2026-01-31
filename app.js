@@ -106,6 +106,7 @@ const tradesBody = document.getElementById('tradesBody');
 const noTradesMsg = document.getElementById('noTrades');
 const statusFilter = document.getElementById('statusFilter');
 const tradesTable = document.getElementById('tradesTable');
+const tableContainer = document.querySelector('.table-container');
 
 // State
 let trades = [];
@@ -635,6 +636,7 @@ function renderTrades() {
     if (filteredTrades.length === 0) {
         tradesTable.classList.add('hidden');
         noTradesMsg.classList.remove('hidden');
+        tableContainer.classList.add('empty');
         noTradesMsg.textContent = filter === 'all'
             ? 'No trades logged yet. Click "Add New Trade" to get started.'
             : `No ${STATUS_LABELS[filter] || filter} trades found.`;
@@ -644,6 +646,7 @@ function renderTrades() {
 
     tradesTable.classList.remove('hidden');
     noTradesMsg.classList.add('hidden');
+    tableContainer.classList.remove('empty');
 
     // Pagination
     const totalPages = Math.ceil(filteredTrades.length / TRADES_PER_PAGE);

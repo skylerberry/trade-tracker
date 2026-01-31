@@ -706,6 +706,10 @@ header h1 {
     min-height: 500px; /* Prevent layout shift when paginating */
 }
 
+.table-container.empty {
+    min-height: auto;
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
