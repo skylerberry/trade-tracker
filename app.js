@@ -714,14 +714,18 @@ function goToPage(page) {
 
 function prevPage() {
     if (currentPage > 1) {
+        const scrollY = window.scrollY;
         currentPage--;
         renderTrades();
+        window.scrollTo(0, scrollY);
     }
 }
 
 function nextPage() {
+    const scrollY = window.scrollY;
     currentPage++;
     renderTrades();
+    window.scrollTo(0, scrollY);
 }
 
 // Edit trade
