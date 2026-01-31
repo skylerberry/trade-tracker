@@ -68,7 +68,7 @@
                     <div class="calc-title-actions">
                         <button type="button" class="btn-calc-action" id="pasteAlertBtn" title="Import Discord alert">Paste Alert</button>
                         <button type="button" class="btn-icon" id="shortcutsSettingsBtn" title="Keyboard Shortcuts">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                 <rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect>
                                 <path d="M6 8h.01"></path>
                                 <path d="M10 8h.01"></path>
@@ -143,7 +143,7 @@
                                 <button type="button" class="increment-btn increment-btn-top" data-target="calcStopLoss" data-delta="0.01" tabindex="-1">+</button>
                                 <button type="button" class="increment-btn increment-btn-bottom" data-target="calcStopLoss" data-delta="-0.01" tabindex="-1">-</button>
                             </div>
-                            <button type="button" class="btn-copy-input" id="copyCalcStopLoss" title="Copy to clipboard" tabindex="-1"><span class="copy-text">Copy</span><svg class="copy-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></button>
+                            <button type="button" class="btn-copy-input" id="copyCalcStopLoss" title="Copy to clipboard" tabindex="-1"><span class="copy-text">Copy</span><svg class="copy-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg></button>
                         </div>
                         <span class="calc-error hidden" id="calcStopLossError">Stop loss must be below entry price</span>
                     </div>
@@ -152,7 +152,7 @@
                         <div class="input-with-buttons ticker-input-wrapper">
                             <input type="text" id="calcTicker" placeholder="e.g., AAPL" autocomplete="off" enterkeyhint="next">
                             <button type="button" class="btn-chart-link" id="openTickerChart" title="Open in TradingView (Shift+Enter)" tabindex="-1" disabled>
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                     <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
                                     <polyline points="15 3 21 3 21 9"></polyline>
                                     <line x1="10" y1="14" x2="21" y2="3"></line>
@@ -184,7 +184,7 @@
                             <span class="calc-big-value" id="calcShares">-</span>
                             <span class="calc-big-label">shares</span>
                             <button type="button" class="btn-export-card" id="exportTradeCard" title="Export trade card" disabled>
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                                     <polyline points="7 10 12 15 17 10"></polyline>
                                     <line x1="12" y1="15" x2="12" y2="3"></line>
@@ -265,7 +265,7 @@
 
                 <!-- Log Trade Button -->
                 <button type="button" class="btn-add-to-tracker" id="addToTrackerBtn" disabled>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                         <line x1="12" y1="5" x2="12" y2="19"></line>
                         <line x1="5" y1="12" x2="19" y2="12"></line>
                     </svg>
@@ -286,7 +286,7 @@
                         <label for="ticker">Ticker</label>
                         <div class="input-with-icon">
                             <span class="input-icon">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline><polyline points="16 7 22 7 22 13"></polyline></svg>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline><polyline points="16 7 22 7 22 13"></polyline></svg>
                             </span>
                             <input type="text" id="ticker" required placeholder="e.g., AAPL">
                         </div>
@@ -304,7 +304,7 @@
                         <label for="entryDate">Entry Date</label>
                         <div class="input-with-icon">
                             <span class="input-icon">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
                             </span>
                             <input type="text" id="entryDate" class="datepicker" required placeholder="Select date">
                         </div>
@@ -330,7 +330,7 @@
                         <label for="status">Status</label>
                         <div class="input-with-icon">
                             <span class="input-icon">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
                             </span>
                             <select id="status">
                                 <option value="open">Open</option>
@@ -520,14 +520,14 @@
             </div>
             <div class="export-actions">
                 <button type="button" class="btn btn-secondary" id="copyCardBtn">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                         <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                         <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
                     </svg>
                     Copy to Clipboard
                 </button>
                 <button type="button" class="btn btn-primary" id="downloadCardBtn">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                         <polyline points="7 10 12 15 17 10"></polyline>
                         <line x1="12" y1="15" x2="12" y2="3"></line>
