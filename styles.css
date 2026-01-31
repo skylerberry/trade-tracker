@@ -54,6 +54,7 @@
 
 /* Dark theme - charcoal palette */
 [data-theme="dark"] {
+    color-scheme: dark;
     --color-primary: #60a5fa;
     --color-primary-hover: #3b82f6;
     --color-primary-light: rgba(59, 130, 246, 0.15);
@@ -101,6 +102,7 @@
 
 @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
+        color-scheme: dark;
         --color-primary: #60a5fa;
         --color-primary-hover: #3b82f6;
         --color-primary-light: rgba(59, 130, 246, 0.15);
@@ -729,7 +731,7 @@ td {
 }
 
 tbody tr:hover {
-    background-color: var(--color-gray-50);
+    background-color: white;
 }
 
 tbody tr:last-child td {
@@ -2826,7 +2828,6 @@ tbody tr:last-child td {
 [data-theme="dark"] textarea {
     background-color: #27272a;
     color: #f4f4f5;
-    border-color: #3f3f46;
 }
 
 [data-theme="dark"] input::placeholder {
@@ -2945,6 +2946,16 @@ tbody tr:last-child td {
 [data-theme="dark"] .btn-edit,
 [data-theme="dark"] .btn-delete {
     background-color: #27272a;
+}
+
+/* Table hover - ensure visibility in dark mode */
+[data-theme="dark"] tbody tr:hover {
+    background-color: #3f3f46;
+}
+
+/* Modal backdrop - darker for better contrast */
+[data-theme="dark"] .modal {
+    background: rgba(0, 0, 0, 0.75);
 }
 
 /* Input with buttons - specific override for white background */
@@ -3118,7 +3129,6 @@ tbody tr:last-child td {
     :root:not([data-theme="light"]) textarea {
         background-color: #27272a;
         color: #f4f4f5;
-        border-color: #3f3f46;
     }
 
     :root:not([data-theme="light"]) input::placeholder {
@@ -3208,6 +3218,16 @@ tbody tr:last-child td {
     :root:not([data-theme="light"]) .btn-edit,
     :root:not([data-theme="light"]) .btn-delete {
         background-color: #27272a;
+    }
+
+    /* Table hover - ensure visibility in dark mode */
+    :root:not([data-theme="light"]) tbody tr:hover {
+        background-color: #3f3f46;
+    }
+
+    /* Modal backdrop - darker for better contrast */
+    :root:not([data-theme="light"]) .modal {
+        background: rgba(0, 0, 0, 0.75);
     }
 
     /* Pagination */
