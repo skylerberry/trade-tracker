@@ -371,7 +371,6 @@
             </div>
             <button id="exportPdfBtn" class="btn btn-export">Export Open Trades to PDF</button>
             <button id="gistSettingsBtn" class="btn btn-settings">Sync Settings</button>
-            <button id="deleteAllTradesBtn" class="btn btn-delete-all">Delete All Trades</button>
         </section>
 
         <!-- Gist Settings Modal -->
@@ -452,7 +451,10 @@
                 </table>
             </div>
             <div id="pagination" class="pagination hidden">
-                <span class="pagination-total" id="totalTrades">0 trades</span>
+                <div class="pagination-left">
+                    <span class="pagination-total" id="totalTrades">0 trades</span>
+                    <button type="button" class="btn-delete-all-link" id="deleteAllTradesBtn">Delete all</button>
+                </div>
                 <div class="pagination-controls">
                     <button type="button" class="btn-pagination" id="prevPageBtn" onclick="prevPage()">&larr; Prev</button>
                     <span class="pagination-info" id="pageInfo">Page 1 of 1</span>

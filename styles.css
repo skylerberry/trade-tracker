@@ -680,17 +680,19 @@ header h1 {
     color: var(--color-error);
 }
 
-.btn-delete-all {
-    background-color: transparent;
-    color: var(--color-error);
-    border: 1px solid var(--color-error);
-    padding: 8px 16px;
-    font-size: 0.9rem;
+.btn-delete-all-link {
+    background: none;
+    border: none;
+    color: var(--color-gray-400);
+    font-size: 0.8rem;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    padding: 0;
 }
 
-.btn-delete-all:hover {
-    background-color: var(--color-error);
-    color: white;
+.btn-delete-all-link:hover {
+    color: var(--color-error);
 }
 
 /* Trades Table */
@@ -819,6 +821,12 @@ tbody tr:last-child td {
     background: var(--color-gray-50);
     border-top: 1px solid var(--color-gray-200);
     border-radius: 0 0 8px 8px;
+}
+
+.pagination-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
 .pagination-total {
