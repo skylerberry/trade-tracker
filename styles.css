@@ -5,8 +5,8 @@
     --color-primary-light: rgba(26, 54, 93, 0.15);
 
     /* Accent colors */
-    --color-accent: #3b82f6;
-    --color-accent-hover: #2563eb;
+    --color-accent: #1a365d;
+    --color-accent-hover: #2d4a7c;
 
     /* Status colors */
     --color-success: #22c55e;
@@ -966,6 +966,20 @@ tbody tr:last-child td {
 .flatpickr-day.selected:hover {
     background: var(--color-primary);
     border-color: var(--color-primary);
+}
+
+.flatpickr-day.today {
+    border-color: var(--color-primary);
+}
+
+.flatpickr-day.today:hover {
+    background: var(--color-gray-100);
+    border-color: var(--color-primary);
+}
+
+.flatpickr-day:focus {
+    outline: none;
+    background: var(--color-gray-100);
 }
 
 /* Settings Button */
@@ -2657,8 +2671,8 @@ tbody tr:last-child td {
 
 /* Theme Toggle */
 .theme-toggle {
-    background: rgba(255, 255, 255, 0.2);
-    border: none;
+    background: transparent;
+    border: 1px solid #d1d5db;
     border-radius: var(--radius-full);
     width: 36px;
     height: 36px;
@@ -2666,12 +2680,14 @@ tbody tr:last-child td {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white;
-    transition: background-color 0.2s;
+    color: #6b7280;
+    transition: background-color 0.2s, border-color 0.2s;
 }
 
 .theme-toggle:hover {
-    background: rgba(255, 255, 255, 0.3);
+    background: #f3f4f6;
+    border-color: #9ca3af;
+    color: #374151;
 }
 
 .theme-toggle .icon-sun,
@@ -2688,6 +2704,17 @@ tbody tr:last-child td {
     display: block;
 }
 
+[data-theme="dark"] .theme-toggle {
+    border-color: #52525b;
+    color: #a1a1aa;
+}
+
+[data-theme="dark"] .theme-toggle:hover {
+    background: #3f3f46;
+    border-color: #71717a;
+    color: #e4e4e7;
+}
+
 [data-theme="dark"] .theme-toggle .icon-sun {
     display: block;
 }
@@ -2697,6 +2724,17 @@ tbody tr:last-child td {
 }
 
 @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .theme-toggle {
+        border-color: #52525b;
+        color: #a1a1aa;
+    }
+
+    :root:not([data-theme="light"]) .theme-toggle:hover {
+        background: #3f3f46;
+        border-color: #71717a;
+        color: #e4e4e7;
+    }
+
     :root:not([data-theme="light"]) .theme-toggle .icon-sun {
         display: block;
     }
