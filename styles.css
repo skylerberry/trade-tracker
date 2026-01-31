@@ -3024,14 +3024,18 @@ tbody tr:last-child td {
     color: #60a5fa;
 }
 
-/* Calculator cards - match light mode structure (solid backgrounds, no colored tabs) */
+/* Calculator cards - intentional dark mode design with softer colors and proper depth */
 [data-theme="dark"] .calc-result-card {
-    background: #1e40af;
+    background: #1e3a5f;  /* Softer, muted navy - not harsh bright blue */
+}
+
+[data-theme="dark"] .calc-result-card .calc-big-result {
+    border-bottom-color: rgba(255, 255, 255, 0.15);
 }
 
 [data-theme="dark"] .calc-target-card.inactive {
-    background: #27272a;
-    border: 2px dashed #52525b;
+    background: #2d2d30;  /* Slightly lighter than the dashed border area */
+    border: 2px dashed #3f3f46;  /* Border area appears darker, creating inset effect */
 }
 
 [data-theme="dark"] .calc-target-card.inactive .calc-target-header,
@@ -3045,11 +3049,11 @@ tbody tr:last-child td {
 }
 
 [data-theme="dark"] .calc-target-card.gain {
-    background: #166534;
+    background: #1a4d3a;  /* Softer forest green, not harsh */
 }
 
 [data-theme="dark"] .calc-target-card.loss {
-    background: #991b1b;
+    background: #6b2c2c;  /* Softer burgundy, not harsh red */
 }
 
 /* Increase input border contrast */
@@ -3241,14 +3245,18 @@ tbody tr:last-child td {
         color: #60a5fa;
     }
 
-    /* Calculator cards - match light mode structure (solid backgrounds, no colored tabs) */
+    /* Calculator cards - intentional dark mode design with softer colors and proper depth */
     :root:not([data-theme="light"]) .calc-result-card {
-        background: #1e40af;
+        background: #1e3a5f;  /* Softer, muted navy */
+    }
+
+    :root:not([data-theme="light"]) .calc-result-card .calc-big-result {
+        border-bottom-color: rgba(255, 255, 255, 0.15);
     }
 
     :root:not([data-theme="light"]) .calc-target-card.inactive {
-        background: #27272a;
-        border: 2px dashed #52525b;
+        background: #2d2d30;  /* Slightly lighter than border area */
+        border: 2px dashed #3f3f46;  /* Creates inset effect */
     }
 
     :root:not([data-theme="light"]) .calc-target-card.inactive .calc-target-header,
@@ -3262,11 +3270,11 @@ tbody tr:last-child td {
     }
 
     :root:not([data-theme="light"]) .calc-target-card.gain {
-        background: #166534;
+        background: #1a4d3a;  /* Softer forest green */
     }
 
     :root:not([data-theme="light"]) .calc-target-card.loss {
-        background: #991b1b;
+        background: #6b2c2c;  /* Softer burgundy */
     }
 
     :root:not([data-theme="light"]) input,
