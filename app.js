@@ -1,5 +1,48 @@
 // Trade Tracker App
 
+// =====================
+// Lazy Loading Utilities
+// =====================
+
+// Cache for loaded libraries
+const loadedLibraries = {
+    jspdf: false,
+    html2canvas: false
+};
+
+// Dynamically load a script and return a promise
+function loadScript(src) {
+    return new Promise((resolve, reject) => {
+        // Check if already loaded
+        if (document.querySelector(`script[src="${src}"]`)) {
+            resolve();
+            return;
+        }
+        const script = document.createElement('script');
+        script.src = src;
+        script.onload = resolve;
+        script.onerror = () => reject(new Error(`Failed to load ${src}`));
+        document.body.appendChild(script);
+    });
+}
+
+// Lazy load jsPDF + autoTable (for PDF export)
+async function loadJsPDF() {
+    if (loadedLibraries.jspdf) return;
+
+    await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
+    await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.1/jspdf.plugin.autotable.min.js');
+    loadedLibraries.jspdf = true;
+}
+
+// Lazy load html2canvas (for trade card export)
+async function loadHtml2Canvas() {
+    if (loadedLibraries.html2canvas) return;
+
+    await loadScript('https://html2canvas.hertzen.com/dist/html2canvas.min.js');
+    loadedLibraries.html2canvas = true;
+}
+
 const STORAGE_KEY = 'tradeTracker_trades';
 const GIST_TOKEN_KEY = 'tradeTracker_gistToken';
 const GIST_ID_KEY = 'tradeTracker_gistId';
@@ -642,9 +685,7 @@ window.deleteTrade = deleteTrade;
 // PDF Export
 document.getElementById('exportPdfBtn').addEventListener('click', exportToPdf);
 
-function exportToPdf() {
-    const { jsPDF } = window.jspdf;
-
+async function exportToPdf() {
     // Get open and partially closed trades
     const openTrades = trades.filter(t => t.status === STATUS.OPEN || t.status === STATUS.PARTIALLY_CLOSED);
 
@@ -652,6 +693,27 @@ function exportToPdf() {
         alert('No open trades to export.');
         return;
     }
+
+    // Lazy load jsPDF if needed
+    const btn = document.getElementById('exportPdfBtn');
+    const originalText = btn.textContent;
+    btn.textContent = 'Loading...';
+    btn.disabled = true;
+
+    try {
+        await loadJsPDF();
+    } catch (err) {
+        console.error('Failed to load PDF library:', err);
+        alert('Failed to load PDF library. Please try again.');
+        btn.textContent = originalText;
+        btn.disabled = false;
+        return;
+    }
+
+    btn.textContent = originalText;
+    btn.disabled = false;
+
+    const { jsPDF } = window.jspdf;
 
     // Sort by entry date (oldest first for the PDF)
     openTrades.sort((a, b) => new Date(a.entryDate) - new Date(b.entryDate));
@@ -2665,8 +2727,13 @@ exportModal.addEventListener('click', (e) => {
 // Privacy mode toggle
 privacyModeCheckbox.addEventListener('change', updateTradeCardPreview);
 
-// Generate card image using html2canvas
+// Generate card image using html2canvas (lazy-loaded)
 async function generateCardImage() {
+    // Lazy load html2canvas if needed
+    if (!loadedLibraries.html2canvas) {
+        await loadHtml2Canvas();
+    }
+
     const card = tradeCardPreview;
 
     // Temporarily set explicit dimensions for rendering
@@ -2691,6 +2758,10 @@ async function generateCardImage() {
 
 // Copy to clipboard
 copyCardBtn.addEventListener('click', async () => {
+    const originalHTML = copyCardBtn.innerHTML;
+    copyCardBtn.innerHTML = 'Loading...';
+    copyCardBtn.disabled = true;
+
     try {
         const canvas = await generateCardImage();
 
@@ -2701,7 +2772,6 @@ copyCardBtn.addEventListener('click', async () => {
                 ]);
 
                 // Show success feedback
-                const originalText = copyCardBtn.innerHTML;
                 copyCardBtn.innerHTML = `
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="20 6 9 17 4 12"></polyline>
@@ -2709,24 +2779,33 @@ copyCardBtn.addEventListener('click', async () => {
                     Copied!
                 `;
                 copyCardBtn.classList.add('btn-success');
+                copyCardBtn.disabled = false;
 
                 setTimeout(() => {
-                    copyCardBtn.innerHTML = originalText;
+                    copyCardBtn.innerHTML = originalHTML;
                     copyCardBtn.classList.remove('btn-success');
                 }, 2000);
             } catch (err) {
                 console.error('Failed to copy to clipboard:', err);
                 alert('Failed to copy to clipboard. Try downloading instead.');
+                copyCardBtn.innerHTML = originalHTML;
+                copyCardBtn.disabled = false;
             }
         }, 'image/png');
     } catch (err) {
         console.error('Failed to generate card image:', err);
         alert('Failed to generate card image.');
+        copyCardBtn.innerHTML = originalHTML;
+        copyCardBtn.disabled = false;
     }
 });
 
 // Download PNG
 downloadCardBtn.addEventListener('click', async () => {
+    const originalHTML = downloadCardBtn.innerHTML;
+    downloadCardBtn.innerHTML = 'Loading...';
+    downloadCardBtn.disabled = true;
+
     try {
         const canvas = await generateCardImage();
 
@@ -2739,7 +2818,6 @@ downloadCardBtn.addEventListener('click', async () => {
         link.click();
 
         // Show success feedback
-        const originalText = downloadCardBtn.innerHTML;
         downloadCardBtn.innerHTML = `
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="20 6 9 17 4 12"></polyline>
@@ -2747,14 +2825,17 @@ downloadCardBtn.addEventListener('click', async () => {
             Downloaded!
         `;
         downloadCardBtn.classList.add('btn-success');
+        downloadCardBtn.disabled = false;
 
         setTimeout(() => {
-            downloadCardBtn.innerHTML = originalText;
+            downloadCardBtn.innerHTML = originalHTML;
             downloadCardBtn.classList.remove('btn-success');
         }, 2000);
     } catch (err) {
         console.error('Failed to generate card image:', err);
         alert('Failed to generate card image.');
+        downloadCardBtn.innerHTML = originalHTML;
+        downloadCardBtn.disabled = false;
     }
 });
 
