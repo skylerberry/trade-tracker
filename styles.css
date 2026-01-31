@@ -688,6 +688,7 @@ header h1 {
 
 .table-container {
     overflow-x: auto;
+    min-height: 500px; /* Prevent layout shift when paginating */
 }
 
 table {
