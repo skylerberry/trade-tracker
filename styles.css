@@ -167,11 +167,12 @@ body {
 }
 
 header {
-    background-color: var(--color-primary);
-    color: white;
+    background-color: #f8fafc;
+    color: var(--color-primary);
     padding: 20px 30px;
     margin-bottom: 30px;
     border-radius: var(--radius-lg);
+    border-top: 3px solid var(--color-primary);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -180,55 +181,56 @@ header {
 header h1 {
     font-size: 1.5rem;
     font-weight: 600;
+    color: var(--color-primary);
 }
 
+/* Sync status - minimalist dot style for both themes */
 .sync-status {
     display: flex;
     align-items: center;
     gap: 6px;
     font-size: 0.8rem;
-    padding: 4px 10px;
-    border-radius: 12px;
-    background: rgba(255,255,255,0.2);
+    padding: 4px 0;
+    background: transparent;
     cursor: pointer;
-    transition: background-color 0.2s, opacity 0.2s;
+    transition: color 0.2s;
+    color: #6b7280;
 }
 
 .sync-status .sync-icon {
+    display: none;
+}
+
+.sync-status::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
     flex-shrink: 0;
 }
 
-.sync-status .icon-cloud {
-    display: none;
-}
-
-.sync-status .icon-cloud-off {
-    display: block;
-}
-
 .sync-status.not-synced {
-    background: rgba(251, 191, 36, 0.2);
-    color: rgba(255,255,255,0.9);
-    border: 1.5px solid var(--color-warning);
+    background: transparent;
+    color: #6b7280;
+    border: none;
+}
+
+.sync-status.not-synced::before {
+    background: #fbbf24;
 }
 
 .sync-status.not-synced:hover {
-    background: rgba(255,255,255,0.25);
-    color: white;
+    color: #374151;
 }
 
 .sync-status.syncing {
-    background: var(--color-warning);
-    color: var(--color-primary);
+    background: transparent;
+    color: #6b7280;
 }
 
-.sync-status.syncing .icon-cloud {
-    display: block;
+.sync-status.syncing::before {
+    background: #fbbf24;
     animation: pulse 1s ease-in-out infinite;
-}
-
-.sync-status.syncing .icon-cloud-off {
-    display: none;
 }
 
 @keyframes pulse {
@@ -237,37 +239,30 @@ header h1 {
 }
 
 .sync-status.synced {
-    background: var(--color-success);
-    color: white;
+    background: transparent;
+    color: #6b7280;
+}
+
+.sync-status.synced::before {
+    background: #22c55e;
 }
 
 .sync-status.synced:hover {
-    background: var(--color-success-hover);
-}
-
-.sync-status.synced .icon-cloud {
-    display: block;
-}
-
-.sync-status.synced .icon-cloud-off {
-    display: none;
+    background: transparent;
+    color: #374151;
 }
 
 .sync-status.error {
-    background: var(--color-error);
-    color: white;
+    background: transparent;
+    color: #6b7280;
+}
+
+.sync-status.error::before {
+    background: #ef4444;
 }
 
 .sync-status.error:hover {
-    background: var(--color-error-hover);
-}
-
-.sync-status.error .icon-cloud-off {
-    display: block;
-}
-
-.sync-status.error .icon-cloud {
-    display: none;
+    color: #374151;
 }
 
 /* Add Trade Section */
@@ -718,8 +713,8 @@ table {
 }
 
 thead {
-    background-color: var(--color-primary);
-    color: white;
+    background-color: #f3f4f6;
+    color: var(--color-primary);
 }
 
 th {
@@ -1436,11 +1431,11 @@ tbody tr:last-child td {
     opacity: 0;
     transform: translateY(8px);
     transition: opacity 0.2s ease, transform 0.2s ease;
-    background: white;
-    color: var(--color-gray-700);
+    background: #ffffff;
+    color: #374151;
     padding: 12px 20px;
-    border: 1px solid var(--color-gray-300);
-    border-left: 3px solid var(--color-primary);
+    border: 1px solid #d1d5db;
+    border-left: 3px solid #1a365d;
     border-radius: var(--radius-lg);
     font-size: 0.9rem;
     font-weight: 500;
@@ -2895,84 +2890,12 @@ tbody tr:last-child td {
     color: #a1a1aa;
 }
 
-/* Sync status - minimalist dot style for dark mode */
+/* Sync status - dark mode color overrides */
 [data-theme="dark"] .sync-status {
-    background: transparent;
-    padding: 4px 0;
-}
-
-[data-theme="dark"] .sync-status.synced {
-    background: transparent;
     color: #a1a1aa;
 }
 
-[data-theme="dark"] .sync-status.synced::before {
-    content: '';
-    width: 8px;
-    height: 8px;
-    background: #22c55e;
-    border-radius: 50%;
-    flex-shrink: 0;
-}
-
-[data-theme="dark"] .sync-status.synced .sync-icon {
-    display: none;
-}
-
-[data-theme="dark"] .sync-status.synced:hover {
-    background: transparent;
-    color: #e4e4e7;
-}
-
-[data-theme="dark"] .sync-status.not-synced {
-    background: transparent;
-    border: none;
-    color: #a1a1aa;
-}
-
-[data-theme="dark"] .sync-status.not-synced::before {
-    content: '';
-    width: 8px;
-    height: 8px;
-    background: #fbbf24;
-    border-radius: 50%;
-    flex-shrink: 0;
-}
-
-[data-theme="dark"] .sync-status.syncing {
-    background: transparent;
-    color: #a1a1aa;
-}
-
-[data-theme="dark"] .sync-status.syncing::before {
-    content: '';
-    width: 8px;
-    height: 8px;
-    background: #fbbf24;
-    border-radius: 50%;
-    flex-shrink: 0;
-    animation: pulse 1s ease-in-out infinite;
-}
-
-[data-theme="dark"] .sync-status.syncing .sync-icon {
-    display: none;
-}
-
-[data-theme="dark"] .sync-status.error {
-    background: transparent;
-    color: #a1a1aa;
-}
-
-[data-theme="dark"] .sync-status.error::before {
-    content: '';
-    width: 8px;
-    height: 8px;
-    background: #ef4444;
-    border-radius: 50%;
-    flex-shrink: 0;
-}
-
-[data-theme="dark"] .sync-status.error:hover {
+[data-theme="dark"] .sync-status:hover {
     color: #e4e4e7;
 }
 
@@ -3231,84 +3154,12 @@ tbody tr:last-child td {
         border-top: 3px solid #3b82f6;
     }
 
-    /* Sync status - minimalist dot style */
+    /* Sync status - dark mode color overrides */
     :root:not([data-theme="light"]) .sync-status {
-        background: transparent;
-        padding: 4px 0;
-    }
-
-    :root:not([data-theme="light"]) .sync-status.synced {
-        background: transparent;
         color: #a1a1aa;
     }
 
-    :root:not([data-theme="light"]) .sync-status.synced::before {
-        content: '';
-        width: 8px;
-        height: 8px;
-        background: #22c55e;
-        border-radius: 50%;
-        flex-shrink: 0;
-    }
-
-    :root:not([data-theme="light"]) .sync-status.synced .sync-icon {
-        display: none;
-    }
-
-    :root:not([data-theme="light"]) .sync-status.synced:hover {
-        background: transparent;
-        color: #e4e4e7;
-    }
-
-    :root:not([data-theme="light"]) .sync-status.not-synced {
-        background: transparent;
-        border: none;
-        color: #a1a1aa;
-    }
-
-    :root:not([data-theme="light"]) .sync-status.not-synced::before {
-        content: '';
-        width: 8px;
-        height: 8px;
-        background: #fbbf24;
-        border-radius: 50%;
-        flex-shrink: 0;
-    }
-
-    :root:not([data-theme="light"]) .sync-status.syncing {
-        background: transparent;
-        color: #a1a1aa;
-    }
-
-    :root:not([data-theme="light"]) .sync-status.syncing::before {
-        content: '';
-        width: 8px;
-        height: 8px;
-        background: #fbbf24;
-        border-radius: 50%;
-        flex-shrink: 0;
-        animation: pulse 1s ease-in-out infinite;
-    }
-
-    :root:not([data-theme="light"]) .sync-status.syncing .sync-icon {
-        display: none;
-    }
-
-    :root:not([data-theme="light"]) .sync-status.error {
-        background: transparent;
-        color: #a1a1aa;
-    }
-
-    :root:not([data-theme="light"]) .sync-status.error::before {
-        content: '';
-        width: 8px;
-        height: 8px;
-        background: #ef4444;
-        border-radius: 50%;
-        flex-shrink: 0;
-    }
-
-    :root:not([data-theme="light"]) .sync-status.error:hover {
+    :root:not([data-theme="light"]) .sync-status:hover {
         color: #e4e4e7;
     }
 
