@@ -12,9 +12,9 @@ This document defines the visual language and design principles for the Trade Tr
 
 1. **Flat design** - No gradients, no glassmorphism, no 3D effects
 2. **Solid color backgrounds** - Cards use solid fills, not semi-transparent overlays
-3. **Consistent color usage** - The same blue should be used everywhere blue appears
+3. **Consistent color usage** - The same color should be used everywhere that color appears
 4. **Subtle depth** - Use borders and slight background color differences, not shadows
-5. **Theme parity** - Light and dark mode should feel like the same app, just inverted
+5. **Theme parity** - Light and dark mode should feel like the same app with matching visual hierarchy
 
 ### What NOT to Do
 
@@ -22,6 +22,23 @@ This document defines the visual language and design principles for the Trade Tr
 - **NO glassmorphism** - No frosted glass effects, no backdrop-blur
 - **NO trendy effects** - If it looks like a 2024 design trend, don't use it
 - **NO inconsistent colors** - If one button is navy, ALL buttons should be navy
+- **NO "heavy" headers** - Headers use light backgrounds with colored top border accents
+
+---
+
+## Theme Parity Strategy
+
+Both light and dark modes share the same visual hierarchy:
+
+| Element | Light Mode | Dark Mode |
+|---------|------------|-----------|
+| Header background | Light gray `#f8fafc` | Dark charcoal `#1f1f22` |
+| Header top border | 3px navy `#1a365d` | 3px blue `#3b82f6` |
+| Header text | Navy `#1a365d` | Light gray `#f4f4f5` |
+| Sync status | Minimalist dot + muted text | Minimalist dot + muted text |
+| Table headers | Light gray `#f3f4f6` | Dark charcoal `#1f1f22` |
+| Primary buttons | Navy `#1a365d` | Blue `#3b82f6` |
+| Toast accent | 3px navy left border | 3px blue left border |
 
 ---
 
@@ -33,21 +50,51 @@ This document defines the visual language and design principles for the Trade Tr
 ```css
 --color-primary: #1a365d;        /* Navy blue - THE brand color */
 --color-primary-hover: #2d4a7c;  /* Slightly lighter for hover */
+--color-accent: #1a365d;         /* Same as primary for consistency */
 ```
 
-**This navy blue is used for:**
-- Header background
-- All primary buttons (Position Size Calculator, Log Trade, Paste Alert, etc.)
-- Active/selected preset buttons (1%, 2%, etc.)
-- Active R-level items
-- Form headings
-- Watchlist pill hover states
+#### Header (Light Mode)
+```css
+background: #f8fafc;             /* Very light gray */
+border-top: 3px solid #1a365d;   /* Navy accent */
+color: #1a365d;                  /* Navy text */
+```
 
 #### Status Colors
 ```css
 --color-success: #22c55e;        /* Green - synced, gains, closed trades */
 --color-warning: #fbbf24;        /* Amber - syncing, warnings */
 --color-error: #ef4444;          /* Red - errors, losses, delete actions */
+```
+
+#### Sync Status (Light Mode)
+```css
+/* Minimalist dot style */
+background: transparent;
+color: #6b7280;                  /* Muted text */
+
+/* Status dot (::before pseudo-element) */
+width: 8px;
+height: 8px;
+border-radius: 50%;
+background: #22c55e;             /* Green for synced */
+background: #fbbf24;             /* Amber for syncing/not-synced */
+background: #ef4444;             /* Red for error */
+```
+
+#### Table Headers (Light Mode)
+```css
+background: #f3f4f6;             /* Light gray */
+color: #1a365d;                  /* Navy text */
+```
+
+#### Toast (Light Mode)
+```css
+background: #ffffff;
+color: #374151;
+border: 1px solid #d1d5db;
+border-left: 3px solid #1a365d;  /* Navy accent */
+border-radius: 8px;
 ```
 
 #### Calculator Card Colors (Light Mode)
@@ -70,34 +117,57 @@ border: 2px dashed #d1d5db;      /* Dashed border creates depth */
 
 #### Primary Brand Color (Dark Mode)
 ```css
-#3b82f6                          /* Medium blue - good contrast against charcoal */
-#2563eb                          /* Hover state - slightly darker */
+--color-primary: #3b82f6;        /* Medium blue - good contrast against charcoal */
+--color-primary-hover: #2563eb;  /* Slightly darker for hover */
+--color-accent: #93c5fd;         /* Light blue for links */
 ```
 
-**This blue is used for ALL the same elements as light mode:**
-- Header background
-- All primary buttons
-- Active/selected preset buttons
-- Active R-level items
-- Watchlist pill hover states
-- Shortcut key recording state
+**Why blue instead of navy?** The charcoal background (`#27272a`) is too close in value to muted navy, resulting in poor contrast. `#3b82f6` provides good contrast without being too bright.
 
-**CRITICAL: Every blue interactive element must use `#3b82f6` in dark mode. No exceptions.**
+#### Header (Dark Mode)
+```css
+background: #1f1f22;             /* Dark charcoal */
+border-top: 3px solid #3b82f6;   /* Blue accent */
+color: #f4f4f5;                  /* Light text */
+```
 
-**Why not muted navy?** The charcoal background (`#27272a`) is too close in value to muted navy (`#1e3a5f`), resulting in poor contrast. `#3b82f6` provides good contrast without being too bright.
+#### Sync Status (Dark Mode)
+```css
+/* Minimalist dot style - same as light mode */
+background: transparent;
+color: #a1a1aa;                  /* Muted text */
+
+/* Status dots use same colors as light mode */
+```
+
+#### Table Headers (Dark Mode)
+```css
+background: #1f1f22;             /* Dark charcoal - matches header */
+color: #71717a;                  /* Muted gray text */
+```
+
+#### Toast (Dark Mode)
+```css
+background: #27272a;             /* Card background */
+color: #f4f4f5;                  /* Bright text */
+border: 1px solid #3f3f46;
+border-left: 3px solid #3b82f6;  /* Blue accent */
+border-radius: 8px;
+```
 
 #### Dark Mode Backgrounds
 ```css
 #18181b                          /* Page background */
+#1f1f22                          /* Header, table headers */
 #27272a                          /* Card/panel backgrounds */
-#2d2d30                          /* Slightly elevated (e.g., inactive card interior) */
+#2d2d30                          /* Slightly elevated surfaces */
 #3f3f46                          /* Borders, dividers */
 ```
 
 #### Calculator Card Colors (Dark Mode)
 ```css
 /* Position Card */
-background: #3b82f6;             /* Medium blue - matches header/buttons */
+background: #3b82f6;             /* Blue - matches header accent */
 
 /* Target Card - Gain */
 background: #1a4d3a;             /* Softer forest green */
@@ -110,49 +180,46 @@ background: #2d2d30;             /* Slightly lighter than surroundings */
 border: 2px dashed #3f3f46;      /* Creates inset effect */
 ```
 
-**Note:** Dark mode colors should be SOFTER and more muted than light mode. Harsh bright colors are jarring on dark backgrounds.
-
----
-
-## Theme Consistency Rules
-
-### Rule 1: Matching Elements Must Match
-If two elements look the same in light mode, they MUST look the same in dark mode.
-
-**Example:** In light mode, the "Paste Alert" button and the active "1%" preset button are both navy. In dark mode, they must BOTH be `#1e3a5f`.
-
-### Rule 2: Structural Parity
-If light mode has a dashed border empty state, dark mode must also have a dashed border empty state.
-
-### Rule 3: No Dark-Mode-Only Effects
-Don't add visual effects (gradients, glows, special borders) to dark mode that don't exist in light mode.
-
-### Rule 4: Test Both Themes
-Before committing any CSS change, verify it looks correct in BOTH light and dark mode.
-
 ---
 
 ## Component Specifications
 
-### Buttons
+### Theme Toggle
+```css
+/* Light Mode */
+background: transparent;
+border: 1px solid #d1d5db;
+color: #6b7280;
 
-#### Primary Button
+/* Light Mode Hover */
+background: #f3f4f6;
+border-color: #9ca3af;
+color: #374151;
+
+/* Dark Mode */
+border-color: #52525b;
+color: #a1a1aa;
+
+/* Dark Mode Hover */
+background: #3f3f46;
+border-color: #71717a;
+color: #e4e4e7;
+```
+
+### Primary Button
 ```css
 /* Light Mode */
 background-color: #1a365d;
 color: white;
 
 /* Dark Mode */
-background-color: #1e3a5f;
+background-color: #3b82f6;
 color: white;
-
-/* Hover - Both Modes */
-background-color: [slightly lighter shade];
 ```
 
 **Used for:** Position Size Calculator, Log Trade, Paste Alert, Export, Save, Submit
 
-#### Secondary Button
+### Secondary Button
 ```css
 /* Light Mode */
 background: transparent;
@@ -167,31 +234,7 @@ color: #a1a1aa;
 
 **Used for:** Cancel, Close, secondary actions
 
-#### Preset Buttons (Risk %, Max %)
-```css
-/* Inactive - Light Mode */
-background: white;
-border: 1px solid #d1d5db;
-color: #374151;
-
-/* Inactive - Dark Mode */
-background: #3f3f46;
-border: 1px solid #52525b;
-color: #e4e4e7;
-
-/* Active - Light Mode */
-background: #1a365d;
-border-color: #1a365d;
-color: white;
-
-/* Active - Dark Mode */
-background: #1e3a5f;
-border-color: #1e3a5f;
-color: white;
-```
-
 ### Form Inputs
-
 ```css
 /* Light Mode */
 background: white;
@@ -207,69 +250,21 @@ color: #f4f4f5;
 box-shadow: 0 0 0 3px rgba(26, 54, 93, 0.15);
 
 /* Focus Ring - Dark Mode */
-box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.25);
+box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.35);
 ```
 
-### Select Dropdown Arrow
-The dropdown arrow SVG must be visible in both themes:
+### Date Picker (Flatpickr)
 ```css
-/* Light Mode */
-fill: #6b7280;
+/* Selected day - uses primary color */
+.flatpickr-day.selected {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+}
 
-/* Dark Mode */
-fill: #a1a1aa;
-```
-
-### Calculator Result Cards
-
-Cards should be **solid colors**, not gradients or semi-transparent.
-
-```css
-/* Position Card */
-Light: #1a365d (navy)
-Dark:  #1e3a5f (muted navy)
-
-/* Target Card - Active Gain */
-Light: #2d6a4f (forest green)
-Dark:  #1a4d3a (softer forest green)
-
-/* Target Card - Active Loss */
-Light: #9b2226 (burgundy)
-Dark:  #6b2c2c (softer burgundy)
-
-/* Target Card - Inactive/Empty */
-Light: #f3f4f6 background, 2px dashed #d1d5db border
-Dark:  #2d2d30 background, 2px dashed #3f3f46 border
-```
-
-**The inactive state should have visible depth** - the interior should be slightly different from the border area.
-
-### Header
-
-```css
-/* Light Mode */
-background: #1a365d;
-color: white;
-
-/* Dark Mode */
-background: #1e3a5f;
-color: white;
-```
-
-### Sync Status Pills (in Header)
-
-```css
-/* Synced - Dark Mode */
-background: #166534;
-color: #86efac;
-
-/* Syncing - Dark Mode */
-background: #854d0e;
-color: #fef3c7;
-
-/* Error - Dark Mode */
-background: #7f1d1d;
-color: #fca5a5;
+/* Today indicator */
+.flatpickr-day.today {
+    border-color: var(--color-primary);
+}
 ```
 
 ---
@@ -297,9 +292,9 @@ Common values: 8px, 12px, 16px, 20px, 24px, 30px
 ```css
 --radius-sm: 4px;    /* Badges, small elements */
 --radius-md: 6px;    /* Buttons, inputs */
---radius-lg: 8px;    /* Cards, panels */
---radius-xl: 12px;   /* Large cards */
---radius-full: 9999px;  /* Pills */
+--radius-lg: 8px;    /* Cards, panels, toasts */
+--radius-xl: 12px;   /* Large cards, modals */
+--radius-full: 9999px;  /* Pills, theme toggle */
 ```
 
 ---
@@ -357,24 +352,49 @@ Before making any visual change, verify:
 - [ ] Does it look correct in dark mode?
 - [ ] Do interactive states (hover, active, focus) exist for both themes?
 - [ ] Is there structural parity between themes (same borders, same layout)?
+- [ ] Does it maintain theme parity (matching visual hierarchy)?
 
 ---
+
+## Quick Reference: Light Mode Colors
+
+| Element | Color |
+|---------|-------|
+| Header background | `#f8fafc` |
+| Header top border | `#1a365d` |
+| Primary buttons, active states | `#1a365d` |
+| Primary hover | `#2d4a7c` |
+| Table header background | `#f3f4f6` |
+| Table header text | `#1a365d` |
+| Sync status text | `#6b7280` |
+| Toast background | `#ffffff` |
+| Toast left accent | `#1a365d` |
+| Theme toggle border | `#d1d5db` |
+| Theme toggle icon | `#6b7280` |
 
 ## Quick Reference: Dark Mode Colors
 
 | Element | Color |
 |---------|-------|
-| Primary buttons, header, active states | `#3b82f6` |
+| Header background | `#1f1f22` |
+| Header top border | `#3b82f6` |
+| Primary buttons, active states | `#3b82f6` |
 | Primary hover | `#2563eb` |
 | Page background | `#18181b` |
 | Card/panel background | `#27272a` |
-| Elevated surface (inactive card interior) | `#2d2d30` |
+| Table header background | `#1f1f22` |
+| Table header text | `#71717a` |
 | Borders, dividers | `#3f3f46` |
 | Secondary borders | `#52525b` |
+| Sync status text | `#a1a1aa` |
 | Muted text | `#71717a` |
 | Secondary text | `#a1a1aa` |
 | Primary text | `#e4e4e7` |
 | Bright text | `#f4f4f5` |
+| Toast background | `#27272a` |
+| Toast left accent | `#3b82f6` |
+| Theme toggle border | `#52525b` |
+| Theme toggle icon | `#a1a1aa` |
 | Position card | `#3b82f6` |
 | Gain card | `#1a4d3a` |
 | Loss card | `#6b2c2c` |
