@@ -2952,20 +2952,32 @@ tbody tr:last-child td {
     background-color: #2a2a2d;
 }
 
+/* R-level items - match inactive target card style */
+[data-theme="dark"] .r-level-item {
+    background: #2d2d30;
+    border: 1px solid #3f3f46;
+}
+
+[data-theme="dark"] .r-level-item:hover {
+    background: #3f3f46;
+    border-color: #52525b;
+}
+
 [data-theme="dark"] .r-level-item .r-label {
-    color: #a1a1aa;
+    color: #71717a;
 }
 
 [data-theme="dark"] .r-level-item .r-price {
-    color: #93c5fd;
+    color: #e4e4e7;
 }
 
 [data-theme="dark"] .r-level-item .r-profit {
-    color: #86efac;
+    color: #22c55e;
 }
 
 [data-theme="dark"] .r-level-item.active {
     background: #3b82f6;
+    border-color: #3b82f6;
     color: white;
 }
 
@@ -3236,20 +3248,32 @@ tbody tr:last-child td {
         color: #a1a1aa;
     }
 
+    /* R-level items - match inactive target card style */
+    :root:not([data-theme="light"]) .r-level-item {
+        background: #2d2d30;
+        border: 1px solid #3f3f46;
+    }
+
+    :root:not([data-theme="light"]) .r-level-item:hover {
+        background: #3f3f46;
+        border-color: #52525b;
+    }
+
     :root:not([data-theme="light"]) .r-level-item .r-label {
-        color: #a1a1aa;
+        color: #71717a;
     }
 
     :root:not([data-theme="light"]) .r-level-item .r-price {
-        color: #93c5fd;
+        color: #e4e4e7;
     }
 
     :root:not([data-theme="light"]) .r-level-item .r-profit {
-        color: #86efac;
+        color: #22c55e;
     }
 
     :root:not([data-theme="light"]) .r-level-item.active {
         background: #3b82f6;
+        border-color: #3b82f6;
         color: white;
     }
 

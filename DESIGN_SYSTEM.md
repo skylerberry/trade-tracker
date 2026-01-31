@@ -178,6 +178,17 @@ background: #6b2c2c;             /* Softer burgundy */
 /* Target Card - Inactive/Empty */
 background: #2d2d30;             /* Slightly lighter than surroundings */
 border: 2px dashed #3f3f46;      /* Creates inset effect */
+
+/* R-Level Items (inactive) */
+background: #2d2d30;             /* Matches inactive target card */
+border: 1px solid #3f3f46;       /* Solid border (not dashed) */
+color: #71717a;                  /* Label text - muted */
+/* Price: #e4e4e7, Profit: #22c55e */
+
+/* R-Level Items (active) */
+background: #3b82f6;             /* Primary blue */
+border-color: #3b82f6;
+/* All text: white */
 ```
 
 ---
