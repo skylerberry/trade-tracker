@@ -86,6 +86,15 @@ The app uses CSS variables that change between themes. Key variables in dark mod
 - Increased modal backdrop opacity to 75% in dark mode.
 - Removed conflicting input border rules.
 
+### 6. Aesthetic Polish (Header & Calculator Cards)
+**Problem**:
+- The bright blue header in dark mode was jarring and reduced contrast for the green "Synced" pill.
+- Calculator cards felt flat and lacked visual hierarchy in dark mode.
+
+**Fix Applied** (Jan 31, 2026 - Part 2):
+- **Header**: Changed background to Dark Slate `#1e293b` with a subtle bottom border. This improves the "Synced" pill visibility significantly.
+- **Calculator Cards**: Added subtle linear gradients and soft shadows to the Position (Blue) and Target (Green) cards. This gives them a "glassmorphism" feel that lifts them off the dark background while maintaining readability.
+
 ## Areas to Audit
 
 ### High Priority - Check These First
