@@ -121,6 +121,9 @@ let pendingSnapshot = null; // Snapshot data when adding trade from calculator
 const TRADES_PER_PAGE = 10;
 let currentPage = 1;
 
+// Date filter
+let dateFilterRange = null; // { from: Date, to: Date } or null for all dates
+
 // Flatpickr config
 const flatpickrConfig = {
     dateFormat: 'Y-m-d',
@@ -205,6 +208,36 @@ function initDatePickers() {
     };
 
     datePickers.entryDate = flatpickr('#entryDate', entryDateConfig);
+
+    // Date range filter for trades table
+    datePickers.dateFilter = flatpickr('#dateFilter', {
+        mode: 'range',
+        dateFormat: 'Y-m-d',
+        altInput: true,
+        altFormat: 'j M Y',
+        onChange: function(selectedDates) {
+            if (selectedDates.length === 2) {
+                dateFilterRange = {
+                    from: selectedDates[0],
+                    to: selectedDates[1]
+                };
+                currentPage = 1;
+                renderTrades();
+            } else if (selectedDates.length === 0) {
+                dateFilterRange = null;
+                currentPage = 1;
+                renderTrades();
+            }
+        }
+    });
+
+    // Clear date filter button
+    document.getElementById('clearDateFilter')?.addEventListener('click', () => {
+        datePickers.dateFilter.clear();
+        dateFilterRange = null;
+        currentPage = 1;
+        renderTrades();
+    });
 }
 
 // Sales management
@@ -578,8 +611,22 @@ function renderTrades() {
     const filter = statusFilter.value;
     let filteredTrades = trades;
 
+    // Filter by status
     if (filter !== 'all') {
-        filteredTrades = trades.filter(t => t.status === filter);
+        filteredTrades = filteredTrades.filter(t => t.status === filter);
+    }
+
+    // Filter by date range
+    if (dateFilterRange) {
+        filteredTrades = filteredTrades.filter(t => {
+            const tradeDate = new Date(t.entryDate);
+            // Set time to start/end of day for proper comparison
+            const fromDate = new Date(dateFilterRange.from);
+            fromDate.setHours(0, 0, 0, 0);
+            const toDate = new Date(dateFilterRange.to);
+            toDate.setHours(23, 59, 59, 999);
+            return tradeDate >= fromDate && tradeDate <= toDate;
+        });
     }
 
     // Sort by entry date (newest first)

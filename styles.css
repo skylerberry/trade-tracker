@@ -649,6 +649,35 @@ header h1 {
     background-position: right 12px center;
 }
 
+.date-filter-input {
+    padding: 8px 12px;
+    border: 1px solid var(--color-gray-300);
+    border-radius: 6px;
+    font-size: 0.95rem;
+    background-color: var(--color-gray-50);
+    min-width: 180px;
+    cursor: pointer;
+}
+
+.date-filter-input::placeholder {
+    color: var(--color-gray-500);
+}
+
+.btn-clear-filter {
+    padding: 4px 8px;
+    border: none;
+    background: none;
+    color: var(--color-gray-400);
+    font-size: 1.1rem;
+    cursor: pointer;
+    line-height: 1;
+    margin-left: -4px;
+}
+
+.btn-clear-filter:hover {
+    color: var(--color-error);
+}
+
 /* Trades Table */
 .trades-section {
     background-color: var(--color-gray-50);
@@ -2704,6 +2733,12 @@ tbody tr:last-child td {
     color: var(--color-gray-700);
 }
 
+[data-theme="dark"] .date-filter-input {
+    background-color: #27272a;
+    border-color: #3f3f46;
+    color: #e4e4e7;
+}
+
 [data-theme="dark"] .flatpickr-monthDropdown-months {
     background-color: #27272a;
     color: #e4e4e7;
@@ -2758,6 +2793,12 @@ tbody tr:last-child td {
 
     :root:not([data-theme="light"]) .flatpickr-monthDropdown-months option {
         background-color: #27272a;
+        color: #e4e4e7;
+    }
+
+    :root:not([data-theme="light"]) .date-filter-input {
+        background-color: #27272a;
+        border-color: #3f3f46;
         color: #e4e4e7;
     }
 }

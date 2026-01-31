@@ -355,7 +355,7 @@
 
         <section class="filters-section">
             <div class="filter-group">
-                <label for="statusFilter">Filter by Status:</label>
+                <label for="statusFilter">Status:</label>
                 <select id="statusFilter">
                     <option value="all">All Trades</option>
                     <option value="open">Open</option>
@@ -363,6 +363,11 @@
                     <option value="closed">Fully Closed</option>
                     <option value="stopped_out">Stopped Out</option>
                 </select>
+            </div>
+            <div class="filter-group">
+                <label for="dateFilter">Date:</label>
+                <input type="text" id="dateFilter" class="date-filter-input" placeholder="All dates" readonly>
+                <button type="button" class="btn-clear-filter" id="clearDateFilter" title="Clear date filter">&times;</button>
             </div>
             <button id="exportPdfBtn" class="btn btn-export">Export Open Trades to PDF</button>
             <button id="gistSettingsBtn" class="btn btn-settings">Sync Settings</button>
