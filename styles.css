@@ -2842,6 +2842,35 @@ tbody tr:last-child td {
     color: #a1a1aa;
 }
 
+/* Sync status - dark mode adjustments for better contrast with blue header */
+[data-theme="dark"] .sync-status.synced {
+    background: #166534;
+    color: #86efac;
+}
+
+[data-theme="dark"] .sync-status.synced:hover {
+    background: #15803d;
+}
+
+[data-theme="dark"] .sync-status.not-synced {
+    background: rgba(251, 191, 36, 0.15);
+    border-color: #fbbf24;
+}
+
+[data-theme="dark"] .sync-status.syncing {
+    background: #854d0e;
+    color: #fef3c7;
+}
+
+[data-theme="dark"] .sync-status.error {
+    background: #7f1d1d;
+    color: #fca5a5;
+}
+
+[data-theme="dark"] .sync-status.error:hover {
+    background: #991b1b;
+}
+
 [data-theme="dark"] .r-level-item .r-label {
     color: #a1a1aa;
 }
@@ -2916,6 +2945,39 @@ tbody tr:last-child td {
 [data-theme="dark"] .btn-edit,
 [data-theme="dark"] .btn-delete {
     background-color: #27272a;
+}
+
+/* Input with buttons - specific override for white background */
+[data-theme="dark"] .input-with-buttons input {
+    background-color: #27272a;
+}
+
+/* Toast notification - ensure dark mode is applied */
+[data-theme="dark"] .toast {
+    background: #1e293b;
+    color: #f1f5f9;
+    border-color: #334155;
+    border-left-color: #3b82f6;
+}
+
+/* Trade card - dark mode styling */
+[data-theme="dark"] .trade-card {
+    background: #1e293b;
+    border-color: #334155;
+}
+
+[data-theme="dark"] .trade-card-ticker,
+[data-theme="dark"] .trade-card-shares,
+[data-theme="dark"] .trade-card-detail-value {
+    color: #f4f4f5;
+}
+
+[data-theme="dark"] .trade-card-main {
+    background: #27272a;
+}
+
+[data-theme="dark"] .trade-card-divider {
+    background: #3f3f46;
 }
 
 /* Pagination - dark mode */
@@ -3022,6 +3084,35 @@ tbody tr:last-child td {
 
 /* System preference dark mode overrides */
 @media (prefers-color-scheme: dark) {
+    /* Sync status - better contrast with blue header */
+    :root:not([data-theme="light"]) .sync-status.synced {
+        background: #166534;
+        color: #86efac;
+    }
+
+    :root:not([data-theme="light"]) .sync-status.synced:hover {
+        background: #15803d;
+    }
+
+    :root:not([data-theme="light"]) .sync-status.not-synced {
+        background: rgba(251, 191, 36, 0.15);
+        border-color: #fbbf24;
+    }
+
+    :root:not([data-theme="light"]) .sync-status.syncing {
+        background: #854d0e;
+        color: #fef3c7;
+    }
+
+    :root:not([data-theme="light"]) .sync-status.error {
+        background: #7f1d1d;
+        color: #fca5a5;
+    }
+
+    :root:not([data-theme="light"]) .sync-status.error:hover {
+        background: #991b1b;
+    }
+
     :root:not([data-theme="light"]) input,
     :root:not([data-theme="light"]) select,
     :root:not([data-theme="light"]) textarea {
@@ -3217,6 +3308,39 @@ tbody tr:last-child td {
     :root:not([data-theme="light"]) .btn-secondary:hover {
         background-color: #3f3f46;
         border-color: #71717a;
+    }
+
+    /* Input with buttons - specific override for white background */
+    :root:not([data-theme="light"]) .input-with-buttons input {
+        background-color: #27272a;
+    }
+
+    /* Toast notification */
+    :root:not([data-theme="light"]) .toast {
+        background: #1e293b;
+        color: #f1f5f9;
+        border-color: #334155;
+        border-left-color: #3b82f6;
+    }
+
+    /* Trade card - dark mode styling */
+    :root:not([data-theme="light"]) .trade-card {
+        background: #1e293b;
+        border-color: #334155;
+    }
+
+    :root:not([data-theme="light"]) .trade-card-ticker,
+    :root:not([data-theme="light"]) .trade-card-shares,
+    :root:not([data-theme="light"]) .trade-card-detail-value {
+        color: #f4f4f5;
+    }
+
+    :root:not([data-theme="light"]) .trade-card-main {
+        background: #27272a;
+    }
+
+    :root:not([data-theme="light"]) .trade-card-divider {
+        background: #3f3f46;
     }
 }
 
