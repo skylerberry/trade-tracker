@@ -2137,17 +2137,51 @@ function loadDefaultSettings() {
     if (storedRisk) {
         defaultRiskPercent = parseFloat(storedRisk);
         calcRiskPercent.value = defaultRiskPercent;
+
+        // Check if value matches any preset
+        const presetValues = [0.1, 0.25, 0.5, 1];
+        const isPreset = presetValues.includes(defaultRiskPercent);
+
         document.querySelectorAll('.risk-preset').forEach(btn => {
             btn.classList.toggle('active', parseFloat(btn.dataset.value) === defaultRiskPercent);
         });
+
+        // If custom value, show the custom input
+        if (!isPreset) {
+            const customToggle = document.getElementById('customRiskToggle');
+            const customWrapper = document.getElementById('customRiskWrapper');
+            const customInput = document.getElementById('calcCustomRisk');
+
+            customToggle.classList.add('hidden');
+            customWrapper.classList.remove('hidden');
+            customWrapper.classList.add('active');
+            customInput.value = defaultRiskPercent;
+        }
     }
 
     if (storedMax) {
         defaultMaxPercent = parseFloat(storedMax);
         calcMaxPercent.value = defaultMaxPercent;
+
+        // Check if value matches any preset
+        const maxPresetValues = [5, 10, 20, 50, 100];
+        const isMaxPreset = maxPresetValues.includes(defaultMaxPercent);
+
         document.querySelectorAll('.max-preset').forEach(btn => {
             btn.classList.toggle('active', parseFloat(btn.dataset.value) === defaultMaxPercent);
         });
+
+        // If custom value, show the custom input
+        if (!isMaxPreset) {
+            const customToggle = document.getElementById('customMaxToggle');
+            const customWrapper = document.getElementById('customMaxWrapper');
+            const customInput = document.getElementById('calcCustomMax');
+
+            customToggle.classList.add('hidden');
+            customWrapper.classList.remove('hidden');
+            customWrapper.classList.add('active');
+            customInput.value = defaultMaxPercent;
+        }
     }
 }
 
@@ -2260,17 +2294,49 @@ async function loadSettingsFromGist() {
                 defaultRiskPercent = settings.defaultRiskPercent;
                 localStorage.setItem('tradeTracker_defaultRisk', defaultRiskPercent.toString());
                 calcRiskPercent.value = defaultRiskPercent;
+
+                const presetValues = [0.1, 0.25, 0.5, 1];
+                const isPreset = presetValues.includes(defaultRiskPercent);
+
                 document.querySelectorAll('.risk-preset').forEach(btn => {
                     btn.classList.toggle('active', parseFloat(btn.dataset.value) === defaultRiskPercent);
                 });
+
+                // If custom value, show the custom input
+                if (!isPreset) {
+                    const customToggle = document.getElementById('customRiskToggle');
+                    const customWrapper = document.getElementById('customRiskWrapper');
+                    const customInput = document.getElementById('calcCustomRisk');
+
+                    customToggle.classList.add('hidden');
+                    customWrapper.classList.remove('hidden');
+                    customWrapper.classList.add('active');
+                    customInput.value = defaultRiskPercent;
+                }
             }
             if (settings.defaultMaxPercent) {
                 defaultMaxPercent = settings.defaultMaxPercent;
                 localStorage.setItem('tradeTracker_defaultMax', defaultMaxPercent.toString());
                 calcMaxPercent.value = defaultMaxPercent;
+
+                const maxPresetValues = [5, 10, 20, 50, 100];
+                const isMaxPreset = maxPresetValues.includes(defaultMaxPercent);
+
                 document.querySelectorAll('.max-preset').forEach(btn => {
                     btn.classList.toggle('active', parseFloat(btn.dataset.value) === defaultMaxPercent);
                 });
+
+                // If custom value, show the custom input
+                if (!isMaxPreset) {
+                    const customToggle = document.getElementById('customMaxToggle');
+                    const customWrapper = document.getElementById('customMaxWrapper');
+                    const customInput = document.getElementById('calcCustomMax');
+
+                    customToggle.classList.add('hidden');
+                    customWrapper.classList.remove('hidden');
+                    customWrapper.classList.add('active');
+                    customInput.value = defaultMaxPercent;
+                }
             }
             if (settings.calcExpanded !== undefined) {
                 localStorage.setItem(CALC_EXPANDED_KEY, settings.calcExpanded.toString());
@@ -3603,17 +3669,49 @@ loadSettingsFromGist = async function() {
                 defaultRiskPercent = settings.defaultRiskPercent;
                 localStorage.setItem('tradeTracker_defaultRisk', defaultRiskPercent.toString());
                 calcRiskPercent.value = defaultRiskPercent;
+
+                const presetValues = [0.1, 0.25, 0.5, 1];
+                const isPreset = presetValues.includes(defaultRiskPercent);
+
                 document.querySelectorAll('.risk-preset').forEach(btn => {
                     btn.classList.toggle('active', parseFloat(btn.dataset.value) === defaultRiskPercent);
                 });
+
+                // If custom value, show the custom input
+                if (!isPreset) {
+                    const customToggle = document.getElementById('customRiskToggle');
+                    const customWrapper = document.getElementById('customRiskWrapper');
+                    const customInput = document.getElementById('calcCustomRisk');
+
+                    customToggle.classList.add('hidden');
+                    customWrapper.classList.remove('hidden');
+                    customWrapper.classList.add('active');
+                    customInput.value = defaultRiskPercent;
+                }
             }
             if (settings.defaultMaxPercent) {
                 defaultMaxPercent = settings.defaultMaxPercent;
                 localStorage.setItem('tradeTracker_defaultMax', defaultMaxPercent.toString());
                 calcMaxPercent.value = defaultMaxPercent;
+
+                const maxPresetValues = [5, 10, 20, 50, 100];
+                const isMaxPreset = maxPresetValues.includes(defaultMaxPercent);
+
                 document.querySelectorAll('.max-preset').forEach(btn => {
                     btn.classList.toggle('active', parseFloat(btn.dataset.value) === defaultMaxPercent);
                 });
+
+                // If custom value, show the custom input
+                if (!isMaxPreset) {
+                    const customToggle = document.getElementById('customMaxToggle');
+                    const customWrapper = document.getElementById('customMaxWrapper');
+                    const customInput = document.getElementById('calcCustomMax');
+
+                    customToggle.classList.add('hidden');
+                    customWrapper.classList.remove('hidden');
+                    customWrapper.classList.add('active');
+                    customInput.value = defaultMaxPercent;
+                }
             }
             if (settings.calcExpanded !== undefined) {
                 localStorage.setItem(CALC_EXPANDED_KEY, settings.calcExpanded.toString());
