@@ -2854,6 +2854,23 @@ tbody tr:last-child td {
     color: #86efac;
 }
 
+[data-theme="dark"] .r-level-item.active {
+    background: #3b82f6;
+    color: white;
+}
+
+[data-theme="dark"] .r-level-item.active .r-label {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+[data-theme="dark"] .r-level-item.active .r-price {
+    color: white;
+}
+
+[data-theme="dark"] .r-level-item.active .r-profit {
+    color: #bbf7d0;
+}
+
 [data-theme="dark"] .preset-btn {
     background-color: #3f3f46;
     color: #e4e4e7;
@@ -2863,6 +2880,25 @@ tbody tr:last-child td {
 [data-theme="dark"] .preset-btn:hover {
     background-color: #52525b;
     color: #ffffff;
+}
+
+[data-theme="dark"] .preset-btn.active {
+    background-color: #3b82f6;
+    border-color: #3b82f6;
+    color: white;
+}
+
+[data-theme="dark"] .custom-input-wrapper.active {
+    background-color: #3b82f6;
+    border-color: #3b82f6;
+}
+
+[data-theme="dark"] .custom-input-wrapper.active input {
+    color: white;
+}
+
+[data-theme="dark"] .custom-input-wrapper.active input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
 }
 
 [data-theme="dark"] .increment-btn {
@@ -3019,6 +3055,23 @@ tbody tr:last-child td {
         color: #86efac;
     }
 
+    :root:not([data-theme="light"]) .r-level-item.active {
+        background: #3b82f6;
+        color: white;
+    }
+
+    :root:not([data-theme="light"]) .r-level-item.active .r-label {
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    :root:not([data-theme="light"]) .r-level-item.active .r-price {
+        color: white;
+    }
+
+    :root:not([data-theme="light"]) .r-level-item.active .r-profit {
+        color: #bbf7d0;
+    }
+
     :root:not([data-theme="light"]) .preset-btn {
         background-color: #3f3f46;
         color: #e4e4e7;
@@ -3028,6 +3081,25 @@ tbody tr:last-child td {
     :root:not([data-theme="light"]) .preset-btn:hover {
         background-color: #52525b;
         color: #ffffff;
+    }
+
+    :root:not([data-theme="light"]) .preset-btn.active {
+        background-color: #3b82f6;
+        border-color: #3b82f6;
+        color: white;
+    }
+
+    :root:not([data-theme="light"]) .custom-input-wrapper.active {
+        background-color: #3b82f6;
+        border-color: #3b82f6;
+    }
+
+    :root:not([data-theme="light"]) .custom-input-wrapper.active input {
+        color: white;
+    }
+
+    :root:not([data-theme="light"]) .custom-input-wrapper.active input::placeholder {
+        color: rgba(255, 255, 255, 0.6);
     }
 
     :root:not([data-theme="light"]) .increment-btn {
