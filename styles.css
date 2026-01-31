@@ -3153,6 +3153,15 @@ tbody tr:last-child td {
     border-radius: 6px;
 }
 
+.shortcuts-tip code {
+    background: var(--color-bg);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+    font-size: 0.8rem;
+    border: 1px solid var(--color-gray-300);
+}
+
 .shortcut-conflict {
     font-size: 0.75rem;
     color: var(--color-warning-dark);
@@ -3183,6 +3192,12 @@ tbody tr:last-child td {
 [data-theme="dark"] .shortcuts-tip {
     background: #27272a;
     color: #a1a1aa;
+}
+
+[data-theme="dark"] .shortcuts-tip code {
+    background: #18181b;
+    border-color: #3f3f46;
+    color: #e4e4e7;
 }
 
 [data-theme="dark"] .btn-clear-shortcut {
@@ -3219,6 +3234,12 @@ tbody tr:last-child td {
     :root:not([data-theme="light"]) .shortcuts-tip {
         background: #27272a;
         color: #a1a1aa;
+    }
+
+    :root:not([data-theme="light"]) .shortcuts-tip code {
+        background: #18181b;
+        border-color: #3f3f46;
+        color: #e4e4e7;
     }
 
     :root:not([data-theme="light"]) .btn-clear-shortcut {
