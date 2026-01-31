@@ -1,417 +1,376 @@
 # Trade Tracker Design System
 
-This document defines the visual language and design principles for the Trade Tracker application.
+This document defines the visual language and design principles for the Trade Tracker application. **All design changes must follow these guidelines to maintain consistency.**
 
 ---
 
 ## Design Philosophy
 
-**Flat, Clean, Professional** - The design prioritizes clarity and simplicity. No gradients, minimal shadows, and a focus on typography and spacing.
+**Flat, Clean, Timeless** - The design prioritizes clarity and simplicity. No gradients, no glassmorphism, no trendy effects. Just clean, functional design that won't look dated.
 
-**Key Principles:**
-- Flat design with subtle depth through borders and background colors
-- Navy blue as the dominant brand color
-- Generous whitespace
-- Consistent border-radius (6px for inputs, 8px for cards/panels, 12px for large cards)
-- Left-border accents for emphasis (toasts, alerts)
+### Core Principles
+
+1. **Flat design** - No gradients, no glassmorphism, no 3D effects
+2. **Solid color backgrounds** - Cards use solid fills, not semi-transparent overlays
+3. **Consistent color usage** - The same blue should be used everywhere blue appears
+4. **Subtle depth** - Use borders and slight background color differences, not shadows
+5. **Theme parity** - Light and dark mode should feel like the same app, just inverted
+
+### What NOT to Do
+
+- **NO gradients** - Ever. Not for backgrounds, not for buttons, not for cards
+- **NO glassmorphism** - No frosted glass effects, no backdrop-blur
+- **NO trendy effects** - If it looks like a 2024 design trend, don't use it
+- **NO inconsistent colors** - If one button is navy, ALL buttons should be navy
 
 ---
 
 ## Color Palette
 
-### Primary Colors
+### Light Mode
+
+#### Primary Brand Color
 ```css
---color-primary: #1a365d;        /* Navy blue - main brand color */
---color-primary-hover: #2d4a7c;  /* Navy blue hover state */
---color-primary-light: rgba(26, 54, 93, 0.15);  /* Focus ring */
+--color-primary: #1a365d;        /* Navy blue - THE brand color */
+--color-primary-hover: #2d4a7c;  /* Slightly lighter for hover */
 ```
 
-### Accent Colors
+**This navy blue is used for:**
+- Header background
+- All primary buttons (Position Size Calculator, Log Trade, Paste Alert, etc.)
+- Active/selected preset buttons (1%, 2%, etc.)
+- Active R-level items
+- Form headings
+- Watchlist pill hover states
+
+#### Status Colors
 ```css
---color-accent: #2563eb;         /* Bright blue - links, interactive elements */
---color-accent-hover: #1d4ed8;
+--color-success: #22c55e;        /* Green - synced, gains, closed trades */
+--color-warning: #fbbf24;        /* Amber - syncing, warnings */
+--color-error: #ef4444;          /* Red - errors, losses, delete actions */
 ```
 
-### Status Colors
+#### Calculator Card Colors (Light Mode)
 ```css
-/* Success - Green */
---color-success: #22c55e;
---color-success-light: #dcfce7;
---color-success-dark: #166534;
+/* Position Card */
+background: #1a365d;             /* Navy - same as primary */
 
-/* Warning - Yellow/Amber */
---color-warning: #fbbf24;
---color-warning-light: #fef3c7;
---color-warning-dark: #92400e;
+/* Target Card - Gain */
+background: #2d6a4f;             /* Muted forest green */
 
-/* Error - Red */
---color-error: #ef4444;
---color-error-light: #fee2e2;
---color-error-dark: #991b1b;
+/* Target Card - Loss */
+background: #9b2226;             /* Muted burgundy */
 
-/* Info - Blue */
---color-info: #2563eb;
---color-info-light: #dbeafe;
---color-info-dark: #1e40af;
+/* Target Card - Inactive/Empty */
+background: #f3f4f6;             /* Light gray */
+border: 2px dashed #d1d5db;      /* Dashed border creates depth */
 ```
 
-### Neutral Colors (Gray Scale)
+### Dark Mode
+
+#### Primary Brand Color (Dark Mode)
 ```css
---color-gray-50: #f9fafb;   /* Backgrounds */
---color-gray-100: #f3f4f6;  /* Alt backgrounds */
---color-gray-200: #e5e7eb;  /* Borders, dividers */
---color-gray-300: #d1d5db;  /* Input borders */
---color-gray-400: #9ca3af;  /* Placeholder text */
---color-gray-500: #6b7280;  /* Secondary text */
---color-gray-600: #4b5563;  /* Body text */
---color-gray-700: #374151;  /* Headings */
---color-gray-800: #1f2937;
---color-gray-900: #111827;
+#1e3a5f                          /* Muted navy - softer than light mode */
+```
+
+**This muted navy is used for ALL the same elements as light mode:**
+- Header background
+- All primary buttons
+- Active/selected preset buttons
+- Active R-level items
+- Watchlist pill hover states
+- Shortcut key recording state
+
+**CRITICAL: Every blue interactive element must use `#1e3a5f` in dark mode. No exceptions.**
+
+#### Dark Mode Backgrounds
+```css
+#18181b                          /* Page background */
+#27272a                          /* Card/panel backgrounds */
+#2d2d30                          /* Slightly elevated (e.g., inactive card interior) */
+#3f3f46                          /* Borders, dividers */
+```
+
+#### Calculator Card Colors (Dark Mode)
+```css
+/* Position Card */
+background: #1e3a5f;             /* Muted navy - matches header/buttons */
+
+/* Target Card - Gain */
+background: #1a4d3a;             /* Softer forest green */
+
+/* Target Card - Loss */
+background: #6b2c2c;             /* Softer burgundy */
+
+/* Target Card - Inactive/Empty */
+background: #2d2d30;             /* Slightly lighter than surroundings */
+border: 2px dashed #3f3f46;      /* Creates inset effect */
+```
+
+**Note:** Dark mode colors should be SOFTER and more muted than light mode. Harsh bright colors are jarring on dark backgrounds.
+
+---
+
+## Theme Consistency Rules
+
+### Rule 1: Matching Elements Must Match
+If two elements look the same in light mode, they MUST look the same in dark mode.
+
+**Example:** In light mode, the "Paste Alert" button and the active "1%" preset button are both navy. In dark mode, they must BOTH be `#1e3a5f`.
+
+### Rule 2: Structural Parity
+If light mode has a dashed border empty state, dark mode must also have a dashed border empty state.
+
+### Rule 3: No Dark-Mode-Only Effects
+Don't add visual effects (gradients, glows, special borders) to dark mode that don't exist in light mode.
+
+### Rule 4: Test Both Themes
+Before committing any CSS change, verify it looks correct in BOTH light and dark mode.
+
+---
+
+## Component Specifications
+
+### Buttons
+
+#### Primary Button
+```css
+/* Light Mode */
+background-color: #1a365d;
+color: white;
+
+/* Dark Mode */
+background-color: #1e3a5f;
+color: white;
+
+/* Hover - Both Modes */
+background-color: [slightly lighter shade];
+```
+
+**Used for:** Position Size Calculator, Log Trade, Paste Alert, Export, Save, Submit
+
+#### Secondary Button
+```css
+/* Light Mode */
+background: transparent;
+border: 1px solid #d1d5db;
+color: #4b5563;
+
+/* Dark Mode */
+background: transparent;
+border: 1px solid #52525b;
+color: #a1a1aa;
+```
+
+**Used for:** Cancel, Close, secondary actions
+
+#### Preset Buttons (Risk %, Max %)
+```css
+/* Inactive - Light Mode */
+background: white;
+border: 1px solid #d1d5db;
+color: #374151;
+
+/* Inactive - Dark Mode */
+background: #3f3f46;
+border: 1px solid #52525b;
+color: #e4e4e7;
+
+/* Active - Light Mode */
+background: #1a365d;
+border-color: #1a365d;
+color: white;
+
+/* Active - Dark Mode */
+background: #1e3a5f;
+border-color: #1e3a5f;
+color: white;
+```
+
+### Form Inputs
+
+```css
+/* Light Mode */
+background: white;
+border: 1px solid #d1d5db;
+color: #374151;
+
+/* Dark Mode */
+background: #27272a;
+border: 1px solid #52525b;
+color: #f4f4f5;
+
+/* Focus Ring - Light Mode */
+box-shadow: 0 0 0 3px rgba(26, 54, 93, 0.15);
+
+/* Focus Ring - Dark Mode */
+box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.25);
+```
+
+### Select Dropdown Arrow
+The dropdown arrow SVG must be visible in both themes:
+```css
+/* Light Mode */
+fill: #6b7280;
+
+/* Dark Mode */
+fill: #a1a1aa;
+```
+
+### Calculator Result Cards
+
+Cards should be **solid colors**, not gradients or semi-transparent.
+
+```css
+/* Position Card */
+Light: #1a365d (navy)
+Dark:  #1e3a5f (muted navy)
+
+/* Target Card - Active Gain */
+Light: #2d6a4f (forest green)
+Dark:  #1a4d3a (softer forest green)
+
+/* Target Card - Active Loss */
+Light: #9b2226 (burgundy)
+Dark:  #6b2c2c (softer burgundy)
+
+/* Target Card - Inactive/Empty */
+Light: #f3f4f6 background, 2px dashed #d1d5db border
+Dark:  #2d2d30 background, 2px dashed #3f3f46 border
+```
+
+**The inactive state should have visible depth** - the interior should be slightly different from the border area.
+
+### Header
+
+```css
+/* Light Mode */
+background: #1a365d;
+color: white;
+
+/* Dark Mode */
+background: #1e3a5f;
+color: white;
+```
+
+### Sync Status Pills (in Header)
+
+```css
+/* Synced - Dark Mode */
+background: #166534;
+color: #86efac;
+
+/* Syncing - Dark Mode */
+background: #854d0e;
+color: #fef3c7;
+
+/* Error - Dark Mode */
+background: #7f1d1d;
+color: #fca5a5;
 ```
 
 ---
 
 ## Typography
 
-**Font Family:** System fonts for fast loading and native feel
 ```css
-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 ```
 
-**Font Sizes:**
-- Page title: 1.5rem (24px)
-- Section heading: 1.25rem (20px)
-- Body/inputs: 0.95rem (15px)
-- Small/labels: 0.85rem (13.6px)
-- Tiny/badges: 0.8rem (12.8px)
-- Micro/tags: 0.75rem (12px)
-
-**Font Weights:**
-- Regular: 400
-- Medium: 500
-- Semi-bold: 600
-- Bold: 700
+No custom fonts. System fonts only.
 
 ---
 
 ## Spacing
 
-Use consistent spacing multiples:
-- Base unit: 4px
-- Common values: 8px, 12px, 16px, 20px, 24px, 30px
+Base unit: 4px
 
-**Component spacing:**
-- Form group margin-bottom: 20px
-- Section margin-bottom: 20px-30px
-- Input padding: 10px 12px (standard), 14px 16px (large/calculator)
-- Button padding: 10px 20px (standard), 8px 16px (small)
-- Card padding: 25px-30px
+Common values: 8px, 12px, 16px, 20px, 24px, 30px
 
 ---
 
 ## Border Radius
 
 ```css
---radius-sm: 4px;    /* Small elements, badges */
+--radius-sm: 4px;    /* Badges, small elements */
 --radius-md: 6px;    /* Buttons, inputs */
 --radius-lg: 8px;    /* Cards, panels */
---radius-xl: 12px;   /* Large cards, calculator result cards */
---radius-full: 9999px;  /* Pills, round buttons */
+--radius-xl: 12px;   /* Large cards */
+--radius-full: 9999px;  /* Pills */
 ```
 
 ---
 
 ## Shadows
 
-Minimal shadow usage - prefer borders for definition.
+Minimal. Prefer borders for definition.
 
 ```css
 --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
---shadow-md: 0 2px 8px rgba(0, 0, 0, 0.1);   /* Cards, panels */
---shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.2); /* Modals */
+--shadow-md: 0 2px 8px rgba(0, 0, 0, 0.1);
+--shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.2);  /* Modals only */
 ```
 
 ---
 
-## Button Styles
+## Dark Mode Implementation
 
-### Primary Button (Main Actions)
-Navy blue filled button for primary actions.
+### Two Selector Patterns Required
+
+Every dark mode style must be defined twice:
+
 ```css
-.btn-primary {
-    background-color: var(--color-primary);  /* Navy blue */
-    color: white;
-    border: none;
-    border-radius: 6px;
-    padding: 10px 20px;
-    font-weight: 500;
-}
-```
-**Use for:** Submit, Save, Import, Export actions
-
-### Secondary Button (Cancel/Dismiss)
-Ghost-style outlined button for secondary actions.
-```css
-.btn-secondary {
-    background-color: transparent;
-    color: var(--color-gray-600);
-    border: 1px solid var(--color-gray-300);
-    border-radius: 6px;
-    padding: 10px 20px;
-    font-weight: 500;
-}
-```
-**Use for:** Cancel, Close, Dismiss actions
-
-### Ghost Button (Subtle Actions)
-Outlined button that fills on hover.
-```css
-.btn-ghost {
-    background-color: transparent;
-    color: var(--color-primary);
-    border: 2px solid var(--color-primary);
-}
-```
-**Use for:** Secondary navigation, toggle buttons (like Manage Watchlist)
-
-### Danger Actions (Edit/Delete)
-Outlined style that fills with color on hover.
-```css
-.btn-delete {
-    background-color: transparent;
-    color: var(--color-error);
-    border: 1px solid var(--color-error);
-}
-/* Hover: fills with error color */
-```
-
----
-
-## Form Elements
-
-### Text Inputs
-```css
-input {
-    padding: 10px 12px;
-    border: 1px solid var(--color-gray-300);
-    border-radius: 6px;
-    font-size: 0.95rem;
+/* 1. Explicit theme selection */
+[data-theme="dark"] .element {
+    /* styles */
 }
 
-/* Focus state */
-input:focus {
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px var(--color-primary-light);
-}
-
-/* Error state */
-input.error {
-    border-color: var(--color-error);
+/* 2. System preference */
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .element {
+        /* same styles */
+    }
 }
 ```
 
-### Labels
+### Native UI Elements
+
 ```css
-label {
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--color-gray-700);
-    margin-bottom: 6px;
+[data-theme="dark"] {
+    color-scheme: dark;  /* Required for scrollbars, checkboxes, etc. */
 }
 ```
 
 ---
 
-## Cards & Panels
+## Checklist for Design Changes
 
-### Standard Panel
-```css
-.panel {
-    background-color: var(--color-gray-50);  /* White/light gray */
-    padding: 25px-30px;
-    border-radius: 8px;
-    box-shadow: var(--shadow-md);
-}
-```
+Before making any visual change, verify:
 
-### Result Cards (Calculator)
-Colored cards with internal structure.
-```css
-.calc-result-card {
-    background: var(--color-primary);  /* Navy */
-    border-radius: 12px;
-    padding: 25px;
-    color: white;
-}
-```
+- [ ] Does it follow the flat design principle (no gradients, no glassmorphism)?
+- [ ] Does the color match existing elements of the same type?
+- [ ] Have you added BOTH `[data-theme="dark"]` AND `@media (prefers-color-scheme: dark)` styles?
+- [ ] Does it look correct in light mode?
+- [ ] Does it look correct in dark mode?
+- [ ] Do interactive states (hover, active, focus) exist for both themes?
+- [ ] Is there structural parity between themes (same borders, same layout)?
 
 ---
 
-## Feedback Elements
+## Quick Reference: Dark Mode Colors
 
-### Toast Notifications
-Flat design with left border accent.
-```css
-.toast {
-    background: white;
-    color: var(--color-gray-700);
-    padding: 12px 20px;
-    border: 1px solid var(--color-gray-300);
-    border-left: 3px solid var(--color-primary);  /* Accent border */
-    border-radius: 6px;
-}
-```
-
-### Status Badges
-Pill-shaped with background color.
-```css
-.status-badge {
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 500;
-}
-
-/* Example: Open status */
-.status-open {
-    background-color: var(--color-success-light);
-    color: var(--color-success-dark);
-}
-```
-
----
-
-## Watchlist Pills
-Small clickable ticker pills.
-```css
-.watchlist-pill {
-    padding: 6px 12px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    border: 1px solid var(--color-gray-300);
-    border-radius: 20px;
-    background: white;
-    color: var(--color-primary);
-}
-
-/* Hover: fills with primary color */
-.watchlist-pill:hover {
-    background: var(--color-primary);
-    border-color: var(--color-primary);
-    color: white;
-}
-```
-
----
-
-## Modal Design
-
-```css
-.modal {
-    /* Backdrop */
-    background: rgba(0, 0, 0, 0.5);
-}
-
-.modal-content {
-    background: var(--color-gray-50);
-    padding: 30px;
-    border-radius: 12px;
-    max-width: 450px;
-    box-shadow: var(--shadow-lg);
-}
-
-/* Modal heading */
-.modal-content h2 {
-    color: var(--color-primary);
-    margin-bottom: 20px;
-}
-
-/* Modal description */
-.modal-description {
-    color: var(--color-gray-500);
-    font-size: 0.9rem;
-}
-
-/* Modal actions - button row */
-.modal-actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 20px;
-}
-```
-
----
-
-## Dark Mode
-
-Dark mode uses a charcoal palette with blue accents.
-
-### Key Color Mappings
-| Light Mode | Dark Mode |
-|------------|-----------|
-| White backgrounds | #27272a (charcoal) |
-| Navy primary | #60a5fa (light blue) |
-| Gray-700 text | #f4f4f5 (near white) |
-| Input borders | #52525b |
-
-### Dark Mode Cards
-Use dark slate backgrounds with top-border accents instead of solid bright colors.
-```css
-[data-theme="dark"] .calc-result-card {
-    background: #1e293b;
-    border: 1px solid #334155;
-    border-top: 3px solid #60a5fa;  /* Blue accent */
-}
-```
-
----
-
-## Responsive Breakpoints
-
-```css
-/* Tablet */
-@media (max-width: 768px) { }
-
-/* Mobile */
-@media (max-width: 480px) { }
-```
-
-### Mobile Considerations
-- Stack buttons vertically on mobile
-- Single-column form layouts
-- Adjust padding (15-20px instead of 25-30px)
-- Disable hover effects for touch devices with `@media (hover: none)`
-
----
-
-## Animation & Transitions
-
-Keep animations subtle and fast.
-
-```css
-transition: all 0.2s;  /* Standard transition */
-```
-
-**Common transitions:**
-- Button hover: background-color, color
-- Input focus: border-color, box-shadow
-- Modal: opacity, transform
-- Toast: opacity, translateY
-
----
-
-## Do's and Don'ts
-
-### Do
-- Use navy blue for primary actions
-- Use left-border accents for emphasis
-- Keep spacing consistent with 4px multiples
-- Use white/light backgrounds with subtle borders
-- Test all changes in both light and dark mode
-
-### Don't
-- Use gradients
-- Use heavy drop shadows
-- Mix different blue shades inconsistently
-- Use bright colors for large filled areas (except result cards)
-- Forget dark mode support
+| Element | Color |
+|---------|-------|
+| Primary buttons, header, active states | `#1e3a5f` |
+| Page background | `#18181b` |
+| Card/panel background | `#27272a` |
+| Elevated surface (inactive card interior) | `#2d2d30` |
+| Borders, dividers | `#3f3f46` |
+| Secondary borders | `#52525b` |
+| Muted text | `#71717a` |
+| Secondary text | `#a1a1aa` |
+| Primary text | `#e4e4e7` |
+| Bright text | `#f4f4f5` |
+| Position card | `#1e3a5f` |
+| Gain card | `#1a4d3a` |
+| Loss card | `#6b2c2c` |
