@@ -3394,6 +3394,31 @@ tbody tr:last-child td {
     font-size: 0.9rem;
 }
 
+.trade-details-actions {
+    justify-content: space-between;
+}
+
+.copy-details-link {
+    padding: 0;
+    border: none;
+    background: none;
+    color: var(--color-gray-400);
+    font-size: 0.75rem;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    white-space: nowrap;
+}
+
+.copy-details-link:hover {
+    color: var(--color-primary);
+}
+
+.copy-details-link.copied {
+    color: var(--color-success);
+    text-decoration: none;
+}
+
 /* Dark mode for trade details modal */
 [data-theme="dark"] .trade-details-header {
     border-bottom-color: #3f3f46;

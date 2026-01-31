@@ -808,6 +808,60 @@ tradeDetailsModal?.addEventListener('click', (e) => {
     }
 });
 
+// Copy trade details to clipboard
+document.getElementById('copyTradeDetailsBtn')?.addEventListener('click', async () => {
+    if (!viewingTradeId) return;
+
+    const trade = trades.find(t => t.id === viewingTradeId);
+    if (!trade) return;
+
+    // Build text summary
+    let text = `${trade.ticker} Trade Details\n`;
+    text += `${'─'.repeat(30)}\n`;
+    text += `Entry: ${formatCurrency(trade.entryPrice)} on ${formatDate(trade.entryDate)}\n`;
+    text += `Initial Stop: ${formatCurrency(trade.initialSL)}\n`;
+    text += `Current Stop: ${formatCurrency(trade.currentSL)}\n`;
+    text += `Status: ${STATUS_LABELS[trade.status] || trade.status}\n`;
+
+    // Add sales if any
+    const sales = getTradeSales(trade);
+    const validSales = sales.filter(s => s && (s.portion || s.price));
+    if (validSales.length > 0) {
+        text += `\nSales:\n`;
+        validSales.forEach((sale, i) => {
+            text += `  ${i + 1}. ${formatSale(sale, false)}\n`;
+        });
+    }
+
+    // Add snapshot if exists
+    if (trade.snapshot) {
+        const s = trade.snapshot;
+        text += `\nPosition Snapshot:\n`;
+        text += `  Account: ${formatCurrency(s.accountSize)}\n`;
+        text += `  Shares: ${formatNumber(s.shares)}\n`;
+        text += `  Position: ${formatCurrency(s.positionSize)}\n`;
+        text += `  Risk: ${s.riskPercent}% (${formatCurrency(s.totalRisk)})\n`;
+        text += `  % of Account: ${s.percentOfAccount.toFixed(1)}%\n`;
+    }
+
+    try {
+        await navigator.clipboard.writeText(text);
+
+        // Show feedback
+        const btn = document.getElementById('copyTradeDetailsBtn');
+        const originalText = btn.textContent;
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+
+        setTimeout(() => {
+            btn.textContent = originalText;
+            btn.classList.remove('copied');
+        }, 2000);
+    } catch (err) {
+        console.error('Failed to copy:', err);
+    }
+});
+
 // Export functions for global access (used in onclick handlers)
 window.editTrade = editTrade;
 window.deleteTrade = deleteTrade;
