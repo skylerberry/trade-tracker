@@ -2823,11 +2823,6 @@ tbody tr:last-child td {
    DARK MODE EXPLICIT OVERRIDES
    ================================ */
 
-[data-theme="dark"] header {
-    background-color: #1e293b;
-    border-bottom: 1px solid #334155;
-}
-
 [data-theme="dark"] input,
 [data-theme="dark"] select,
 [data-theme="dark"] textarea {
@@ -3019,10 +3014,9 @@ tbody tr:last-child td {
 
 /* Calculator cards - dark bg with colored accents instead of solid bright colors */
 [data-theme="dark"] .calc-result-card {
-    background: linear-gradient(145deg, rgba(30, 58, 138, 0.4), rgba(30, 41, 59, 0.4));
-    border: 1px solid rgba(96, 165, 250, 0.2);
+    background: #1e293b;
+    border: 1px solid #334155;
     border-top: 3px solid #60a5fa;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
 }
 
 [data-theme="dark"] .calc-result-card .calc-big-value {
@@ -3030,11 +3024,11 @@ tbody tr:last-child td {
 }
 
 [data-theme="dark"] .calc-result-card .calc-big-label {
-    color: #94a3b8;
+    color: #64748b;
 }
 
 [data-theme="dark"] .calc-result-card .calc-big-result {
-    border-bottom-color: rgba(96, 165, 250, 0.2);
+    border-bottom-color: #334155;
 }
 
 [data-theme="dark"] .calc-result-card .calc-result-row span:first-child {
@@ -3046,10 +3040,9 @@ tbody tr:last-child td {
 }
 
 [data-theme="dark"] .calc-target-card {
-    background: linear-gradient(145deg, rgba(6, 78, 59, 0.4), rgba(30, 41, 59, 0.4));
-    border: 1px solid rgba(74, 222, 128, 0.2);
+    background: #1e293b;
+    border: 1px solid #334155;
     border-top: 3px solid #4ade80;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
 }
 
 [data-theme="dark"] .calc-target-card .calc-target-header {
@@ -3058,7 +3051,7 @@ tbody tr:last-child td {
 
 [data-theme="dark"] .calc-target-card .calc-target-big-value {
     color: #86efac;
-    border-bottom-color: rgba(74, 222, 128, 0.2);
+    border-bottom-color: #334155;
 }
 
 [data-theme="dark"] .calc-target-card .calc-target-row span:first-child {
@@ -3102,11 +3095,6 @@ tbody tr:last-child td {
 
 /* System preference dark mode overrides */
 @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) header {
-        background-color: #1e293b;
-        border-bottom: 1px solid #334155;
-    }
-
     /* Sync status - better contrast with blue header */
     :root:not([data-theme="light"]) .sync-status.synced {
         background: #166534;
@@ -3265,10 +3253,9 @@ tbody tr:last-child td {
 
     /* Calculator cards */
     :root:not([data-theme="light"]) .calc-result-card {
-        background: linear-gradient(145deg, rgba(30, 58, 138, 0.4), rgba(30, 41, 59, 0.4));
-        border: 1px solid rgba(96, 165, 250, 0.2);
+        background: #1e293b;
+        border: 1px solid #334155;
         border-top: 3px solid #60a5fa;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
     }
 
     :root:not([data-theme="light"]) .calc-result-card .calc-big-value {
@@ -3276,11 +3263,11 @@ tbody tr:last-child td {
     }
 
     :root:not([data-theme="light"]) .calc-result-card .calc-big-label {
-        color: #94a3b8;
+        color: #64748b;
     }
 
     :root:not([data-theme="light"]) .calc-result-card .calc-big-result {
-        border-bottom-color: rgba(96, 165, 250, 0.2);
+        border-bottom-color: #334155;
     }
 
     :root:not([data-theme="light"]) .calc-result-card .calc-result-row span:first-child {
@@ -3292,10 +3279,9 @@ tbody tr:last-child td {
     }
 
     :root:not([data-theme="light"]) .calc-target-card {
-        background: linear-gradient(145deg, rgba(6, 78, 59, 0.4), rgba(30, 41, 59, 0.4));
-        border: 1px solid rgba(74, 222, 128, 0.2);
+        background: #1e293b;
+        border: 1px solid #334155;
         border-top: 3px solid #4ade80;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
     }
 
     :root:not([data-theme="light"]) .calc-target-card .calc-target-header {
@@ -3304,7 +3290,7 @@ tbody tr:last-child td {
 
     :root:not([data-theme="light"]) .calc-target-card .calc-target-big-value {
         color: #86efac;
-        border-bottom-color: rgba(74, 222, 128, 0.2);
+        border-bottom-color: #334155;
     }
 
     :root:not([data-theme="light"]) .calc-target-card .calc-target-row span:first-child {
