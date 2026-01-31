@@ -787,6 +787,26 @@ function deleteTrade(id) {
     renderTrades();
 }
 
+// Delete all trades
+document.getElementById('deleteAllTradesBtn')?.addEventListener('click', () => {
+    if (trades.length === 0) {
+        alert('No trades to delete.');
+        return;
+    }
+
+    const count = trades.length;
+    if (!confirm(`Are you sure you want to delete ALL ${count} trades?\n\nThis action cannot be undone.`)) return;
+
+    // Double confirmation for safety
+    if (!confirm(`This will permanently delete ${count} trades. Are you absolutely sure?`)) return;
+
+    trades = [];
+    currentPage = 1;
+    saveTrades();
+    renderTrades();
+    showToast(`Deleted ${count} trades`);
+});
+
 // View trade details
 let viewingTradeId = null;
 const tradeDetailsModal = document.getElementById('tradeDetailsModal');

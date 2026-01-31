@@ -678,6 +678,19 @@ header h1 {
     color: var(--color-error);
 }
 
+.btn-delete-all {
+    background-color: transparent;
+    color: var(--color-error);
+    border: 1px solid var(--color-error);
+    padding: 8px 16px;
+    font-size: 0.9rem;
+}
+
+.btn-delete-all:hover {
+    background-color: var(--color-error);
+    color: white;
+}
+
 /* Trades Table */
 .trades-section {
     background-color: var(--color-gray-50);
