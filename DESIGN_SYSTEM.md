@@ -70,10 +70,11 @@ border: 2px dashed #d1d5db;      /* Dashed border creates depth */
 
 #### Primary Brand Color (Dark Mode)
 ```css
-#1e3a5f                          /* Muted navy - softer than light mode */
+#2563eb                          /* Vibrant blue - provides contrast against charcoal */
+#1d4ed8                          /* Hover state - slightly darker */
 ```
 
-**This muted navy is used for ALL the same elements as light mode:**
+**This blue is used for ALL the same elements as light mode:**
 - Header background
 - All primary buttons
 - Active/selected preset buttons
@@ -81,7 +82,9 @@ border: 2px dashed #d1d5db;      /* Dashed border creates depth */
 - Watchlist pill hover states
 - Shortcut key recording state
 
-**CRITICAL: Every blue interactive element must use `#1e3a5f` in dark mode. No exceptions.**
+**CRITICAL: Every blue interactive element must use `#2563eb` in dark mode. No exceptions.**
+
+**Why not muted navy?** The charcoal background (`#27272a`) is too close in value to muted navy (`#1e3a5f`), resulting in poor contrast. `#2563eb` provides sufficient contrast while remaining professional.
 
 #### Dark Mode Backgrounds
 ```css
@@ -94,7 +97,7 @@ border: 2px dashed #d1d5db;      /* Dashed border creates depth */
 #### Calculator Card Colors (Dark Mode)
 ```css
 /* Position Card */
-background: #1e3a5f;             /* Muted navy - matches header/buttons */
+background: #2563eb;             /* Vibrant blue - matches header/buttons */
 
 /* Target Card - Gain */
 background: #1a4d3a;             /* Softer forest green */
@@ -361,7 +364,8 @@ Before making any visual change, verify:
 
 | Element | Color |
 |---------|-------|
-| Primary buttons, header, active states | `#1e3a5f` |
+| Primary buttons, header, active states | `#2563eb` |
+| Primary hover | `#1d4ed8` |
 | Page background | `#18181b` |
 | Card/panel background | `#27272a` |
 | Elevated surface (inactive card interior) | `#2d2d30` |
@@ -371,6 +375,6 @@ Before making any visual change, verify:
 | Secondary text | `#a1a1aa` |
 | Primary text | `#e4e4e7` |
 | Bright text | `#f4f4f5` |
-| Position card | `#1e3a5f` |
+| Position card | `#2563eb` |
 | Gain card | `#1a4d3a` |
 | Loss card | `#6b2c2c` |

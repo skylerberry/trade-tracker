@@ -55,9 +55,9 @@
 /* Dark theme - charcoal palette */
 [data-theme="dark"] {
     color-scheme: dark;
-    --color-primary: #1e3a5f;
-    --color-primary-hover: #2a4a6f;
-    --color-primary-light: rgba(30, 58, 95, 0.25);
+    --color-primary: #2563eb;
+    --color-primary-hover: #1d4ed8;
+    --color-primary-light: rgba(37, 99, 235, 0.25);
 
     --color-accent: #93c5fd;
     --color-accent-hover: #60a5fa;
@@ -103,9 +103,9 @@
 @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
         color-scheme: dark;
-        --color-primary: #1e3a5f;
-        --color-primary-hover: #2a4a6f;
-        --color-primary-light: rgba(30, 58, 95, 0.25);
+        --color-primary: #2563eb;
+        --color-primary-hover: #1d4ed8;
+        --color-primary-light: rgba(37, 99, 235, 0.25);
 
         --color-accent: #93c5fd;
         --color-accent-hover: #60a5fa;
@@ -1492,8 +1492,8 @@ tbody tr:last-child td {
 }
 
 [data-theme="dark"] .watchlist-pill:hover {
-    background-color: #1e3a5f;
-    border-color: #1e3a5f;
+    background-color: #2563eb;
+    border-color: #2563eb;
     color: white;
 }
 
@@ -1521,8 +1521,8 @@ tbody tr:last-child td {
     }
 
     :root:not([data-theme="light"]) .watchlist-pill:hover {
-        background-color: #1e3a5f;
-        border-color: #1e3a5f;
+        background-color: #2563eb;
+        border-color: #2563eb;
         color: white;
     }
 
@@ -2869,7 +2869,7 @@ tbody tr:last-child td {
 
 /* Header and primary buttons should match - use same muted navy */
 [data-theme="dark"] header {
-    background-color: #1e3a5f;
+    background-color: #2563eb;
 }
 
 [data-theme="dark"] input,
@@ -2934,7 +2934,7 @@ tbody tr:last-child td {
 }
 
 [data-theme="dark"] .r-level-item.active {
-    background: #1e3a5f;
+    background: #2563eb;
     color: white;
 }
 
@@ -2962,14 +2962,14 @@ tbody tr:last-child td {
 }
 
 [data-theme="dark"] .preset-btn.active {
-    background-color: #1e3a5f;
-    border-color: #1e3a5f;
+    background-color: #2563eb;
+    border-color: #2563eb;
     color: white;
 }
 
 [data-theme="dark"] .custom-input-wrapper.active {
-    background-color: #1e3a5f;
-    border-color: #1e3a5f;
+    background-color: #2563eb;
+    border-color: #2563eb;
 }
 
 [data-theme="dark"] .custom-input-wrapper.active input {
@@ -3063,7 +3063,7 @@ tbody tr:last-child td {
 
 /* Calculator cards - intentional dark mode design with softer colors and proper depth */
 [data-theme="dark"] .calc-result-card {
-    background: #1e3a5f;  /* Softer, muted navy - not harsh bright blue */
+    background: #2563eb;  /* Softer, muted navy - not harsh bright blue */
 }
 
 [data-theme="dark"] .calc-result-card .calc-big-result {
@@ -3118,27 +3118,27 @@ tbody tr:last-child td {
 
 /* Button hierarchy - secondary buttons more subtle */
 [data-theme="dark"] .btn-calculator {
-    background-color: #1e3a5f;
+    background-color: #2563eb;
 }
 
 [data-theme="dark"] .btn-calculator:hover {
-    background-color: #2a4a6f;
+    background-color: #1d4ed8;
 }
 
 [data-theme="dark"] .btn-primary {
-    background-color: #1e3a5f;
+    background-color: #2563eb;
 }
 
 [data-theme="dark"] .btn-primary:hover {
-    background-color: #2a4a6f;
+    background-color: #1d4ed8;
 }
 
 [data-theme="dark"] .btn-calc-action {
-    background-color: #1e3a5f;
+    background-color: #2563eb;
 }
 
 [data-theme="dark"] .btn-calc-action:hover {
-    background-color: #2a4a6f;
+    background-color: #1d4ed8;
 }
 
 [data-theme="dark"] .btn-secondary {
@@ -3156,7 +3156,7 @@ tbody tr:last-child td {
 @media (prefers-color-scheme: dark) {
     /* Header - match primary buttons */
     :root:not([data-theme="light"]) header {
-        background-color: #1e3a5f;
+        background-color: #2563eb;
     }
 
     /* Sync status - better contrast with blue header */
@@ -3221,7 +3221,7 @@ tbody tr:last-child td {
     }
 
     :root:not([data-theme="light"]) .r-level-item.active {
-        background: #1e3a5f;
+        background: #2563eb;
         color: white;
     }
 
@@ -3249,14 +3249,14 @@ tbody tr:last-child td {
     }
 
     :root:not([data-theme="light"]) .preset-btn.active {
-        background-color: #1e3a5f;
-        border-color: #1e3a5f;
+        background-color: #2563eb;
+        border-color: #2563eb;
         color: white;
     }
 
     :root:not([data-theme="light"]) .custom-input-wrapper.active {
-        background-color: #1e3a5f;
-        border-color: #1e3a5f;
+        background-color: #2563eb;
+        border-color: #2563eb;
     }
 
     :root:not([data-theme="light"]) .custom-input-wrapper.active input {
@@ -3317,7 +3317,7 @@ tbody tr:last-child td {
 
     /* Calculator cards - intentional dark mode design with softer colors and proper depth */
     :root:not([data-theme="light"]) .calc-result-card {
-        background: #1e3a5f;  /* Softer, muted navy */
+        background: #2563eb;  /* Softer, muted navy */
     }
 
     :root:not([data-theme="light"]) .calc-result-card .calc-big-result {
@@ -3370,19 +3370,19 @@ tbody tr:last-child td {
     }
 
     :root:not([data-theme="light"]) .btn-calculator {
-        background-color: #1e3a5f;
+        background-color: #2563eb;
     }
 
     :root:not([data-theme="light"]) .btn-calculator:hover {
-        background-color: #2a4a6f;
+        background-color: #1d4ed8;
     }
 
     :root:not([data-theme="light"]) .btn-primary {
-        background-color: #1e3a5f;
+        background-color: #2563eb;
     }
 
     :root:not([data-theme="light"]) .btn-primary:hover {
-        background-color: #2a4a6f;
+        background-color: #1d4ed8;
     }
 
     :root:not([data-theme="light"]) .btn-secondary {
@@ -3397,11 +3397,11 @@ tbody tr:last-child td {
     }
 
     :root:not([data-theme="light"]) .btn-calc-action {
-        background-color: #1e3a5f;
+        background-color: #2563eb;
     }
 
     :root:not([data-theme="light"]) .btn-calc-action:hover {
-        background-color: #2a4a6f;
+        background-color: #1d4ed8;
     }
 
     /* Input with buttons - specific override for white background */
@@ -3634,9 +3634,9 @@ tbody tr:last-child td {
 }
 
 [data-theme="dark"] .shortcut-key.recording {
-    background: #1e3a5f;
+    background: #2563eb;
     color: white;
-    border-color: #1e3a5f;
+    border-color: #2563eb;
 }
 
 [data-theme="dark"] .shortcut-row {
@@ -3676,9 +3676,9 @@ tbody tr:last-child td {
     }
 
     :root:not([data-theme="light"]) .shortcut-key.recording {
-        background: #1e3a5f;
+        background: #2563eb;
         color: white;
-        border-color: #1e3a5f;
+        border-color: #2563eb;
     }
 
     :root:not([data-theme="light"]) .shortcut-row {
