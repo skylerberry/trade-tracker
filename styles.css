@@ -3016,54 +3016,32 @@ tbody tr:last-child td {
     color: #60a5fa;
 }
 
-/* Calculator cards - dark bg with colored accents instead of solid bright colors */
+/* Calculator cards - match light mode structure (solid backgrounds, no colored tabs) */
 [data-theme="dark"] .calc-result-card {
-    background: #1e293b;
-    border: 1px solid #334155;
-    border-top: 3px solid #60a5fa;
+    background: #1e40af;
 }
 
-[data-theme="dark"] .calc-result-card .calc-big-value {
-    color: #93c5fd;
+[data-theme="dark"] .calc-target-card.inactive {
+    background: #27272a;
+    border: 2px dashed #52525b;
 }
 
-[data-theme="dark"] .calc-result-card .calc-big-label {
-    color: #64748b;
+[data-theme="dark"] .calc-target-card.inactive .calc-target-header,
+[data-theme="dark"] .calc-target-card.inactive .calc-target-row span:first-child {
+    color: #71717a;
 }
 
-[data-theme="dark"] .calc-result-card .calc-big-result {
-    border-bottom-color: #334155;
+[data-theme="dark"] .calc-target-card.inactive .calc-target-big-value,
+[data-theme="dark"] .calc-target-card.inactive .calc-target-row span:last-child {
+    color: #a1a1aa;
 }
 
-[data-theme="dark"] .calc-result-card .calc-result-row span:first-child {
-    color: #94a3b8;
+[data-theme="dark"] .calc-target-card.gain {
+    background: #166534;
 }
 
-[data-theme="dark"] .calc-result-card .calc-result-row span:last-child {
-    color: #f1f5f9;
-}
-
-[data-theme="dark"] .calc-target-card {
-    background: #1e293b;
-    border: 1px solid #334155;
-    border-top: 3px solid #4ade80;
-}
-
-[data-theme="dark"] .calc-target-card .calc-target-header {
-    color: #4ade80;
-}
-
-[data-theme="dark"] .calc-target-card .calc-target-big-value {
-    color: #86efac;
-    border-bottom-color: #334155;
-}
-
-[data-theme="dark"] .calc-target-card .calc-target-row span:first-child {
-    color: #94a3b8;
-}
-
-[data-theme="dark"] .calc-target-card .calc-target-row span:last-child {
-    color: #f1f5f9;
+[data-theme="dark"] .calc-target-card.loss {
+    background: #991b1b;
 }
 
 /* Increase input border contrast */
@@ -3255,54 +3233,32 @@ tbody tr:last-child td {
         color: #60a5fa;
     }
 
-    /* Calculator cards */
+    /* Calculator cards - match light mode structure (solid backgrounds, no colored tabs) */
     :root:not([data-theme="light"]) .calc-result-card {
-        background: #1e293b;
-        border: 1px solid #334155;
-        border-top: 3px solid #60a5fa;
+        background: #1e40af;
     }
 
-    :root:not([data-theme="light"]) .calc-result-card .calc-big-value {
-        color: #93c5fd;
+    :root:not([data-theme="light"]) .calc-target-card.inactive {
+        background: #27272a;
+        border: 2px dashed #52525b;
     }
 
-    :root:not([data-theme="light"]) .calc-result-card .calc-big-label {
-        color: #64748b;
+    :root:not([data-theme="light"]) .calc-target-card.inactive .calc-target-header,
+    :root:not([data-theme="light"]) .calc-target-card.inactive .calc-target-row span:first-child {
+        color: #71717a;
     }
 
-    :root:not([data-theme="light"]) .calc-result-card .calc-big-result {
-        border-bottom-color: #334155;
+    :root:not([data-theme="light"]) .calc-target-card.inactive .calc-target-big-value,
+    :root:not([data-theme="light"]) .calc-target-card.inactive .calc-target-row span:last-child {
+        color: #a1a1aa;
     }
 
-    :root:not([data-theme="light"]) .calc-result-card .calc-result-row span:first-child {
-        color: #94a3b8;
+    :root:not([data-theme="light"]) .calc-target-card.gain {
+        background: #166534;
     }
 
-    :root:not([data-theme="light"]) .calc-result-card .calc-result-row span:last-child {
-        color: #f1f5f9;
-    }
-
-    :root:not([data-theme="light"]) .calc-target-card {
-        background: #1e293b;
-        border: 1px solid #334155;
-        border-top: 3px solid #4ade80;
-    }
-
-    :root:not([data-theme="light"]) .calc-target-card .calc-target-header {
-        color: #4ade80;
-    }
-
-    :root:not([data-theme="light"]) .calc-target-card .calc-target-big-value {
-        color: #86efac;
-        border-bottom-color: #334155;
-    }
-
-    :root:not([data-theme="light"]) .calc-target-card .calc-target-row span:first-child {
-        color: #94a3b8;
-    }
-
-    :root:not([data-theme="light"]) .calc-target-card .calc-target-row span:last-child {
-        color: #f1f5f9;
+    :root:not([data-theme="light"]) .calc-target-card.loss {
+        background: #991b1b;
     }
 
     :root:not([data-theme="light"]) input,
