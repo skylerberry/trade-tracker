@@ -1441,7 +1441,7 @@ tbody tr:last-child td {
     padding: 12px 20px;
     border: 1px solid var(--color-gray-300);
     border-left: 3px solid var(--color-primary);
-    border-radius: 6px;
+    border-radius: var(--radius-lg);
     font-size: 0.9rem;
     font-weight: 500;
     pointer-events: auto;
@@ -1453,18 +1453,20 @@ tbody tr:last-child td {
 }
 
 [data-theme="dark"] .toast {
-    background: #1e293b;
-    color: #f1f5f9;
-    border-color: #334155;
-    border-left-color: #3b82f6;
+    background: #27272a;
+    color: #f4f4f5;
+    border: 1px solid #3f3f46;
+    border-left: 3px solid #3b82f6;
+    border-radius: 8px;
 }
 
 @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) .toast {
-        background: #1e293b;
-        color: #f1f5f9;
-        border-color: #334155;
-        border-left-color: #3b82f6;
+        background: #27272a;
+        color: #f4f4f5;
+        border: 1px solid #3f3f46;
+        border-left: 3px solid #3b82f6;
+        border-radius: 8px;
     }
 }
 
@@ -3082,10 +3084,11 @@ tbody tr:last-child td {
 
 /* Toast notification - ensure dark mode is applied */
 [data-theme="dark"] .toast {
-    background: #1e293b;
-    color: #f1f5f9;
-    border-color: #334155;
-    border-left-color: #3b82f6;
+    background: #27272a;
+    color: #f4f4f5;
+    border: 1px solid #3f3f46;
+    border-left: 3px solid #3b82f6;
+    border-radius: 8px;
 }
 
 /* Trade card - dark mode styling */
@@ -3547,10 +3550,11 @@ tbody tr:last-child td {
 
     /* Toast notification */
     :root:not([data-theme="light"]) .toast {
-        background: #1e293b;
-        color: #f1f5f9;
-        border-color: #334155;
-        border-left-color: #3b82f6;
+        background: #27272a;
+        color: #f4f4f5;
+        border: 1px solid #3f3f46;
+        border-left: 3px solid #3b82f6;
+        border-radius: 8px;
     }
 
     /* Trade card - dark mode styling */
