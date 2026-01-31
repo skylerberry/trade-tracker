@@ -2771,12 +2771,20 @@ function renderWatchlistPills() {
                 if (ticker && !watchlist.includes(ticker) && watchlist.length < 20) {
                     watchlist.push(ticker);
                     saveWatchlist();
+                    // Re-focus the new input after render
+                    setTimeout(() => {
+                        document.getElementById('watchlistQuickAdd')?.focus();
+                    }, 0);
                 } else if (watchlist.includes(ticker)) {
                     // Already exists - just clear input
                     quickAddInput.value = '';
                 } else if (watchlist.length >= 20) {
                     showToast('Watchlist full (max 20)');
                 }
+            } else if (e.key === 'Tab' && !e.shiftKey) {
+                // Keep focus on the input for quick successive adds
+                e.preventDefault();
+                quickAddInput.focus();
             }
         });
     }
