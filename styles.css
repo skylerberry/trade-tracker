@@ -1488,7 +1488,7 @@ tbody tr:last-child td {
 .btn-clear-calculator {
     padding: 8px 20px;
     font-size: 0.85rem;
-    font-weight: 550;
+    font-weight: 600;
     border: 1.5px solid var(--color-gray-350, #9ca3af);
     border-radius: 6px;
     background: transparent;
