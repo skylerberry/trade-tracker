@@ -3066,8 +3066,8 @@ tbody tr:last-child td {
 
 /* Trade card - dark mode styling */
 [data-theme="dark"] .trade-card {
-    background: #1e293b;
-    border-color: #334155;
+    background: #27272a;
+    border-color: #3f3f46;
 }
 
 [data-theme="dark"] .trade-card-ticker,
@@ -3472,8 +3472,8 @@ tbody tr:last-child td {
 
     /* Trade card - dark mode styling */
     :root:not([data-theme="light"]) .trade-card {
-        background: #1e293b;
-        border-color: #334155;
+        background: #27272a;
+        border-color: #3f3f46;
     }
 
     :root:not([data-theme="light"]) .trade-card-ticker,

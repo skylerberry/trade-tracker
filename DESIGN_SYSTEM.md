@@ -46,9 +46,16 @@ Both light and dark modes share the same visual hierarchy:
 
 ### Light Mode
 
+#### Blue Hierarchy Strategy (Light Mode)
+
+| Type | Color | Usage |
+|------|-------|-------|
+| **Primary Action** | `#1a365d` | Solid backgrounds for high-intent buttons |
+| **Secondary/Interactive** | `#4b5563` | Ghost buttons, utility actions |
+
 #### Primary Brand Color
 ```css
---color-primary: #1a365d;        /* Navy blue - THE brand color */
+--color-primary: #1a365d;        /* Navy blue - solid button backgrounds */
 --color-primary-hover: #2d4a7c;  /* Slightly lighter for hover */
 --color-accent: #1a365d;         /* Same as primary for consistency */
 ```
@@ -115,11 +122,22 @@ border: 2px dashed #d1d5db;      /* Dashed border creates depth */
 
 ### Dark Mode
 
+#### Blue Hierarchy Strategy (Dark Mode)
+
+The dark mode uses a two-tier blue system to create visual hierarchy:
+
+| Type | Color | Usage |
+|------|-------|-------|
+| **Primary Action** | `#3b82f6` | Solid backgrounds for high-intent buttons (Log Trade, Paste Alert, Add New Trade) |
+| **Secondary/Interactive** | `#93c5fd` | Ghost buttons, links, hover states (Sync Settings, Watchlist Pills, icon hovers) |
+
+**Why this distinction?** If every interactive element uses the same vibrant blue, users won't know where to look. The lighter `#93c5fd` creates visual breathing room for utility actions that shouldn't compete with primary actions.
+
 #### Primary Brand Color (Dark Mode)
 ```css
---color-primary: #3b82f6;        /* Medium blue - good contrast against charcoal */
+--color-primary: #3b82f6;        /* Medium blue - solid button backgrounds */
 --color-primary-hover: #2563eb;  /* Slightly darker for hover */
---color-accent: #93c5fd;         /* Light blue for links */
+--color-accent: #93c5fd;         /* Ice blue - ghost buttons, links, secondary actions */
 ```
 
 **Why blue instead of navy?** The charcoal background (`#27272a`) is too close in value to muted navy, resulting in poor contrast. `#3b82f6` provides good contrast without being too bright.
@@ -230,7 +248,7 @@ color: white;
 
 **Used for:** Position Size Calculator, Log Trade, Paste Alert, Export, Save, Submit
 
-### Secondary Button
+### Secondary Button (Ghost Style)
 ```css
 /* Light Mode */
 background: transparent;
@@ -244,6 +262,21 @@ color: #a1a1aa;
 ```
 
 **Used for:** Cancel, Close, secondary actions
+
+### Utility Button (Ice Blue Ghost - Dark Mode Only)
+```css
+/* Dark Mode */
+background: transparent;
+border: 1px solid #93c5fd;
+color: #93c5fd;
+
+/* Dark Mode Hover */
+background: rgba(147, 197, 253, 0.1);
+```
+
+**Used for:** Sync Settings, Watchlist Pills (text), Icon button hovers
+
+**Why separate from Secondary?** These use the accent blue (`#93c5fd`) to indicate interactivity without competing with primary action buttons. They create visual breathing room for utility functions.
 
 ### Form Inputs
 ```css
