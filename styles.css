@@ -1317,6 +1317,8 @@ tbody tr:last-child td {
     background: none;
     border: none;
     padding: 4px 8px;
+    text-decoration: underline;
+    text-underline-offset: 2px;
 }
 
 .watchlist-clear:hover {
