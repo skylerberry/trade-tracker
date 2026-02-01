@@ -938,6 +938,21 @@ tbody tr:last-child td {
         align-items: stretch;
     }
 
+    /* Keep date input and clear button on same row */
+    .filter-group .date-filter-input {
+        flex: 1;
+    }
+
+    .filter-group:has(.date-filter-input) {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .filter-group:has(.date-filter-input) label {
+        width: 100%;
+        margin-bottom: 4px;
+    }
+
     .btn {
         width: 100%;
         text-align: center;
