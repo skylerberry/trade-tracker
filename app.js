@@ -2755,7 +2755,7 @@ function renderWatchlistPills() {
         : '';
 
     const clearBtnHtml = watchlist.length > 0
-        ? '<button class="watchlist-clear" id="clearWatchlist">× Clear</button>'
+        ? '<button class="watchlist-clear" id="clearWatchlist">× Clear Watchlist</button>'
         : '';
 
     watchlistBar.innerHTML = `

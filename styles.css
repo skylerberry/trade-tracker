@@ -661,20 +661,19 @@ header h1 {
 }
 
 .btn-clear-filter {
-    padding: 4px 10px;
-    border: 1px solid var(--color-gray-300);
-    border-radius: 4px;
     background: none;
-    color: var(--color-gray-500);
+    border: none;
+    color: var(--color-gray-400);
     font-size: 0.8rem;
     cursor: pointer;
-    line-height: 1;
-    margin-left: 4px;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    padding: 0;
+    margin-left: 8px;
 }
 
 .btn-clear-filter:hover {
     color: var(--color-error);
-    border-color: var(--color-error);
 }
 
 .btn-delete-all-link {
@@ -2827,12 +2826,10 @@ tbody tr:last-child td {
 }
 
 [data-theme="dark"] .btn-clear-filter {
-    border-color: #52525b;
     color: #a1a1aa;
 }
 
 [data-theme="dark"] .btn-clear-filter:hover {
-    border-color: #ef4444;
     color: #ef4444;
 }
 
@@ -2916,12 +2913,10 @@ tbody tr:last-child td {
     }
 
     :root:not([data-theme="light"]) .btn-clear-filter {
-        border-color: #52525b;
         color: #a1a1aa;
     }
 
     :root:not([data-theme="light"]) .btn-clear-filter:hover {
-        border-color: #ef4444;
         color: #ef4444;
     }
 }
