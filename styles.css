@@ -882,6 +882,11 @@ tbody tr:last-child td {
         text-align: center;
     }
 
+    /* Hide keyboard shortcuts button on mobile - not relevant for touch devices */
+    #shortcutsSettingsBtn {
+        display: none;
+    }
+
     header h1 {
         font-size: 1.1rem;
     }
