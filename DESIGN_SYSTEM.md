@@ -36,7 +36,7 @@ Both light and dark modes share the same visual hierarchy:
 | Header top border | 3px navy `#1a365d` | 3px blue `#3b82f6` |
 | Header text | Navy `#1a365d` | Light gray `#f4f4f5` |
 | Sync status | Minimalist dot + muted text | Minimalist dot + muted text |
-| Table headers | Light gray `#f3f4f6` | Dark charcoal `#1f1f22` |
+| Table headers | Zinc `#f4f4f5` | Dark charcoal `#1f1f22` |
 | Primary buttons | Navy `#1a365d` | Blue `#3b82f6` |
 | Toast accent | 3px navy left border | 3px blue left border |
 
@@ -400,7 +400,7 @@ Before making any visual change, verify:
 
 ---
 
-## Quick Reference: Light Mode Colors
+## Quick Reference: Light Mode Colors (Zinc Palette)
 
 | Element | Color |
 |---------|-------|
@@ -408,13 +408,18 @@ Before making any visual change, verify:
 | Header top border | `#1a365d` |
 | Primary buttons, active states | `#1a365d` |
 | Primary hover | `#2d4a7c` |
-| Table header background | `#f3f4f6` |
+| Table header background | `#f4f4f5` |
 | Table header text | `#1a365d` |
-| Sync status text | `#6b7280` |
+| Sync status text | `#71717a` |
 | Toast background | `#ffffff` |
 | Toast left accent | `#1a365d` |
-| Theme toggle border | `#d1d5db` |
-| Theme toggle icon | `#6b7280` |
+| Theme toggle border | `#d4d4d8` |
+| Theme toggle icon | `#71717a` |
+| Table ticker text | `#18181b` |
+| Table price text | `#3f3f46` |
+| Table date text | `#71717a` |
+| Container border | `#e4e4e7` |
+| Row hover | `#fafafa` |
 
 ## Quick Reference: Dark Mode Colors
 
@@ -442,3 +447,58 @@ Before making any visual change, verify:
 | Position card | `#3b82f6` |
 | Gain card | `#1a4d3a` |
 | Loss card | `#6b2c2c` |
+| Table row hover | `#2d2d30` |
+| Table date text | `#a1a1aa` |
+| Table price text | `#e4e4e7` |
+| Watchlist pill background | `#2d2d30` |
+| Watchlist pill hover | `transparent` with `#93c5fd` border |
+
+---
+
+## Text Hierarchy in Tables
+
+To reduce eye strain and create visual hierarchy, table cells use differentiated text colors:
+
+| Cell Type | Light Mode | Dark Mode |
+|-----------|------------|-----------|
+| **Ticker** (primary) | Default (inherits) | `#f4f4f5` (bright) |
+| **Prices** (secondary) | `--color-gray-700` | `#e4e4e7` |
+| **Dates** (tertiary) | `--color-gray-500` | `#a1a1aa` |
+
+---
+
+## Interactive Hover States
+
+### Table Row Hover
+Subtle background highlight helps track across columns.
+
+```css
+/* Light Mode */
+tbody tr:hover {
+    background-color: var(--color-gray-50);
+}
+
+/* Dark Mode */
+[data-theme="dark"] tbody tr:hover {
+    background-color: #2d2d30;
+}
+```
+
+### Watchlist Pill Hover
+Muted default state transitions to high-contrast on hover.
+
+```css
+/* Dark Mode - Default (recessed) */
+[data-theme="dark"] .watchlist-pill {
+    background-color: #2d2d30;
+    border-color: #52525b;
+    color: #93c5fd;
+}
+
+/* Dark Mode - Hover (punchy) */
+[data-theme="dark"] .watchlist-pill:hover {
+    background-color: transparent;
+    border-color: #93c5fd;
+    color: #93c5fd;
+}
+```

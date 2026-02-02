@@ -27,17 +27,17 @@
     --color-info-light: #dbeafe;
     --color-info-dark: #1e40af;
 
-    /* Neutral colors */
-    --color-gray-50: #f9fafb;
-    --color-gray-100: #f3f4f6;
-    --color-gray-200: #e5e7eb;
-    --color-gray-300: #d1d5db;
-    --color-gray-400: #9ca3af;
-    --color-gray-500: #6b7280;
-    --color-gray-600: #4b5563;
-    --color-gray-700: #374151;
-    --color-gray-800: #1f2937;
-    --color-gray-900: #111827;
+    /* Neutral colors - Zinc palette for theme parity */
+    --color-gray-50: #fafafa;
+    --color-gray-100: #f4f4f5;
+    --color-gray-200: #e4e4e7;
+    --color-gray-300: #d4d4d8;
+    --color-gray-400: #a1a1aa;
+    --color-gray-500: #71717a;
+    --color-gray-600: #52525b;
+    --color-gray-700: #3f3f46;
+    --color-gray-800: #27272a;
+    --color-gray-900: #18181b;
 
     /* Shadows */
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
@@ -194,7 +194,7 @@ header h1 {
     background: transparent;
     cursor: pointer;
     transition: color 0.2s;
-    color: #6b7280;
+    color: #71717a;
 }
 
 .sync-status .sync-icon {
@@ -211,7 +211,7 @@ header h1 {
 
 .sync-status.not-synced {
     background: transparent;
-    color: #6b7280;
+    color: #71717a;
     border: none;
 }
 
@@ -220,12 +220,12 @@ header h1 {
 }
 
 .sync-status.not-synced:hover {
-    color: #374151;
+    color: #3f3f46;
 }
 
 .sync-status.syncing {
     background: transparent;
-    color: #6b7280;
+    color: #71717a;
 }
 
 .sync-status.syncing::before {
@@ -240,7 +240,7 @@ header h1 {
 
 .sync-status.synced {
     background: transparent;
-    color: #6b7280;
+    color: #71717a;
 }
 
 .sync-status.synced::before {
@@ -249,12 +249,12 @@ header h1 {
 
 .sync-status.synced:hover {
     background: transparent;
-    color: #374151;
+    color: #3f3f46;
 }
 
 .sync-status.error {
     background: transparent;
-    color: #6b7280;
+    color: #71717a;
 }
 
 .sync-status.error::before {
@@ -262,7 +262,7 @@ header h1 {
 }
 
 .sync-status.error:hover {
-    color: #374151;
+    color: #3f3f46;
 }
 
 .sync-status .sync-time {
@@ -711,6 +711,8 @@ header h1 {
 
 .table-container {
     overflow-x: auto;
+    border: 1px solid var(--color-gray-200);
+    border-radius: 8px;
 }
 
 table {
@@ -719,7 +721,7 @@ table {
 }
 
 thead {
-    background-color: #f3f4f6;
+    background-color: #f4f4f5;
     color: var(--color-primary);
 }
 
@@ -737,8 +739,21 @@ td {
     font-size: 0.9rem;
 }
 
+/* Text hierarchy for table cells */
+td.cell-date {
+    color: var(--color-gray-500);
+}
+
+td.cell-price {
+    color: var(--color-gray-700);
+}
+
+tbody tr {
+    transition: background-color 0.15s ease;
+}
+
 tbody tr:hover {
-    background-color: white;
+    background-color: var(--color-gray-50);
 }
 
 tbody tr:last-child td {
@@ -1282,7 +1297,7 @@ tbody tr:last-child td {
     background: var(--color-gray-50);
     color: var(--color-primary);
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.15s ease;
 }
 
 .watchlist-pill:hover {
@@ -1459,9 +1474,9 @@ tbody tr:last-child td {
     transform: translateY(8px);
     transition: opacity 0.2s ease, transform 0.2s ease;
     background: #ffffff;
-    color: #374151;
+    color: #3f3f46;
     padding: 12px 20px;
-    border: 1px solid #d1d5db;
+    border: 1px solid #d4d4d8;
     border-left: 3px solid #1a365d;
     border-radius: var(--radius-lg);
     font-size: 0.9rem;
@@ -1510,15 +1525,15 @@ tbody tr:last-child td {
 
 /* Dark mode overrides for watchlist */
 [data-theme="dark"] .watchlist-pill {
-    background-color: #3f3f46;
+    background-color: #2d2d30;
     color: #93c5fd;
     border-color: #52525b;
 }
 
 [data-theme="dark"] .watchlist-pill:hover {
-    background-color: #3b82f6;
-    border-color: #3b82f6;
-    color: white;
+    background-color: transparent;
+    border-color: #93c5fd;
+    color: #93c5fd;
 }
 
 [data-theme="dark"] .watchlist-modal-content textarea {
@@ -1539,15 +1554,15 @@ tbody tr:last-child td {
 
 @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) .watchlist-pill {
-        background-color: #3f3f46;
+        background-color: #2d2d30;
         color: #93c5fd;
         border-color: #52525b;
     }
 
     :root:not([data-theme="light"]) .watchlist-pill:hover {
-        background-color: #3b82f6;
-        border-color: #3b82f6;
-        color: white;
+        background-color: transparent;
+        border-color: #93c5fd;
+        color: #93c5fd;
     }
 
     :root:not([data-theme="light"]) .watchlist-modal-content textarea {
@@ -2747,7 +2762,7 @@ tbody tr:last-child td {
 /* Theme Toggle */
 .theme-toggle {
     background: transparent;
-    border: 1px solid #d1d5db;
+    border: 1px solid #d4d4d8;
     border-radius: var(--radius-full);
     width: 36px;
     height: 36px;
@@ -2755,14 +2770,14 @@ tbody tr:last-child td {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #6b7280;
+    color: #71717a;
     transition: background-color 0.2s, border-color 0.2s;
 }
 
 .theme-toggle:hover {
-    background: #f3f4f6;
-    border-color: #9ca3af;
-    color: #374151;
+    background: #f4f4f5;
+    border-color: #a1a1aa;
+    color: #3f3f46;
 }
 
 .theme-toggle .icon-sun,
@@ -3029,6 +3044,10 @@ tbody tr:last-child td {
 }
 
 /* Table headers - dark charcoal to match header */
+[data-theme="dark"] .table-container {
+    border-color: #3f3f46;
+}
+
 [data-theme="dark"] thead {
     background-color: #1f1f22;
     color: #71717a;
@@ -3039,8 +3058,17 @@ tbody tr:last-child td {
     font-weight: 500;
 }
 
+/* Text hierarchy - dates dimmed, prices slightly softer */
+[data-theme="dark"] td.cell-date {
+    color: #a1a1aa;
+}
+
+[data-theme="dark"] td.cell-price {
+    color: #e4e4e7;
+}
+
 [data-theme="dark"] tbody tr:hover {
-    background-color: #2a2a2d;
+    background-color: #2d2d30;
 }
 
 /* R-level items - match inactive target card style */
@@ -3129,11 +3157,6 @@ tbody tr:last-child td {
 [data-theme="dark"] .btn-edit,
 [data-theme="dark"] .btn-delete {
     background-color: #27272a;
-}
-
-/* Table hover - ensure visibility in dark mode */
-[data-theme="dark"] tbody tr:hover {
-    background-color: #3f3f46;
 }
 
 /* Modal backdrop - darker for better contrast */
@@ -3305,6 +3328,10 @@ tbody tr:last-child td {
     }
 
     /* Table headers - dark charcoal */
+    :root:not([data-theme="light"]) .table-container {
+        border-color: #3f3f46;
+    }
+
     :root:not([data-theme="light"]) thead {
         background-color: #1f1f22;
         color: #71717a;
@@ -3315,8 +3342,17 @@ tbody tr:last-child td {
         font-weight: 500;
     }
 
+    /* Text hierarchy - dates dimmed, prices slightly softer */
+    :root:not([data-theme="light"]) td.cell-date {
+        color: #a1a1aa;
+    }
+
+    :root:not([data-theme="light"]) td.cell-price {
+        color: #e4e4e7;
+    }
+
     :root:not([data-theme="light"]) tbody tr:hover {
-        background-color: #2a2a2d;
+        background-color: #2d2d30;
     }
 
     :root:not([data-theme="light"]) input,
@@ -3425,11 +3461,6 @@ tbody tr:last-child td {
     :root:not([data-theme="light"]) .btn-edit,
     :root:not([data-theme="light"]) .btn-delete {
         background-color: #27272a;
-    }
-
-    /* Table hover - ensure visibility in dark mode */
-    :root:not([data-theme="light"]) tbody tr:hover {
-        background-color: #3f3f46;
     }
 
     /* Modal backdrop - darker for better contrast */

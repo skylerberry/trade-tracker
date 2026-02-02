@@ -664,10 +664,10 @@ function renderTrades() {
         return `
         <tr data-id="${trade.id}">
             <td><strong>${trade.ticker}</strong></td>
-            <td>${trade.entryPrice.toFixed(2)}</td>
-            <td>${formatDate(trade.entryDate)}</td>
-            <td>${trade.initialSL.toFixed(2)}</td>
-            <td>${trade.currentSL.toFixed(2)}</td>
+            <td class="cell-price">${trade.entryPrice.toFixed(2)}</td>
+            <td class="cell-date">${formatDate(trade.entryDate)}</td>
+            <td class="cell-price">${trade.initialSL.toFixed(2)}</td>
+            <td class="cell-price">${trade.currentSL.toFixed(2)}</td>
             <td class="sale-display">${formatSale(sales[0])}</td>
             <td class="sale-display">${formatSale(sales[1])}</td>
             <td class="sale-display">${formatSale(sales[2])}</td>
