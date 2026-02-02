@@ -328,6 +328,18 @@ header h1 {
     color: white !important;
 }
 
+.btn-danger {
+    background-color: var(--color-gray-200);
+    color: var(--color-gray-600);
+    border: 1px solid var(--color-gray-300);
+}
+
+.btn-danger:hover {
+    background-color: #fee2e2;
+    color: #dc2626;
+    border-color: #fca5a5;
+}
+
 /* Icon-only action buttons */
 .btn-icon {
     width: 32px;
@@ -3407,6 +3419,18 @@ tbody tr:last-child td {
     border-color: #71717a;
 }
 
+[data-theme="dark"] .btn-danger {
+    background-color: #3f3f46;
+    color: #e4e4e7;
+    border: 1px solid #52525b;
+}
+
+[data-theme="dark"] .btn-danger:hover {
+    background-color: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+    border-color: #f87171;
+}
+
 /* System preference dark mode overrides */
 @media (prefers-color-scheme: dark) {
     /* Header - dark charcoal with blue accent border */
@@ -3701,6 +3725,18 @@ tbody tr:last-child td {
         border-color: #71717a;
     }
 
+    :root:not([data-theme="light"]) .btn-danger {
+        background-color: #3f3f46;
+        color: #e4e4e7;
+        border: 1px solid #52525b;
+    }
+
+    :root:not([data-theme="light"]) .btn-danger:hover {
+        background-color: rgba(239, 68, 68, 0.15);
+        color: #f87171;
+        border-color: #f87171;
+    }
+
     :root:not([data-theme="light"]) .btn-calc-action {
         background-color: #3b82f6;
     }
@@ -3755,8 +3791,8 @@ tbody tr:last-child td {
     gap: 8px;
 }
 
-/* Icon button (for shortcuts trigger) */
-.btn-icon {
+/* Shortcuts trigger button */
+.btn-shortcuts-trigger {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -3771,32 +3807,32 @@ tbody tr:last-child td {
     transition: all 0.2s;
 }
 
-.btn-icon:hover {
+.btn-shortcuts-trigger:hover {
     background: var(--color-gray-200);
     color: var(--color-primary);
     border-color: var(--color-gray-400);
 }
 
-[data-theme="dark"] .btn-icon {
+[data-theme="dark"] .btn-shortcuts-trigger {
     background: #3f3f46;
     border-color: #52525b;
     color: #a1a1aa;
 }
 
-[data-theme="dark"] .btn-icon:hover {
+[data-theme="dark"] .btn-shortcuts-trigger:hover {
     background: #52525b;
     color: #93c5fd;
     border-color: #71717a;
 }
 
 @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) .btn-icon {
+    :root:not([data-theme="light"]) .btn-shortcuts-trigger {
         background: #3f3f46;
         border-color: #52525b;
         color: #a1a1aa;
     }
 
-    :root:not([data-theme="light"]) .btn-icon:hover {
+    :root:not([data-theme="light"]) .btn-shortcuts-trigger:hover {
         background: #52525b;
         color: #93c5fd;
         border-color: #71717a;
