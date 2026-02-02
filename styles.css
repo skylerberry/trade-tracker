@@ -328,25 +328,64 @@ header h1 {
     color: white !important;
 }
 
-.btn-view {
-    background-color: transparent;
-    color: var(--color-gray-700);
-    padding: 6px 12px;
-    font-size: 0.85rem;
+/* Icon-only action buttons */
+.btn-icon {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s ease;
     border: none;
+    background: transparent;
+    position: relative;
+}
+
+.btn-icon svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* Custom tooltip */
+.btn-icon::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 4px 8px;
+    background: var(--color-gray-900);
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 500;
+    border-radius: 4px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.15s ease, visibility 0.15s ease;
+    pointer-events: none;
+    margin-bottom: 4px;
+}
+
+.btn-icon:hover::after {
+    opacity: 1;
+    visibility: visible;
+}
+
+.btn-view {
+    color: var(--color-gray-500);
 }
 
 .btn-view:hover {
     background-color: var(--color-gray-100);
-    color: var(--color-gray-900);
+    color: var(--color-primary);
 }
 
 .btn-edit {
-    background-color: transparent;
-    color: var(--color-gray-700);
-    padding: 6px 12px;
-    font-size: 0.85rem;
-    border: none;
+    color: var(--color-gray-500);
 }
 
 .btn-edit:hover {
@@ -355,11 +394,7 @@ header h1 {
 }
 
 .btn-delete {
-    background-color: transparent;
-    color: var(--color-gray-500);
-    padding: 6px 12px;
-    font-size: 0.85rem;
-    border: none;
+    color: var(--color-gray-400);
 }
 
 .btn-delete:hover {
@@ -3188,19 +3223,23 @@ tbody tr:last-child td {
     color: #93c5fd;
 }
 
+/* Icon button tooltip - dark mode */
+[data-theme="dark"] .btn-icon::after {
+    background: #f4f4f5;
+    color: #18181b;
+}
+
 [data-theme="dark"] .btn-view {
-    background-color: transparent;
-    color: #a1a1aa;
+    color: #71717a;
 }
 
 [data-theme="dark"] .btn-view:hover {
     background-color: #3f3f46;
-    color: #f4f4f5;
+    color: #93c5fd;
 }
 
 [data-theme="dark"] .btn-edit {
-    background-color: transparent;
-    color: #a1a1aa;
+    color: #71717a;
 }
 
 [data-theme="dark"] .btn-edit:hover {
@@ -3209,8 +3248,7 @@ tbody tr:last-child td {
 }
 
 [data-theme="dark"] .btn-delete {
-    background-color: transparent;
-    color: #71717a;
+    color: #52525b;
 }
 
 [data-theme="dark"] .btn-delete:hover {
@@ -3523,19 +3561,23 @@ tbody tr:last-child td {
         color: #93c5fd;
     }
 
+    /* Icon button tooltip - dark mode */
+    :root:not([data-theme="light"]) .btn-icon::after {
+        background: #f4f4f5;
+        color: #18181b;
+    }
+
     :root:not([data-theme="light"]) .btn-view {
-        background-color: transparent;
-        color: #a1a1aa;
+        color: #71717a;
     }
 
     :root:not([data-theme="light"]) .btn-view:hover {
         background-color: #3f3f46;
-        color: #f4f4f5;
+        color: #93c5fd;
     }
 
     :root:not([data-theme="light"]) .btn-edit {
-        background-color: transparent;
-        color: #a1a1aa;
+        color: #71717a;
     }
 
     :root:not([data-theme="light"]) .btn-edit:hover {
@@ -3544,8 +3586,7 @@ tbody tr:last-child td {
     }
 
     :root:not([data-theme="light"]) .btn-delete {
-        background-color: transparent;
-        color: #71717a;
+        color: #52525b;
     }
 
     :root:not([data-theme="light"]) .btn-delete:hover {
