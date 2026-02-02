@@ -53,19 +53,21 @@
         <section class="calculator-section">
             <div class="calc-header-buttons">
                 <button id="toggleCalculatorBtn" class="btn btn-calculator">Position Calculator</button>
-                <button id="manageWatchlistBtn" class="btn btn-ghost btn-sm">Manage Watchlist</button>
             </div>
 
             <div id="watchlistSection" class="watchlist-section">
-                <button type="button" class="watchlist-section-header" id="watchlistToggle">
-                    <span class="watchlist-section-title">
-                        Watchlist:
-                        <span class="watchlist-section-count" id="watchlistCount">0</span>
-                    </span>
-                    <svg class="watchlist-section-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                    </svg>
-                </button>
+                <div class="watchlist-section-header">
+                    <button type="button" class="watchlist-section-toggle" id="watchlistToggle">
+                        <span class="watchlist-section-title">
+                            Watchlist:
+                            <span class="watchlist-section-count" id="watchlistCount">0</span>
+                        </span>
+                        <svg class="watchlist-section-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </button>
+                    <button type="button" class="watchlist-edit-btn" id="manageWatchlistBtn">Edit</button>
+                </div>
                 <div id="watchlistContent" class="watchlist-section-content collapsed">
                     <!-- Pills rendered by JS -->
                 </div>
@@ -460,6 +462,7 @@
                             </svg>
                             <span class="sync-item-label">Trades</span>
                             <span class="sync-item-count" id="syncTradesCount">0</span>
+                            <button type="button" class="sync-item-delete" id="deleteTradesBtn" title="Delete all trades">Delete</button>
                         </div>
                         <div class="sync-status-item">
                             <svg class="sync-check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -467,6 +470,7 @@
                             </svg>
                             <span class="sync-item-label">Settings</span>
                             <span class="sync-item-detail" id="syncSettingsDetail">Account, risk defaults</span>
+                            <button type="button" class="sync-item-delete" id="deleteSettingsBtn" title="Reset settings to defaults">Reset</button>
                         </div>
                         <div class="sync-status-item">
                             <svg class="sync-check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -474,8 +478,11 @@
                             </svg>
                             <span class="sync-item-label">Watchlist</span>
                             <span class="sync-item-count" id="syncWatchlistCount">0</span>
+                            <button type="button" class="sync-item-delete" id="deleteWatchlistBtn" title="Clear watchlist">Delete</button>
                         </div>
                     </div>
+
+                    <button type="button" class="btn-delete-all-data" id="deleteAllDataBtn">Delete All Data</button>
 
                     <div class="modal-actions">
                         <button id="forceSyncBtn" class="btn btn-primary">Sync Manually</button>

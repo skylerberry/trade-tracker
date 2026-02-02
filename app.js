@@ -1474,6 +1474,118 @@ document.getElementById('disconnectGist').addEventListener('click', () => {
     gistModal.classList.add('hidden');
 });
 
+// Delete trades button
+document.getElementById('deleteTradesBtn').addEventListener('click', () => {
+    if (trades.length === 0) {
+        alert('No trades to delete.');
+        return;
+    }
+    if (!confirm(`Delete all ${trades.length} trade(s)? This cannot be undone.`)) return;
+
+    trades = [];
+    saveTrades();
+    renderTrades();
+    updateSyncStatusCounts();
+});
+
+// Delete/reset settings button
+document.getElementById('deleteSettingsBtn').addEventListener('click', () => {
+    if (!confirm('Reset all settings to defaults? This will clear your account size, risk defaults, and calculator fields.')) return;
+
+    // Reset to defaults
+    accountSize = 0;
+    defaultRiskPercent = 1;
+    defaultMaxPercent = 100;
+
+    // Clear localStorage
+    localStorage.removeItem(CALC_ACCOUNT_KEY);
+    localStorage.removeItem('tradeTracker_defaultRisk');
+    localStorage.removeItem('tradeTracker_defaultMax');
+
+    // Reset UI
+    calcAccountSize.value = '';
+    calcRiskPercent.value = 1;
+    calcMaxPercent.value = 100;
+
+    // Reset preset button states
+    document.querySelectorAll('.risk-preset').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.value === '1');
+    });
+    document.querySelectorAll('.max-preset').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.value === '100');
+    });
+
+    // Clear calculator fields
+    calcEntryPrice.value = '';
+    calcStopLoss.value = '';
+    calcTargetPrice.value = '';
+    document.getElementById('calcTicker').value = '';
+
+    calculatePosition();
+    syncSettingsToGist();
+    alert('Settings reset to defaults.');
+});
+
+// Delete watchlist button
+document.getElementById('deleteWatchlistBtn').addEventListener('click', () => {
+    if (watchlist.length === 0) {
+        alert('Watchlist is already empty.');
+        return;
+    }
+    if (!confirm(`Delete all ${watchlist.length} ticker(s) from your watchlist?`)) return;
+
+    watchlist = [];
+    saveWatchlist();
+    updateSyncStatusCounts();
+});
+
+// Delete all data button
+document.getElementById('deleteAllDataBtn').addEventListener('click', () => {
+    if (!confirm('Delete ALL data? This will remove all trades, settings, and watchlist. This cannot be undone.')) return;
+    if (!confirm('Are you sure? This is permanent.')) return;
+
+    // Delete trades
+    trades = [];
+    localStorage.removeItem(STORAGE_KEY);
+
+    // Reset settings
+    accountSize = 0;
+    defaultRiskPercent = 1;
+    defaultMaxPercent = 100;
+    localStorage.removeItem(CALC_ACCOUNT_KEY);
+    localStorage.removeItem('tradeTracker_defaultRisk');
+    localStorage.removeItem('tradeTracker_defaultMax');
+
+    // Clear watchlist
+    watchlist = [];
+    localStorage.removeItem(WATCHLIST_KEY);
+
+    // Reset UI
+    calcAccountSize.value = '';
+    calcRiskPercent.value = 1;
+    calcMaxPercent.value = 100;
+    calcEntryPrice.value = '';
+    calcStopLoss.value = '';
+    calcTargetPrice.value = '';
+    document.getElementById('calcTicker').value = '';
+
+    document.querySelectorAll('.risk-preset').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.value === '1');
+    });
+    document.querySelectorAll('.max-preset').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.value === '100');
+    });
+
+    calculatePosition();
+    renderTrades();
+    renderWatchlistPills();
+    syncToGist();
+    syncSettingsToGist();
+    updateSyncStatusCounts();
+
+    alert('All data deleted.');
+});
+
 // Copy Gist ID to clipboard
 document.getElementById('copyGistId').addEventListener('click', async () => {
     const gistId = document.getElementById('displayGistId').textContent;
