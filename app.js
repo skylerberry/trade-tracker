@@ -1620,6 +1620,8 @@ function calculatePosition() {
     // Calculate final values (both original and limited)
     const originalRisk = shares * riskPerShare;
     const actualRisk = limitedShares * riskPerShare;
+    const originalRiskPercent = (originalRisk / account) * 100;
+    const actualRiskPercent = (actualRisk / account) * 100;
     const stopDistancePercent = (riskPerShare / entry) * 100;
     const originalPercentOfAccount = (positionSize / account) * 100;
     const percentOfAccount = (limitedPositionSize / account) * 100;
@@ -1628,12 +1630,12 @@ function calculatePosition() {
     if (isLimited) {
         calcShares.innerHTML = `<span class="original-value">${formatNumber(shares)}</span> → ${formatNumber(limitedShares)}`;
         calcPositionSize.innerHTML = `<span class="original-value">${formatCurrency(positionSize)}</span> → ${formatCurrency(limitedPositionSize)}`;
-        calcTotalRisk.innerHTML = `<span class="original-value">${formatCurrency(originalRisk)}</span> → ${formatCurrency(actualRisk)}`;
+        calcTotalRisk.innerHTML = `<span class="original-value">${formatCurrency(originalRisk)} (${originalRiskPercent.toFixed(2)}%)</span> → ${formatCurrency(actualRisk)} (${actualRiskPercent.toFixed(2)}%)`;
         calcPercentAccount.innerHTML = `<span class="original-value">${formatPercentage(originalPercentOfAccount)}</span> → ${formatPercentage(percentOfAccount)}`;
     } else {
         calcShares.textContent = formatNumber(limitedShares);
         calcPositionSize.textContent = formatCurrency(limitedPositionSize);
-        calcTotalRisk.textContent = formatCurrency(actualRisk);
+        calcTotalRisk.textContent = `${formatCurrency(actualRisk)} (${actualRiskPercent.toFixed(2)}%)`;
         calcPercentAccount.textContent = formatPercentage(percentOfAccount);
     }
     calcShares.classList.toggle('limited', isLimited);
