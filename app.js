@@ -2799,7 +2799,7 @@ function renderWatchlistPills() {
     watchlistBar.classList.remove('hidden');
 
     const pillsHtml = watchlist.length > 0
-        ? watchlist.map(ticker => `<button class="watchlist-pill" data-ticker="${ticker}" title="Click to fill ticker, Shift+Click to open TradingView">${ticker}</button>`).join('')
+        ? watchlist.map(ticker => `<button class="watchlist-pill" data-ticker="${ticker}" title="Click to fill ticker, Shift+Click to open TradingView">${ticker}<span class="pill-remove" data-ticker="${ticker}">×</span></button>`).join('')
         : '';
 
     const clearBtnHtml = watchlist.length > 0
@@ -2853,6 +2853,14 @@ function renderWatchlistPills() {
 
         pill.addEventListener('click', (e) => {
             const ticker = pill.dataset.ticker;
+
+            // Click on × removes the ticker
+            if (e.target.classList.contains('pill-remove')) {
+                e.stopPropagation();
+                watchlist = watchlist.filter(t => t !== ticker);
+                saveWatchlist();
+                return;
+            }
 
             // Shift+click opens TradingView chart
             if (e.shiftKey) {
