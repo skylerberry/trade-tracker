@@ -711,6 +711,7 @@ header h1 {
 
 .table-container {
     overflow-x: auto;
+    background: white;
     border: 1px solid var(--color-gray-200);
     border-radius: 8px;
 }
@@ -3045,6 +3046,7 @@ tbody tr:last-child td {
 
 /* Table headers - dark charcoal to match header */
 [data-theme="dark"] .table-container {
+    background: #27272a;
     border-color: #3f3f46;
 }
 
@@ -3329,6 +3331,7 @@ tbody tr:last-child td {
 
     /* Table headers - dark charcoal */
     :root:not([data-theme="light"]) .table-container {
+        background: #27272a;
         border-color: #3f3f46;
     }
 
