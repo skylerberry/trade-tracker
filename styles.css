@@ -2201,10 +2201,15 @@ tbody tr:last-child td {
     font-size: 1.8rem;
 }
 
-.calc-big-value.limited .original-shares {
+/* Strikethrough styling for limited/adjusted values */
+.original-value {
     text-decoration: line-through;
     text-decoration-thickness: 2px;
     opacity: 0.5;
+}
+
+.calc-result-row span:last-child.limited {
+    font-size: 0.75rem;
 }
 
 /* Target Card (Green) */

@@ -1617,22 +1617,30 @@ function calculatePosition() {
         isLimited = true;
     }
 
-    // Calculate final values
+    // Calculate final values (both original and limited)
+    const originalRisk = shares * riskPerShare;
     const actualRisk = limitedShares * riskPerShare;
     const stopDistancePercent = (riskPerShare / entry) * 100;
+    const originalPercentOfAccount = (positionSize / account) * 100;
     const percentOfAccount = (limitedPositionSize / account) * 100;
 
     // Update Position Card UI
     if (isLimited) {
-        calcShares.innerHTML = `<span class="original-shares">${formatNumber(shares)}</span> → ${formatNumber(limitedShares)}`;
+        calcShares.innerHTML = `<span class="original-value">${formatNumber(shares)}</span> → ${formatNumber(limitedShares)}`;
+        calcPositionSize.innerHTML = `<span class="original-value">${formatCurrency(positionSize)}</span> → ${formatCurrency(limitedPositionSize)}`;
+        calcTotalRisk.innerHTML = `<span class="original-value">${formatCurrency(originalRisk)}</span> → ${formatCurrency(actualRisk)}`;
+        calcPercentAccount.innerHTML = `<span class="original-value">${formatPercentage(originalPercentOfAccount)}</span> → ${formatPercentage(percentOfAccount)}`;
     } else {
         calcShares.textContent = formatNumber(limitedShares);
+        calcPositionSize.textContent = formatCurrency(limitedPositionSize);
+        calcTotalRisk.textContent = formatCurrency(actualRisk);
+        calcPercentAccount.textContent = formatPercentage(percentOfAccount);
     }
     calcShares.classList.toggle('limited', isLimited);
+    calcPositionSize.classList.toggle('limited', isLimited);
+    calcTotalRisk.classList.toggle('limited', isLimited);
+    calcPercentAccount.classList.toggle('limited', isLimited);
     calcStopDistance.textContent = `${formatCurrency(riskPerShare)} (${stopDistancePercent.toFixed(1)}%)`;
-    calcPositionSize.textContent = formatCurrency(limitedPositionSize);
-    calcTotalRisk.textContent = formatCurrency(actualRisk);
-    calcPercentAccount.textContent = formatPercentage(percentOfAccount);
 
     // Calculate and update R-levels
     updateRLevels(entry, riskPerShare, limitedShares, target);
@@ -1728,9 +1736,12 @@ function resetCalcResults() {
     calcShares.textContent = '-';
     calcShares.classList.remove('limited');
     calcPositionSize.textContent = '-';
+    calcPositionSize.classList.remove('limited');
     calcStopDistance.textContent = '-';
     calcTotalRisk.textContent = '-';
+    calcTotalRisk.classList.remove('limited');
     calcPercentAccount.textContent = '-';
+    calcPercentAccount.classList.remove('limited');
 
     // Target card
     calcRMultiple.textContent = '-';
