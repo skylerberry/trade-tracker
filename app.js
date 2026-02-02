@@ -1925,6 +1925,31 @@ document.getElementById('copyCalcStopLoss').addEventListener('click', async () =
     }
 });
 
+// Copy shares to clipboard (copies the adjusted/final value if limited)
+document.getElementById('copyCalcShares').addEventListener('click', async () => {
+    const sharesEl = document.getElementById('calcShares');
+    if (!sharesEl || sharesEl.textContent === '-') return;
+
+    // Extract the final number (after → if limited, or the only number if not)
+    const text = sharesEl.textContent;
+    let value;
+    if (text.includes('→')) {
+        // Limited: get the number after the arrow
+        value = text.split('→')[1].trim().replace(/,/g, '');
+    } else {
+        value = text.replace(/,/g, '');
+    }
+
+    const btn = document.getElementById('copyCalcShares');
+    try {
+        await navigator.clipboard.writeText(value);
+        btn.classList.add('copied');
+        setTimeout(() => btn.classList.remove('copied'), 1500);
+    } catch (err) {
+        console.error('Failed to copy:', err);
+    }
+});
+
 // Calculator click event delegation
 calculatorPanel.addEventListener('click', (e) => {
     const target = e.target;
