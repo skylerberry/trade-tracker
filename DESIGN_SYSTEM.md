@@ -502,3 +502,97 @@ Muted default state transitions to high-contrast on hover.
     color: #93c5fd;
 }
 ```
+
+---
+
+## Collapsible Sections
+
+Used for content that can be hidden to reduce visual clutter (e.g., Watchlist).
+
+### Structure
+- **Header**: Clickable row with title, optional count badge, and chevron indicator
+- **Content**: Hidden by default, revealed on click
+- **State persistence**: Expanded/collapsed state saved to localStorage
+
+### Styling
+```css
+/* Container */
+border: 1px solid var(--color-gray-200);
+border-radius: 8px;
+overflow: hidden;
+
+/* Header */
+background: var(--color-gray-100);
+padding: 10px 14px;
+
+/* Header hover */
+background: var(--color-gray-200);
+
+/* Content area */
+background: var(--color-bg);
+border-top: 1px solid var(--color-gray-200);
+padding: 12px 14px;
+
+/* Chevron rotation on expand */
+transform: rotate(180deg);
+transition: transform 0.2s;
+```
+
+### Count Badge
+Small pill showing item count. Must remain visible on header hover.
+
+```css
+background: var(--color-gray-200);
+padding: 2px 8px;
+border-radius: 10px;
+font-size: 0.75rem;
+font-weight: 600;
+color: var(--color-gray-600);
+
+/* On header hover - darken to stay visible */
+background: var(--color-gray-300);
+```
+
+---
+
+## Destructive Actions
+
+### Inline Delete Button
+Small, muted button that becomes dangerous on hover. Used for granular delete actions within lists.
+
+```css
+/* Default state - unobtrusive */
+padding: 2px 8px;
+font-size: 0.7rem;
+color: var(--color-gray-500);
+background: none;
+border: 1px solid var(--color-gray-300);
+border-radius: 4px;
+
+/* Hover state - danger indication */
+color: var(--color-danger);
+border-color: var(--color-danger);
+background: rgba(239, 68, 68, 0.1);
+```
+
+### Full-Width Delete Button
+Used for major destructive actions (e.g., "Delete All Data").
+
+```css
+/* Default state */
+width: 100%;
+padding: 8px 12px;
+font-size: 0.8rem;
+color: var(--color-danger);
+background: none;
+border: 1px solid var(--color-danger);
+border-radius: 6px;
+
+/* Hover state - filled danger */
+background: var(--color-danger);
+color: white;
+```
+
+### Confirmation Pattern
+- Single confirmation for reversible or minor deletions
+- Double confirmation for irreversible bulk deletions ("Delete All Data")
