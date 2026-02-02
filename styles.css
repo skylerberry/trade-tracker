@@ -376,16 +376,16 @@ header h1 {
 }
 
 .btn-view {
-    color: var(--color-gray-500);
+    color: #71717a;
 }
 
 .btn-view:hover {
-    background-color: var(--color-gray-100);
-    color: var(--color-primary);
+    background-color: #f4f4f5;
+    color: #1a365d;
 }
 
 .btn-edit {
-    color: var(--color-gray-500);
+    color: #71717a;
 }
 
 .btn-edit:hover {
@@ -394,7 +394,7 @@ header h1 {
 }
 
 .btn-delete {
-    color: var(--color-gray-400);
+    color: #71717a;
 }
 
 .btn-delete:hover {
@@ -3248,7 +3248,7 @@ tbody tr:last-child td {
 }
 
 [data-theme="dark"] .btn-delete {
-    color: #52525b;
+    color: #71717a;
 }
 
 [data-theme="dark"] .btn-delete:hover {
@@ -3586,7 +3586,7 @@ tbody tr:last-child td {
     }
 
     :root:not([data-theme="light"]) .btn-delete {
-        color: #52525b;
+        color: #71717a;
     }
 
     :root:not([data-theme="light"]) .btn-delete:hover {
