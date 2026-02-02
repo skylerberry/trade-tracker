@@ -1232,6 +1232,20 @@ function updateLastSyncedDisplay(timestamp) {
     }
 }
 
+// Update sync status counts in the connected modal
+function updateSyncStatusCounts() {
+    const tradesCount = document.getElementById('syncTradesCount');
+    const watchlistCount = document.getElementById('syncWatchlistCount');
+
+    if (tradesCount) {
+        tradesCount.textContent = trades.length;
+    }
+
+    if (watchlistCount) {
+        watchlistCount.textContent = watchlist.length;
+    }
+}
+
 // Click sync status to open settings
 syncStatus.addEventListener('click', () => {
     document.getElementById('gistSettingsBtn').click();
@@ -1363,6 +1377,9 @@ document.getElementById('gistSettingsBtn').addEventListener('click', () => {
         // Update last synced display
         const lastSync = localStorage.getItem(LAST_SYNC_KEY);
         updateLastSyncedDisplay(lastSync ? parseInt(lastSync) : null);
+
+        // Update sync status counts
+        updateSyncStatusCounts();
     } else {
         // Show setup view
         gistSetup.classList.remove('hidden');

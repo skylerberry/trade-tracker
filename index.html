@@ -441,6 +441,31 @@
                         </svg>
                     </button></p>
                     <p class="last-synced-display">Last synced: <span id="lastSyncedDisplay">Never</span></p>
+
+                    <div class="sync-status-list" id="syncStatusList">
+                        <div class="sync-status-item">
+                            <svg class="sync-check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            <span class="sync-item-label">Trades</span>
+                            <span class="sync-item-count" id="syncTradesCount">0</span>
+                        </div>
+                        <div class="sync-status-item">
+                            <svg class="sync-check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            <span class="sync-item-label">Settings</span>
+                            <span class="sync-item-detail" id="syncSettingsDetail">Account, risk defaults</span>
+                        </div>
+                        <div class="sync-status-item">
+                            <svg class="sync-check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            <span class="sync-item-label">Watchlist</span>
+                            <span class="sync-item-count" id="syncWatchlistCount">0</span>
+                        </div>
+                    </div>
+
                     <div class="modal-actions">
                         <button id="forceSyncBtn" class="btn btn-primary">Sync Manually</button>
                         <button id="disconnectGist" class="btn btn-danger">Unlink</button>

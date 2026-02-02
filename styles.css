@@ -1266,6 +1266,53 @@ tbody tr:last-child td {
     color: var(--color-success-dark);
 }
 
+/* Sync Status List (Connected State) */
+.sync-status-list {
+    background: var(--color-gray-50);
+    border: 1px solid var(--color-gray-200);
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin: 16px 0;
+}
+
+.sync-status-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 0;
+    font-size: 0.85rem;
+    color: var(--color-gray-700);
+}
+
+.sync-status-item:not(:last-child) {
+    border-bottom: 1px solid var(--color-gray-200);
+}
+
+.sync-check-icon {
+    color: var(--color-success);
+    flex-shrink: 0;
+}
+
+.sync-item-label {
+    font-weight: 500;
+}
+
+.sync-item-count {
+    margin-left: auto;
+    background: var(--color-gray-200);
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-gray-600);
+}
+
+.sync-item-detail {
+    margin-left: auto;
+    font-size: 0.75rem;
+    color: var(--color-gray-500);
+}
+
 /* Help Section */
 .help-section {
     background: var(--color-gray-50);
