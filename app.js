@@ -991,7 +991,7 @@ document.getElementById('copyTradeDetailsBtn')?.addEventListener('click', async 
     if (trade.snapshot) {
         const s = trade.snapshot;
         text += `\nPosition Snapshot:\n`;
-        text += `  Account: ${formatCurrency(s.accountSize)}\n`;
+        text += `  Account Size: ${formatCurrency(s.accountSize)}\n`;
         text += `  Shares: ${formatNumber(s.shares)}\n`;
         text += `  Position: ${formatCurrency(s.positionSize)}\n`;
         text += `  Risk: ${s.riskPercent}% (${formatCurrency(s.totalRisk)})\n`;
