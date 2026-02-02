@@ -1149,6 +1149,11 @@ async function initGistSync() {
             updateSyncStatus('error', 'Sync error');
             loadTrades(); // Fall back to localStorage
         }
+        // Load and display last sync time
+        const lastSync = localStorage.getItem(LAST_SYNC_KEY);
+        if (lastSync) {
+            updateLastSyncedDisplay(parseInt(lastSync));
+        }
     } else {
         loadTrades();
         updateSyncStatus('not-synced', 'Enable Sync');
@@ -1175,14 +1180,8 @@ function updateSyncStatus(status, text) {
     }
 }
 
-function updateLastSyncedDisplay(timestamp) {
-    const displayEl = document.getElementById('lastSyncedDisplay');
-    if (!displayEl) return;
-
-    if (!timestamp) {
-        displayEl.textContent = 'Never';
-        return;
-    }
+function formatTimeAgo(timestamp) {
+    if (!timestamp) return null;
 
     const date = new Date(timestamp);
     const now = new Date();
@@ -1191,20 +1190,31 @@ function updateLastSyncedDisplay(timestamp) {
     const diffHours = Math.floor(diffMs / 3600000);
     const diffDays = Math.floor(diffMs / 86400000);
 
-    let timeAgo;
     if (diffMins < 1) {
-        timeAgo = 'Just now';
+        return 'Just now';
     } else if (diffMins < 60) {
-        timeAgo = `${diffMins} min${diffMins > 1 ? 's' : ''} ago`;
+        return `${diffMins} min${diffMins > 1 ? 's' : ''} ago`;
     } else if (diffHours < 24) {
-        timeAgo = `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+        return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
     } else if (diffDays < 7) {
-        timeAgo = `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+        return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
     } else {
-        timeAgo = date.toLocaleDateString();
+        return date.toLocaleDateString();
+    }
+}
+
+function updateLastSyncedDisplay(timestamp) {
+    // Update modal display
+    const displayEl = document.getElementById('lastSyncedDisplay');
+    if (displayEl) {
+        displayEl.textContent = timestamp ? formatTimeAgo(timestamp) : 'Never';
     }
 
-    displayEl.textContent = timeAgo;
+    // Update header display
+    const headerSyncTime = document.getElementById('headerSyncTime');
+    if (headerSyncTime) {
+        headerSyncTime.textContent = timestamp ? formatTimeAgo(timestamp) : '';
+    }
 }
 
 // Click sync status to open settings
