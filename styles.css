@@ -1230,6 +1230,42 @@ tbody tr:last-child td {
     font-weight: 500;
 }
 
+/* Sync Info Box */
+.sync-info-box {
+    background: var(--color-gray-50);
+    border: 1px solid var(--color-gray-200);
+    border-radius: 6px;
+    padding: 12px 14px;
+    margin-bottom: 16px;
+    font-size: 0.85rem;
+}
+
+.sync-info-title {
+    font-weight: 600;
+    color: var(--color-gray-700);
+    margin-bottom: 8px;
+}
+
+.sync-info-list {
+    margin: 0 0 10px 0;
+    padding-left: 18px;
+    color: var(--color-gray-600);
+    line-height: 1.6;
+}
+
+.sync-info-list li {
+    margin-bottom: 2px;
+}
+
+.sync-info-note {
+    margin: 0;
+    padding: 6px 8px;
+    background: var(--color-success-light);
+    border-radius: 4px;
+    font-size: 0.8rem;
+    color: var(--color-success-dark);
+}
+
 /* Help Section */
 .help-section {
     background: var(--color-gray-50);

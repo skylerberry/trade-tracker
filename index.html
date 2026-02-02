@@ -389,7 +389,17 @@
                 <button type="button" id="closeGistModal" class="btn-modal-close" aria-label="Close">&times;</button>
                 <h2 id="gistModalTitle">GitHub Gist Sync</h2>
                 <div id="gistSetup">
-                    <p>Sync your trades easily across devices using GitHub Gist.</p>
+                    <p>Sync your trades across devices using GitHub Gist.</p>
+
+                    <div class="sync-info-box">
+                        <div class="sync-info-title">What gets synced:</div>
+                        <ul class="sync-info-list">
+                            <li>All your trades (ticker, entry/exit prices, dates, sales)</li>
+                            <li>Calculator settings (account size, default risk %)</li>
+                            <li>Your watchlist</li>
+                        </ul>
+                        <p class="sync-info-note">Your GitHub token stays on this device only and is never uploaded.</p>
+                    </div>
 
                     <details class="help-section">
                         <summary>How to get a token (first time setup)</summary>
