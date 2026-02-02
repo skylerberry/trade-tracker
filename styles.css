@@ -1424,7 +1424,7 @@ tbody tr:last-child td {
     align-items: center;
     gap: 8px;
     font-size: 0.85rem;
-    font-weight: 500;
+    font-weight: 600;
     color: var(--color-gray-700);
 }
 
