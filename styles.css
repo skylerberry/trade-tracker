@@ -287,20 +287,18 @@ header h1 {
     cursor: pointer;
     font-size: 0.95rem;
     font-weight: 500;
-    transition: background-color 0.2s, transform 0.1s;
-}
-
-.btn:hover {
-    transform: translateY(-1px);
+    transition: all 0.15s ease;
 }
 
 .btn-primary {
     background-color: var(--color-primary);
     color: white;
+    border: 1px solid var(--color-primary);
 }
 
 .btn-primary:hover {
     background-color: var(--color-primary-hover);
+    border-color: var(--color-primary-hover);
 }
 
 .btn-ghost {
@@ -331,45 +329,42 @@ header h1 {
 }
 
 .btn-view {
-    background-color: var(--color-gray-50);
-    color: var(--color-accent);
+    background-color: transparent;
+    color: var(--color-gray-700);
     padding: 6px 12px;
     font-size: 0.85rem;
-    border: 1px solid var(--color-accent);
+    border: none;
 }
 
 .btn-view:hover {
-    background-color: var(--color-accent);
-    color: white;
-    transform: none;
+    background-color: var(--color-gray-100);
+    color: var(--color-gray-900);
 }
 
 .btn-edit {
-    background-color: var(--color-gray-50);
-    color: var(--color-warning);
+    background-color: transparent;
+    color: var(--color-gray-700);
     padding: 6px 12px;
     font-size: 0.85rem;
-    border: 1px solid var(--color-warning);
+    border: none;
 }
 
 .btn-edit:hover {
-    background-color: var(--color-warning);
-    color: white;
-    transform: none;
+    background-color: #fef3c7;
+    color: #92400e;
 }
 
 .btn-delete {
-    background-color: var(--color-gray-50);
-    color: var(--color-error);
+    background-color: transparent;
+    color: var(--color-gray-500);
     padding: 6px 12px;
     font-size: 0.85rem;
-    border: 1px solid var(--color-error);
+    border: none;
 }
 
 .btn-delete:hover {
-    background-color: var(--color-error);
-    color: white;
-    transform: none;
+    background-color: #fee2e2;
+    color: #dc2626;
 }
 
 /* Trade Form */
@@ -3193,10 +3188,34 @@ tbody tr:last-child td {
     color: #93c5fd;
 }
 
-[data-theme="dark"] .btn-view,
-[data-theme="dark"] .btn-edit,
+[data-theme="dark"] .btn-view {
+    background-color: transparent;
+    color: #a1a1aa;
+}
+
+[data-theme="dark"] .btn-view:hover {
+    background-color: #3f3f46;
+    color: #f4f4f5;
+}
+
+[data-theme="dark"] .btn-edit {
+    background-color: transparent;
+    color: #a1a1aa;
+}
+
+[data-theme="dark"] .btn-edit:hover {
+    background-color: rgba(251, 191, 36, 0.15);
+    color: #fbbf24;
+}
+
 [data-theme="dark"] .btn-delete {
-    background-color: #27272a;
+    background-color: transparent;
+    color: #71717a;
+}
+
+[data-theme="dark"] .btn-delete:hover {
+    background-color: rgba(239, 68, 68, 0.15);
+    color: #f87171;
 }
 
 /* Modal backdrop - darker for better contrast */
@@ -3504,10 +3523,34 @@ tbody tr:last-child td {
         color: #93c5fd;
     }
 
-    :root:not([data-theme="light"]) .btn-view,
-    :root:not([data-theme="light"]) .btn-edit,
+    :root:not([data-theme="light"]) .btn-view {
+        background-color: transparent;
+        color: #a1a1aa;
+    }
+
+    :root:not([data-theme="light"]) .btn-view:hover {
+        background-color: #3f3f46;
+        color: #f4f4f5;
+    }
+
+    :root:not([data-theme="light"]) .btn-edit {
+        background-color: transparent;
+        color: #a1a1aa;
+    }
+
+    :root:not([data-theme="light"]) .btn-edit:hover {
+        background-color: rgba(251, 191, 36, 0.15);
+        color: #fbbf24;
+    }
+
     :root:not([data-theme="light"]) .btn-delete {
-        background-color: #27272a;
+        background-color: transparent;
+        color: #71717a;
+    }
+
+    :root:not([data-theme="light"]) .btn-delete:hover {
+        background-color: rgba(239, 68, 68, 0.15);
+        color: #f87171;
     }
 
     /* Modal backdrop - darker for better contrast */
@@ -4124,10 +4167,6 @@ tbody tr:last-child td {
     background: #27272a;
 }
 
-[data-theme="dark"] .btn-view {
-    background-color: #27272a;
-}
-
 /* System dark mode preference */
 @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) .trade-details-header {
@@ -4172,9 +4211,5 @@ tbody tr:last-child td {
 
     :root:not([data-theme="light"]) .snapshot-empty {
         background: #27272a;
-    }
-
-    :root:not([data-theme="light"]) .btn-view {
-        background-color: #27272a;
     }
 }
