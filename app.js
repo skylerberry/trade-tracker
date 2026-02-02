@@ -2809,7 +2809,7 @@ function renderWatchlistPills() {
     watchlistBar.innerHTML = `
         <span class="watchlist-label">Watchlist:</span>
         ${pillsHtml}
-        <input type="text" id="watchlistQuickAdd" class="watchlist-quick-add" placeholder="+ Add" maxlength="5" enterkeyhint="done">
+        <input type="text" id="watchlistQuickAdd" class="watchlist-quick-add" placeholder="+ Add" maxlength="5" enterkeyhint="done" autocomplete="off">
         ${clearBtnHtml}
     `;
 
