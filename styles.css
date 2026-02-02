@@ -1315,10 +1315,11 @@ tbody tr:last-child td {
 
 .sync-item-delete {
     margin-left: 10px;
-    padding: 2px 8px;
-    font-size: 0.7rem;
+    padding: 3px 10px;
+    font-size: 0.75rem;
+    font-weight: 500;
     color: var(--color-gray-500);
-    background: none;
+    background: var(--color-gray-100);
     border: 1px solid var(--color-gray-300);
     border-radius: 4px;
     cursor: pointer;
@@ -1326,27 +1327,34 @@ tbody tr:last-child td {
 }
 
 .sync-item-delete:hover {
-    color: var(--color-danger);
-    border-color: var(--color-danger);
-    background: rgba(239, 68, 68, 0.1);
+    background: #fee2e2;
+    color: #dc2626;
+    border-color: #fca5a5;
+}
+
+.sync-data-actions {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--color-gray-200);
 }
 
 .btn-delete-all-data {
     width: 100%;
-    margin-top: 12px;
-    padding: 8px 12px;
-    font-size: 0.8rem;
-    color: var(--color-danger);
-    background: none;
-    border: 1px solid var(--color-danger);
+    padding: 10px 16px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--color-gray-600);
+    background: var(--color-gray-100);
+    border: 1px solid var(--color-gray-300);
     border-radius: 6px;
     cursor: pointer;
     transition: all 0.15s;
 }
 
 .btn-delete-all-data:hover {
-    background: var(--color-danger);
-    color: white;
+    background: #fee2e2;
+    color: #dc2626;
+    border-color: #fca5a5;
 }
 
 /* Help Section */
@@ -2529,6 +2537,7 @@ tbody tr:last-child td {
 
 .btn-copy-shares .copy-icon,
 .btn-copy-shares .copy-check {
+    position: absolute;
     transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
@@ -2538,7 +2547,6 @@ tbody tr:last-child td {
 }
 
 .btn-copy-shares .copy-check {
-    position: absolute;
     opacity: 0;
     transform: scale(0.5);
 }
@@ -3626,6 +3634,34 @@ tbody tr:last-child td {
     border-color: #f87171;
 }
 
+[data-theme="dark"] .sync-item-delete {
+    background: #3f3f46;
+    color: #e4e4e7;
+    border-color: #52525b;
+}
+
+[data-theme="dark"] .sync-item-delete:hover {
+    background-color: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+    border-color: #f87171;
+}
+
+[data-theme="dark"] .sync-data-actions {
+    border-color: #3f3f46;
+}
+
+[data-theme="dark"] .btn-delete-all-data {
+    background: #3f3f46;
+    color: #e4e4e7;
+    border-color: #52525b;
+}
+
+[data-theme="dark"] .btn-delete-all-data:hover {
+    background-color: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+    border-color: #f87171;
+}
+
 /* System preference dark mode overrides */
 @media (prefers-color-scheme: dark) {
     /* Header - dark charcoal with blue accent border */
@@ -3927,6 +3963,34 @@ tbody tr:last-child td {
     }
 
     :root:not([data-theme="light"]) .btn-danger:hover {
+        background-color: rgba(239, 68, 68, 0.15);
+        color: #f87171;
+        border-color: #f87171;
+    }
+
+    :root:not([data-theme="light"]) .sync-item-delete {
+        background: #3f3f46;
+        color: #e4e4e7;
+        border-color: #52525b;
+    }
+
+    :root:not([data-theme="light"]) .sync-item-delete:hover {
+        background-color: rgba(239, 68, 68, 0.15);
+        color: #f87171;
+        border-color: #f87171;
+    }
+
+    :root:not([data-theme="light"]) .sync-data-actions {
+        border-color: #3f3f46;
+    }
+
+    :root:not([data-theme="light"]) .btn-delete-all-data {
+        background: #3f3f46;
+        color: #e4e4e7;
+        border-color: #52525b;
+    }
+
+    :root:not([data-theme="light"]) .btn-delete-all-data:hover {
         background-color: rgba(239, 68, 68, 0.15);
         color: #f87171;
         border-color: #f87171;
