@@ -2788,7 +2788,31 @@ importAlertBtn.addEventListener('click', () => {
 // ============================================
 
 // Watchlist DOM elements
-const watchlistBar = document.getElementById('watchlistBar');
+const watchlistSection = document.getElementById('watchlistSection');
+const watchlistToggle = document.getElementById('watchlistToggle');
+const watchlistContent = document.getElementById('watchlistContent');
+const watchlistCountEl = document.getElementById('watchlistCount');
+
+// Watchlist expand/collapse
+const WATCHLIST_EXPANDED_KEY = 'tradeTracker_watchlistExpanded';
+
+function toggleWatchlist() {
+    const isExpanded = watchlistSection.classList.toggle('expanded');
+    watchlistContent.classList.toggle('collapsed', !isExpanded);
+    localStorage.setItem(WATCHLIST_EXPANDED_KEY, isExpanded.toString());
+}
+
+watchlistToggle.addEventListener('click', toggleWatchlist);
+
+// Initialize watchlist expanded state
+function initWatchlistExpandedState() {
+    const stored = localStorage.getItem(WATCHLIST_EXPANDED_KEY);
+    if (stored === 'true') {
+        watchlistSection.classList.add('expanded');
+        watchlistContent.classList.remove('collapsed');
+    }
+}
+initWatchlistExpandedState();
 const watchlistModal = document.getElementById('watchlistModal');
 const manageWatchlistBtn = document.getElementById('manageWatchlistBtn');
 const closeWatchlistModal = document.getElementById('closeWatchlistModal');
@@ -2827,19 +2851,18 @@ function openTradingViewChart(ticker) {
 
 // Render watchlist pills
 function renderWatchlistPills() {
-    // Always show the bar (for quick-add input), but only show pills if watchlist has items
-    watchlistBar.classList.remove('hidden');
+    // Update count badge
+    watchlistCountEl.textContent = watchlist.length;
 
     const pillsHtml = watchlist.length > 0
         ? watchlist.map(ticker => `<button class="watchlist-pill" data-ticker="${ticker}" title="Click to fill ticker, Shift+Click to open TradingView">${ticker}<span class="pill-remove" data-ticker="${ticker}">×</span></button>`).join('')
         : '';
 
     const clearBtnHtml = watchlist.length > 0
-        ? '<button class="watchlist-clear" id="clearWatchlist">× Clear Watchlist</button>'
+        ? '<button class="watchlist-clear" id="clearWatchlist">× Clear</button>'
         : '';
 
-    watchlistBar.innerHTML = `
-        <span class="watchlist-label">Watchlist:</span>
+    watchlistContent.innerHTML = `
         ${pillsHtml}
         <input type="text" id="watchlistQuickAdd" class="watchlist-quick-add" placeholder="+ Add" maxlength="5" enterkeyhint="done" autocomplete="off">
         ${clearBtnHtml}
@@ -2874,7 +2897,7 @@ function renderWatchlistPills() {
     }
 
     // Add click listeners to pills
-    watchlistBar.querySelectorAll('.watchlist-pill').forEach(pill => {
+    watchlistContent.querySelectorAll('.watchlist-pill').forEach(pill => {
         // iOS keyboard trick: focus proxy input on touchstart to "prime" the keyboard
         pill.addEventListener('touchstart', () => {
             const proxyInput = document.getElementById('iosKeyboardProxy');

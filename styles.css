@@ -1394,23 +1394,75 @@ tbody tr:last-child td {
     font-size: 0.85rem;
 }
 
-/* Watchlist Pills Bar */
-.watchlist-bar {
+/* Watchlist Collapsible Section */
+.watchlist-section {
+    border: 1px solid var(--color-gray-200);
+    border-radius: 8px;
+    margin-bottom: 15px;
+    overflow: hidden;
+}
+
+.watchlist-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 10px 14px;
+    background: var(--color-gray-100);
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.15s;
+}
+
+.watchlist-section-header:hover {
+    background: var(--color-gray-200);
+}
+
+.watchlist-section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--color-gray-700);
+}
+
+.watchlist-section-count {
+    background: var(--color-gray-200);
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--color-gray-500);
+    transition: background 0.15s;
+}
+
+.watchlist-section-header:hover .watchlist-section-count {
+    background: var(--color-gray-300);
+}
+
+.watchlist-section-chevron {
+    color: var(--color-gray-500);
+    transition: transform 0.2s;
+}
+
+.watchlist-section.expanded .watchlist-section-chevron {
+    transform: rotate(180deg);
+}
+
+.watchlist-section-content {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
     align-items: center;
-    padding: 12px 16px;
-    background: var(--color-gray-100);
-    border-radius: 8px;
-    margin-bottom: 15px;
+    padding: 12px 14px;
+    background: var(--color-bg);
+    border-top: 1px solid var(--color-gray-200);
 }
 
-.watchlist-label {
-    font-size: 0.8rem;
-    color: var(--color-gray-500);
-    font-weight: 500;
-    margin-right: 4px;
+.watchlist-section-content.collapsed {
+    display: none;
 }
 
 .watchlist-pill {
@@ -2907,7 +2959,7 @@ tbody tr:last-child td {
         flex-wrap: wrap;
     }
 
-    .watchlist-bar {
+    .watchlist-section-content {
         padding: 10px 12px;
     }
 
