@@ -6251,7 +6251,7 @@ tbody tr:last-child td {
 }
 
 .open-risk-text {
-    color: #71717a;
+    color: var(--color-gray-700);
     font-weight: 600;
 }
 
@@ -6277,6 +6277,11 @@ tbody tr:last-child td {
     color: var(--color-gray-600);
 }
 
+.open-risk-status.risk-freerolled .open-risk-badge {
+    background-color: var(--color-primary);
+    color: white;
+}
+
 .open-risk-status.risk-low .open-risk-badge {
     background-color: #dcfce7;
     color: #15803d;
@@ -6298,7 +6303,10 @@ tbody tr:last-child td {
         color: #a1a1aa;
     }
 
-    :root:not([data-theme="light"]) .open-risk-text,
+    :root:not([data-theme="light"]) .open-risk-text {
+        color: #f4f4f5;
+    }
+
     :root:not([data-theme="light"]) .open-risk-amount,
     :root:not([data-theme="light"]) .open-risk-percent {
         color: #a1a1aa;
@@ -6307,6 +6315,11 @@ tbody tr:last-child td {
     :root:not([data-theme="light"]) .open-risk-status.risk-cash .open-risk-badge {
         background-color: #3f3f46;
         color: #a1a1aa;
+    }
+
+    :root:not([data-theme="light"]) .open-risk-status.risk-freerolled .open-risk-badge {
+        background: #3b82f6;
+        color: white;
     }
 
     :root:not([data-theme="light"]) .open-risk-status.risk-low .open-risk-badge {
@@ -6330,7 +6343,10 @@ tbody tr:last-child td {
     color: #a1a1aa;
 }
 
-[data-theme="dark"] .open-risk-text,
+[data-theme="dark"] .open-risk-text {
+    color: #f4f4f5;
+}
+
 [data-theme="dark"] .open-risk-amount,
 [data-theme="dark"] .open-risk-percent {
     color: #a1a1aa;
@@ -6339,6 +6355,11 @@ tbody tr:last-child td {
 [data-theme="dark"] .open-risk-status.risk-cash .open-risk-badge {
     background-color: #3f3f46;
     color: #a1a1aa;
+}
+
+[data-theme="dark"] .open-risk-status.risk-freerolled .open-risk-badge {
+    background: #3b82f6;
+    color: white;
 }
 
 [data-theme="dark"] .open-risk-status.risk-low .open-risk-badge {

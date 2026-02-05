@@ -5196,7 +5196,10 @@ function calculateOpenHeat() {
 
     const percent = (totalRisk / accountSize) * 100;
 
-    return { totalRisk, percent, tradeCount };
+    // Count total active positions (including freerolled ones)
+    const activePositionCount = activeTrades.length;
+
+    return { totalRisk, percent, tradeCount, activePositionCount };
 }
 
 /**
@@ -5233,12 +5236,17 @@ function updateOpenHeatDisplay() {
         ? `${heat.tradeCount} position${heat.tradeCount > 1 ? 's' : ''} at risk`
         : 'No open positions at risk';
 
-    // Risk level badge: CASH (0), LOW (<1%), MED (1-3%), HIGH (4%+)
-    card.classList.remove('risk-cash', 'risk-low', 'risk-med', 'risk-high');
+    // Risk level badge: CASH (no positions), LOW (<1%), MED (1-3%), HIGH (4%+)
+    card.classList.remove('risk-cash', 'risk-freerolled', 'risk-low', 'risk-med', 'risk-high');
 
-    if (heat.percent === 0) {
+    // Only show CASH if no active positions at all
+    if (heat.activePositionCount === 0) {
         levelEl.textContent = 'CASH';
         card.classList.add('risk-cash');
+    } else if (heat.percent === 0) {
+        // Has positions but 0% risk = all freerolled
+        levelEl.textContent = 'FREEROLLED';
+        card.classList.add('risk-freerolled');
     } else if (heat.percent < 1) {
         levelEl.textContent = 'LOW';
         card.classList.add('risk-low');
