@@ -1793,6 +1793,7 @@ function calculatePosition() {
         calcPercentAccount.textContent = formatPercentage(percentOfAccount);
     }
     calcShares.classList.toggle('limited', isLimited);
+    calcShares.classList.add('copyable');
     calcPositionSize.classList.toggle('limited', isLimited);
     calcTotalRisk.classList.toggle('limited', isLimited);
     calcPercentAccount.classList.toggle('limited', isLimited);
@@ -1890,7 +1891,7 @@ function formatCompactCurrency(value) {
 function resetCalcResults() {
     // Position card
     calcShares.textContent = '-';
-    calcShares.classList.remove('limited');
+    calcShares.classList.remove('limited', 'copyable');
     calcPositionSize.textContent = '-';
     calcPositionSize.classList.remove('limited');
     calcStopDistance.textContent = '-';
@@ -2079,10 +2080,11 @@ document.getElementById('copyCalcStopLoss').addEventListener('click', async () =
     }
 });
 
-// Copy shares to clipboard (copies the adjusted/final value if limited)
-document.getElementById('copyCalcShares').addEventListener('click', async () => {
+// Copy shares to clipboard by clicking on the shares value
+document.getElementById('calcShares').addEventListener('click', async () => {
     const sharesEl = document.getElementById('calcShares');
-    if (!sharesEl || sharesEl.textContent === '-') return;
+    const containerEl = sharesEl?.closest('.calc-big-result');
+    if (!sharesEl || !sharesEl.classList.contains('copyable')) return;
 
     // Extract the final number (after → if limited, or the only number if not)
     const text = sharesEl.textContent;
@@ -2091,14 +2093,13 @@ document.getElementById('copyCalcShares').addEventListener('click', async () => 
         // Limited: get the number after the arrow
         value = text.split('→')[1].trim().replace(/,/g, '');
     } else {
-        value = text.replace(/,/g, '');
+        value = text.replace(/,/g, '').trim();
     }
 
-    const btn = document.getElementById('copyCalcShares');
     try {
         await navigator.clipboard.writeText(value);
-        btn.classList.add('copied');
-        setTimeout(() => btn.classList.remove('copied'), 1500);
+        containerEl.classList.add('copied');
+        setTimeout(() => containerEl.classList.remove('copied'), 1200);
     } catch (err) {
         console.error('Failed to copy:', err);
     }

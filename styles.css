@@ -2245,6 +2245,23 @@ tbody tr:last-child td {
     border-color: var(--color-primary);
 }
 
+.input-prefix {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-gray-500);
+    font-size: 0.95rem;
+    font-weight: 500;
+    pointer-events: none;
+    user-select: none;
+    z-index: 1;
+}
+
+.input-with-buttons:has(.input-prefix) {
+    position: relative;
+}
+
 .input-with-buttons input {
     flex: 1;
     min-width: 100px;
@@ -2256,9 +2273,18 @@ tbody tr:last-child td {
     padding: 14px 16px;
 }
 
+.input-with-buttons:has(.input-prefix) input {
+    padding-left: 28px;
+}
+
 .input-with-buttons input:focus {
     outline: none;
     box-shadow: none;
+    border: none;
+}
+
+.input-with-buttons input:focus-visible {
+    outline: none;
 }
 
 .input-with-buttons input::-webkit-outer-spin-button,
@@ -2275,6 +2301,16 @@ tbody tr:last-child td {
 .input-with-buttons:focus-within .btn-copy-input,
 .input-with-buttons:focus-within .btn-copy-spacer {
     border-color: var(--color-primary);
+}
+
+/* Error state for input-with-buttons container */
+.input-with-buttons:has(input.error) {
+    border-color: var(--color-error);
+}
+
+.input-with-buttons:has(input.error) .increment-btn,
+.input-with-buttons:has(input.error) .btn-copy-input {
+    border-color: var(--color-error);
 }
 
 .increment-btn-stack {
@@ -2466,6 +2502,33 @@ tbody tr:last-child td {
     display: block;
     font-size: 2rem;
     font-weight: 700;
+    transition: opacity 0.3s ease;
+}
+
+.calc-big-value.copyable {
+    cursor: pointer;
+}
+
+.calc-big-value.copyable:hover {
+    opacity: 0.8;
+}
+
+.calc-big-result .copy-check-inline {
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.calc-big-result.copied .calc-big-value {
+    opacity: 0;
+}
+
+.calc-big-result.copied .copy-check-inline {
+    opacity: 1;
 }
 
 .calc-big-label {
@@ -2511,61 +2574,6 @@ tbody tr:last-child td {
 }
 
 /* Copy shares button */
-.btn-copy-shares {
-    position: relative;
-    background: rgba(255, 255, 255, 0.15);
-    border: none;
-    border-radius: 4px;
-    color: rgba(255, 255, 255, 0.7);
-    cursor: pointer;
-    padding: 4px 6px;
-    margin-left: 8px;
-    vertical-align: middle;
-    transition: all 0.2s;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 26px;
-    height: 26px;
-    overflow: hidden;
-}
-
-.btn-copy-shares:hover {
-    background: rgba(255, 255, 255, 0.25);
-    color: white;
-}
-
-.btn-copy-shares .copy-icon,
-.btn-copy-shares .copy-check {
-    position: absolute;
-    transition: opacity 0.2s ease, transform 0.2s ease;
-}
-
-.btn-copy-shares .copy-icon {
-    opacity: 1;
-    transform: scale(1);
-}
-
-.btn-copy-shares .copy-check {
-    opacity: 0;
-    transform: scale(0.5);
-}
-
-.btn-copy-shares.copied {
-    background: rgba(34, 197, 94, 0.3);
-    color: #22c55e;
-}
-
-.btn-copy-shares.copied .copy-icon {
-    opacity: 0;
-    transform: scale(0.5);
-}
-
-.btn-copy-shares.copied .copy-check {
-    opacity: 1;
-    transform: scale(1);
-}
-
 /* Target Card (Green) */
 .calc-target-card {
     border-radius: 12px;
@@ -3481,6 +3489,10 @@ tbody tr:last-child td {
     background-color: #27272a;
 }
 
+[data-theme="dark"] .input-prefix {
+    color: #a1a1aa;
+}
+
 /* Toast notification - ensure dark mode is applied */
 [data-theme="dark"] .toast {
     background: #27272a;
@@ -4007,6 +4019,10 @@ tbody tr:last-child td {
     /* Input with buttons - specific override for white background */
     :root:not([data-theme="light"]) .input-with-buttons input {
         background-color: #27272a;
+    }
+
+    :root:not([data-theme="light"]) .input-prefix {
+        color: #a1a1aa;
     }
 
     /* Toast notification */
