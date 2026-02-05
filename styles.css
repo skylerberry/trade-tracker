@@ -414,6 +414,33 @@ header h1 {
     color: #dc2626;
 }
 
+.btn-manage {
+    color: #71717a;
+}
+
+.btn-manage:hover {
+    background-color: #e0f2fe;
+    color: #0284c7;
+}
+
+.btn-archive {
+    color: #71717a;
+}
+
+.btn-archive:hover {
+    background-color: #f3e8ff;
+    color: #7c3aed;
+}
+
+.btn-restore {
+    color: #71717a;
+}
+
+.btn-restore:hover {
+    background-color: #dcfce7;
+    color: #16a34a;
+}
+
 /* Trade Form */
 .trade-form {
     background-color: var(--color-gray-50);
@@ -3479,6 +3506,33 @@ tbody tr:last-child td {
     color: #f87171;
 }
 
+[data-theme="dark"] .btn-manage {
+    color: #71717a;
+}
+
+[data-theme="dark"] .btn-manage:hover {
+    background-color: rgba(56, 189, 248, 0.15);
+    color: #38bdf8;
+}
+
+[data-theme="dark"] .btn-archive {
+    color: #71717a;
+}
+
+[data-theme="dark"] .btn-archive:hover {
+    background-color: rgba(167, 139, 250, 0.15);
+    color: #a78bfa;
+}
+
+[data-theme="dark"] .btn-restore {
+    color: #71717a;
+}
+
+[data-theme="dark"] .btn-restore:hover {
+    background-color: rgba(74, 222, 128, 0.15);
+    color: #4ade80;
+}
+
 /* Modal backdrop - darker for better contrast */
 [data-theme="dark"] .modal {
     background: rgba(0, 0, 0, 0.75);
@@ -3859,6 +3913,33 @@ tbody tr:last-child td {
     :root:not([data-theme="light"]) .btn-delete:hover {
         background-color: rgba(239, 68, 68, 0.15);
         color: #f87171;
+    }
+
+    :root:not([data-theme="light"]) .btn-manage {
+        color: #71717a;
+    }
+
+    :root:not([data-theme="light"]) .btn-manage:hover {
+        background-color: rgba(56, 189, 248, 0.15);
+        color: #38bdf8;
+    }
+
+    :root:not([data-theme="light"]) .btn-archive {
+        color: #71717a;
+    }
+
+    :root:not([data-theme="light"]) .btn-archive:hover {
+        background-color: rgba(167, 139, 250, 0.15);
+        color: #a78bfa;
+    }
+
+    :root:not([data-theme="light"]) .btn-restore {
+        color: #71717a;
+    }
+
+    :root:not([data-theme="light"]) .btn-restore:hover {
+        background-color: rgba(74, 222, 128, 0.15);
+        color: #4ade80;
     }
 
     /* Modal backdrop - darker for better contrast */
@@ -4331,16 +4412,44 @@ tbody tr:last-child td {
 .trade-details-modal-content {
     max-width: 480px;
     max-height: 90vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+}
+
+.trade-details-sticky-header {
+    position: sticky;
+    top: 0;
+    background: var(--color-gray-50);
+    z-index: 10;
+    flex-shrink: 0;
+    padding: 30px 30px 0 30px;
+}
+
+.trade-details-sticky-header h2 {
+    margin: 0 0 16px 0;
+}
+
+.trade-details-body {
+    flex: 1;
     overflow-y: auto;
+    padding: 0 30px;
 }
 
 .trade-details-header {
     display: flex;
     align-items: center;
     gap: 12px;
-    margin-bottom: 24px;
+    margin-bottom: 0;
     padding-bottom: 16px;
     border-bottom: 1px solid var(--color-gray-200);
+}
+
+.trade-details-modal-content .trade-details-actions {
+    padding: 20px 30px;
+    border-top: 1px solid var(--color-gray-200);
+    background: var(--color-gray-50);
 }
 
 .trade-details-ticker {
@@ -4379,6 +4488,10 @@ tbody tr:last-child td {
 
 .trade-details-section {
     margin-bottom: 20px;
+}
+
+.trade-details-body .trade-details-section:first-child {
+    padding-top: 20px;
 }
 
 .trade-details-section h3 {
@@ -4451,6 +4564,312 @@ tbody tr:last-child td {
     font-size: 0.9rem;
 }
 
+/* Journal Section */
+.journal-section {
+    border-top: 1px solid var(--color-gray-200);
+    padding-top: 16px;
+}
+
+.journal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.journal-header h3 {
+    margin: 0;
+}
+
+.btn-add-entry {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    background-color: var(--color-gray-100);
+    border: 1px solid var(--color-gray-300);
+    border-radius: 6px;
+    color: var(--color-gray-700);
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.btn-add-entry:hover {
+    background-color: var(--color-gray-200);
+    border-color: var(--color-gray-400);
+}
+
+.btn-add-entry.hidden {
+    display: none;
+}
+
+/* Journal Form */
+.journal-form {
+    background-color: var(--color-gray-50);
+    border: 1px solid var(--color-gray-200);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+}
+
+.journal-form.hidden {
+    display: none;
+}
+
+.journal-form-row {
+    margin-bottom: 12px;
+}
+
+.journal-form-row label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--color-gray-700);
+    margin-bottom: 4px;
+}
+
+.journal-select {
+    width: 100%;
+    padding: 8px 12px;
+    padding-right: 32px;
+    border: 1px solid var(--color-gray-300);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    background-color: white;
+    color: var(--color-gray-900);
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2371717a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    cursor: pointer;
+}
+
+.journal-textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--color-gray-300);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-family: inherit;
+    resize: vertical;
+    min-height: 80px;
+    background-color: white;
+    color: var(--color-gray-900);
+}
+
+.journal-textarea::placeholder {
+    color: var(--color-gray-400);
+}
+
+.journal-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.btn-small {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+}
+
+/* Journal Entries */
+.journal-entries {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.journal-empty {
+    text-align: center;
+    padding: 24px;
+    color: var(--color-gray-500);
+    font-size: 0.9rem;
+}
+
+.journal-empty p {
+    margin: 0;
+}
+
+.journal-entry {
+    background-color: var(--color-gray-50);
+    border: 1px solid var(--color-gray-200);
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 10px;
+}
+
+.journal-entry:last-child {
+    margin-bottom: 0;
+}
+
+.journal-entry-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.journal-entry-badge {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+
+.badge-blue {
+    background-color: #dbeafe;
+    color: #1d4ed8;
+}
+
+.badge-amber {
+    background-color: #fef3c7;
+    color: #b45309;
+}
+
+.badge-green {
+    background-color: #dcfce7;
+    color: #15803d;
+}
+
+.badge-purple {
+    background-color: #f3e8ff;
+    color: #7c3aed;
+}
+
+.journal-entry-date {
+    font-size: 0.8rem;
+    color: var(--color-gray-500);
+    flex: 1;
+}
+
+.journal-entry-delete {
+    background: none;
+    border: none;
+    padding: 4px;
+    cursor: pointer;
+    color: var(--color-gray-400);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+}
+
+.journal-entry-delete:hover {
+    color: #dc2626;
+    background-color: #fee2e2;
+}
+
+.journal-entry-delete svg {
+    width: 14px;
+    height: 14px;
+}
+
+.journal-entry-content {
+    font-size: 0.9rem;
+    color: var(--color-gray-700);
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+/* Journal Images */
+.journal-image-hint {
+    font-weight: 400;
+    color: var(--color-gray-400);
+    font-size: 0.8rem;
+}
+
+.journal-image-upload {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.journal-image-upload .btn-small {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    width: fit-content;
+}
+
+.journal-image-upload .btn-small svg {
+    flex-shrink: 0;
+}
+
+.journal-image-previews {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.journal-image-preview {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid var(--color-gray-300);
+}
+
+.journal-image-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.journal-image-remove {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.6);
+    border: none;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s ease;
+}
+
+.journal-image-remove:hover {
+    background: rgba(220, 38, 38, 0.9);
+}
+
+.journal-form.drag-over {
+    border-color: var(--color-primary);
+    background-color: rgba(59, 130, 246, 0.05);
+}
+
+/* Journal entry images display */
+.journal-entry-images {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.journal-entry-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 6px;
+    cursor: pointer;
+    border: 1px solid var(--color-gray-200);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.journal-entry-image:hover {
+    transform: scale(1.02);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
 .trade-details-actions {
     justify-content: space-between;
 }
@@ -4477,6 +4896,15 @@ tbody tr:last-child td {
 }
 
 /* Dark mode for trade details modal */
+[data-theme="dark"] .trade-details-sticky-header {
+    background: #27272a;
+}
+
+[data-theme="dark"] .trade-details-modal-content .trade-details-actions {
+    background: #27272a;
+    border-top-color: #3f3f46;
+}
+
 [data-theme="dark"] .trade-details-header {
     border-bottom-color: #3f3f46;
 }
@@ -4521,8 +4949,122 @@ tbody tr:last-child td {
     background: #27272a;
 }
 
+/* Journal - Dark Mode */
+[data-theme="dark"] .journal-section {
+    border-top-color: #3f3f46;
+}
+
+[data-theme="dark"] .btn-add-entry {
+    background-color: #27272a;
+    border-color: #3f3f46;
+    color: #e4e4e7;
+}
+
+[data-theme="dark"] .btn-add-entry:hover {
+    background-color: #3f3f46;
+    border-color: #52525b;
+}
+
+[data-theme="dark"] .journal-form {
+    background-color: #27272a;
+    border-color: #3f3f46;
+}
+
+[data-theme="dark"] .journal-form-row label {
+    color: #e4e4e7;
+}
+
+[data-theme="dark"] .journal-select {
+    background-color: #18181b;
+    border-color: #3f3f46;
+    color: #f4f4f5;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23a1a1aa' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+}
+
+[data-theme="dark"] .journal-textarea {
+    background-color: #18181b;
+    border-color: #3f3f46;
+    color: #f4f4f5;
+}
+
+[data-theme="dark"] .journal-textarea::placeholder {
+    color: #71717a;
+}
+
+[data-theme="dark"] .journal-empty {
+    color: #71717a;
+}
+
+[data-theme="dark"] .journal-entry {
+    background-color: #27272a;
+    border-color: #3f3f46;
+}
+
+[data-theme="dark"] .badge-blue {
+    background-color: rgba(59, 130, 246, 0.2);
+    color: #60a5fa;
+}
+
+[data-theme="dark"] .badge-amber {
+    background-color: rgba(251, 191, 36, 0.2);
+    color: #fbbf24;
+}
+
+[data-theme="dark"] .badge-green {
+    background-color: rgba(34, 197, 94, 0.2);
+    color: #4ade80;
+}
+
+[data-theme="dark"] .badge-purple {
+    background-color: rgba(167, 139, 250, 0.2);
+    color: #a78bfa;
+}
+
+[data-theme="dark"] .journal-entry-date {
+    color: #71717a;
+}
+
+[data-theme="dark"] .journal-entry-delete {
+    color: #71717a;
+}
+
+[data-theme="dark"] .journal-entry-delete:hover {
+    color: #f87171;
+    background-color: rgba(239, 68, 68, 0.15);
+}
+
+[data-theme="dark"] .journal-entry-content {
+    color: #e4e4e7;
+}
+
+[data-theme="dark"] .journal-image-hint {
+    color: #71717a;
+}
+
+[data-theme="dark"] .journal-image-preview {
+    border-color: #3f3f46;
+}
+
+[data-theme="dark"] .journal-form.drag-over {
+    border-color: #3b82f6;
+    background-color: rgba(59, 130, 246, 0.1);
+}
+
+[data-theme="dark"] .journal-entry-image {
+    border-color: #3f3f46;
+}
+
 /* System dark mode preference */
 @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .trade-details-sticky-header {
+        background: #27272a;
+    }
+
+    :root:not([data-theme="light"]) .trade-details-modal-content .trade-details-actions {
+        background: #27272a;
+        border-top-color: #3f3f46;
+    }
+
     :root:not([data-theme="light"]) .trade-details-header {
         border-bottom-color: #3f3f46;
     }
@@ -4565,6 +5107,111 @@ tbody tr:last-child td {
 
     :root:not([data-theme="light"]) .snapshot-empty {
         background: #27272a;
+    }
+
+    /* Journal - System Dark Mode */
+    :root:not([data-theme="light"]) .journal-section {
+        border-top-color: #3f3f46;
+    }
+
+    :root:not([data-theme="light"]) .btn-add-entry {
+        background-color: #27272a;
+        border-color: #3f3f46;
+        color: #e4e4e7;
+    }
+
+    :root:not([data-theme="light"]) .btn-add-entry:hover {
+        background-color: #3f3f46;
+        border-color: #52525b;
+    }
+
+    :root:not([data-theme="light"]) .journal-form {
+        background-color: #27272a;
+        border-color: #3f3f46;
+    }
+
+    :root:not([data-theme="light"]) .journal-form-row label {
+        color: #e4e4e7;
+    }
+
+    :root:not([data-theme="light"]) .journal-select {
+        background-color: #18181b;
+        border-color: #3f3f46;
+        color: #f4f4f5;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23a1a1aa' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    }
+
+    :root:not([data-theme="light"]) .journal-textarea {
+        background-color: #18181b;
+        border-color: #3f3f46;
+        color: #f4f4f5;
+    }
+
+    :root:not([data-theme="light"]) .journal-textarea::placeholder {
+        color: #71717a;
+    }
+
+    :root:not([data-theme="light"]) .journal-empty {
+        color: #71717a;
+    }
+
+    :root:not([data-theme="light"]) .journal-entry {
+        background-color: #27272a;
+        border-color: #3f3f46;
+    }
+
+    :root:not([data-theme="light"]) .badge-blue {
+        background-color: rgba(59, 130, 246, 0.2);
+        color: #60a5fa;
+    }
+
+    :root:not([data-theme="light"]) .badge-amber {
+        background-color: rgba(251, 191, 36, 0.2);
+        color: #fbbf24;
+    }
+
+    :root:not([data-theme="light"]) .badge-green {
+        background-color: rgba(34, 197, 94, 0.2);
+        color: #4ade80;
+    }
+
+    :root:not([data-theme="light"]) .badge-purple {
+        background-color: rgba(167, 139, 250, 0.2);
+        color: #a78bfa;
+    }
+
+    :root:not([data-theme="light"]) .journal-entry-date {
+        color: #71717a;
+    }
+
+    :root:not([data-theme="light"]) .journal-entry-delete {
+        color: #71717a;
+    }
+
+    :root:not([data-theme="light"]) .journal-entry-delete:hover {
+        color: #f87171;
+        background-color: rgba(239, 68, 68, 0.15);
+    }
+
+    :root:not([data-theme="light"]) .journal-entry-content {
+        color: #e4e4e7;
+    }
+
+    :root:not([data-theme="light"]) .journal-image-hint {
+        color: #71717a;
+    }
+
+    :root:not([data-theme="light"]) .journal-image-preview {
+        border-color: #3f3f46;
+    }
+
+    :root:not([data-theme="light"]) .journal-form.drag-over {
+        border-color: #3b82f6;
+        background-color: rgba(59, 130, 246, 0.1);
+    }
+
+    :root:not([data-theme="light"]) .journal-entry-image {
+        border-color: #3f3f46;
     }
 }
 
@@ -4762,6 +5409,12 @@ tbody tr:last-child td {
     display: block;
 }
 
+.spp-loss {
+    font-weight: 600;
+    color: var(--color-error);
+    display: block;
+}
+
 .spp-date {
     font-size: 0.75rem;
     color: var(--color-gray-400);
@@ -4781,6 +5434,154 @@ tbody tr:last-child td {
 
 .btn-quick-sell:hover {
     background: #2d4a7c;
+}
+
+/* Close Position Section */
+.close-position-section {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px dashed var(--color-gray-300);
+}
+
+.close-position-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.close-position-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-gray-600);
+}
+
+.close-position-remaining {
+    font-size: 0.85rem;
+    color: var(--color-gray-500);
+}
+
+.btn-close-position {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    justify-content: center;
+    padding: 10px 16px;
+    font-size: 0.9rem;
+    border: 1px dashed var(--color-gray-400);
+    background: transparent;
+    color: var(--color-gray-600);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.btn-close-position:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    background: rgba(59, 130, 246, 0.05);
+}
+
+.btn-close-position svg {
+    flex-shrink: 0;
+}
+
+.close-position-form {
+    background: var(--color-gray-100);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 12px;
+}
+
+.close-position-form.hidden {
+    display: none;
+}
+
+.close-position-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.close-position-field label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--color-gray-600);
+    margin-bottom: 4px;
+}
+
+.close-position-field input {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid var(--color-gray-300);
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
+.close-position-field .input-with-icon {
+    position: relative;
+}
+
+.close-position-field .input-with-icon .input-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-gray-400);
+    font-size: 0.9rem;
+}
+
+.close-position-field .input-with-icon input {
+    padding-left: 24px;
+}
+
+.btn-breakeven {
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    background-color: var(--color-gray-200);
+    border: 1px solid var(--color-gray-300);
+    border-radius: 4px;
+    cursor: pointer;
+    color: var(--color-gray-600);
+    font-weight: 600;
+    margin-left: 6px;
+    transition: background-color 0.15s, color 0.15s;
+}
+
+.btn-breakeven:hover {
+    background-color: var(--color-gray-300);
+    color: var(--color-gray-700);
+}
+
+.close-position-preview {
+    margin-bottom: 12px;
+}
+
+.close-position-pnl {
+    text-align: center;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.close-position-pnl.profit {
+    background: rgba(34, 197, 94, 0.15);
+    color: #16a34a;
+}
+
+.close-position-pnl.loss {
+    background: rgba(239, 68, 68, 0.15);
+    color: #dc2626;
+}
+
+.close-position-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
 }
 
 /* Sell Progress Dots (Table Row) */
@@ -4999,6 +5800,65 @@ tbody tr:last-child td {
     color: #71717a;
 }
 
+/* Close Position - Dark Mode */
+[data-theme="dark"] .close-position-section {
+    border-top-color: #3f3f46;
+}
+
+[data-theme="dark"] .close-position-label {
+    color: #a1a1aa;
+}
+
+[data-theme="dark"] .close-position-remaining {
+    color: #71717a;
+}
+
+[data-theme="dark"] .btn-close-position {
+    border-color: #52525b;
+    color: #a1a1aa;
+}
+
+[data-theme="dark"] .btn-close-position:hover {
+    border-color: #60a5fa;
+    color: #60a5fa;
+    background: rgba(59, 130, 246, 0.1);
+}
+
+[data-theme="dark"] .close-position-form {
+    background: #27272a;
+}
+
+[data-theme="dark"] .close-position-field label {
+    color: #a1a1aa;
+}
+
+[data-theme="dark"] .close-position-field input {
+    background: #18181b;
+    border-color: #3f3f46;
+    color: #f4f4f5;
+}
+
+[data-theme="dark"] .btn-breakeven {
+    background-color: #3f3f46;
+    border-color: #52525b;
+    color: #a1a1aa;
+}
+
+[data-theme="dark"] .btn-breakeven:hover {
+    background-color: #52525b;
+    color: #e4e4e7;
+}
+
+[data-theme="dark"] .close-position-pnl.profit {
+    background: rgba(74, 222, 128, 0.15);
+    color: #4ade80;
+}
+
+[data-theme="dark"] .close-position-pnl.loss {
+    background: rgba(248, 113, 113, 0.15);
+    color: #f87171;
+}
+
 /* Freeroll Toggle - Dark Mode */
 [data-theme="dark"] .calc-freeroll-toggle {
     background: #27272a;
@@ -5171,6 +6031,65 @@ tbody tr:last-child td {
 
     :root:not([data-theme="light"]) .spp-date {
         color: #71717a;
+    }
+
+    /* Close Position - System Dark Mode */
+    :root:not([data-theme="light"]) .close-position-section {
+        border-top-color: #3f3f46;
+    }
+
+    :root:not([data-theme="light"]) .close-position-label {
+        color: #a1a1aa;
+    }
+
+    :root:not([data-theme="light"]) .close-position-remaining {
+        color: #71717a;
+    }
+
+    :root:not([data-theme="light"]) .btn-close-position {
+        border-color: #52525b;
+        color: #a1a1aa;
+    }
+
+    :root:not([data-theme="light"]) .btn-close-position:hover {
+        border-color: #60a5fa;
+        color: #60a5fa;
+        background: rgba(59, 130, 246, 0.1);
+    }
+
+    :root:not([data-theme="light"]) .close-position-form {
+        background: #27272a;
+    }
+
+    :root:not([data-theme="light"]) .close-position-field label {
+        color: #a1a1aa;
+    }
+
+    :root:not([data-theme="light"]) .close-position-field input {
+        background: #18181b;
+        border-color: #3f3f46;
+        color: #f4f4f5;
+    }
+
+    :root:not([data-theme="light"]) .btn-breakeven {
+        background-color: #3f3f46;
+        border-color: #52525b;
+        color: #a1a1aa;
+    }
+
+    :root:not([data-theme="light"]) .btn-breakeven:hover {
+        background-color: #52525b;
+        color: #e4e4e7;
+    }
+
+    :root:not([data-theme="light"]) .close-position-pnl.profit {
+        background: rgba(74, 222, 128, 0.15);
+        color: #4ade80;
+    }
+
+    :root:not([data-theme="light"]) .close-position-pnl.loss {
+        background: rgba(248, 113, 113, 0.15);
+        color: #f87171;
     }
 
     :root:not([data-theme="light"]) .sp-dot {

@@ -383,11 +383,12 @@
             <div class="filter-group">
                 <label for="statusFilter">Status:</label>
                 <select id="statusFilter">
-                    <option value="all">All Trades</option>
-                    <option value="open">Open</option>
-                    <option value="partially_closed">Partially Closed</option>
-                    <option value="closed">Fully Closed</option>
-                    <option value="stopped_out">Stopped Out</option>
+                    <option value="all">⚡ All Active</option>
+                    <option value="open">🟢 Open</option>
+                    <option value="partially_closed">🟡 Partially Closed</option>
+                    <option value="closed">✅ Fully Closed</option>
+                    <option value="stopped_out">🛑 Stopped Out</option>
+                    <option value="archived">📦 Archived</option>
                 </select>
             </div>
             <div class="filter-group">
@@ -657,14 +658,19 @@ Risking 1%
     <!-- Trade Details Modal -->
     <div id="tradeDetailsModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="tradeDetailsModalTitle">
         <div class="modal-content trade-details-modal-content">
-            <button type="button" id="closeTradeDetailsModal" class="btn-modal-close" aria-label="Close">&times;</button>
-            <h2 id="tradeDetailsModalTitle">Trade Details</h2>
+            <!-- Sticky Header -->
+            <div class="trade-details-sticky-header">
+                <button type="button" id="closeTradeDetailsModal" class="btn-modal-close" aria-label="Close">&times;</button>
+                <h2 id="tradeDetailsModalTitle">Trade Details</h2>
 
-            <div class="trade-details-header">
-                <span class="trade-details-ticker" id="detailsTicker">AAPL</span>
-                <span class="trade-details-status" id="detailsStatus">Open</span>
+                <div class="trade-details-header">
+                    <span class="trade-details-ticker" id="detailsTicker">AAPL</span>
+                    <span class="trade-details-status" id="detailsStatus">Open</span>
+                </div>
             </div>
 
+            <!-- Scrollable Body -->
+            <div class="trade-details-body">
             <div class="trade-details-section">
                 <h3>Trade Info</h3>
                 <div class="trade-details-grid">
@@ -688,17 +694,7 @@ Risking 1%
             </div>
 
             <div class="trade-details-section hidden" id="sellPlanProgressSection">
-                <h3>Position Progress</h3>
-                <div class="position-overview" id="positionOverview">
-                    <!-- Rendered by JS -->
-                </div>
-                <div class="position-progress-bar" id="positionProgressBar">
-                    <div class="ppb-sold"></div>
-                    <div class="ppb-remaining"></div>
-                </div>
-                <div class="sell-plan-progress" id="sellPlanProgress">
-                    <!-- Rendered by JS -->
-                </div>
+                <!-- Entirely rendered by JS in renderSellPlanProgress() -->
             </div>
 
             <div class="trade-details-section" id="detailsSalesSection">
@@ -714,6 +710,56 @@ Risking 1%
                     <!-- Rendered by JS: either snapshot data or "not recorded" message -->
                 </div>
             </div>
+
+            <!-- Journal Section -->
+            <div class="trade-details-section journal-section">
+                <div class="journal-header">
+                    <h3>Journal</h3>
+                    <button type="button" class="btn btn-small btn-add-entry" id="addJournalEntryBtn">+ Add Entry</button>
+                </div>
+
+                <!-- Journal Entry Form (hidden by default) -->
+                <div class="journal-form hidden" id="journalEntryForm">
+                    <div class="journal-form-row">
+                        <label for="journalEntryType">Entry Type</label>
+                        <select id="journalEntryType" class="journal-select">
+                            <option value="entry_thesis">Entry Thesis</option>
+                            <option value="during_trade">During Trade</option>
+                            <option value="exit_review">Exit Review</option>
+                            <option value="lessons_learned">Lessons Learned</option>
+                        </select>
+                    </div>
+                    <div class="journal-form-row">
+                        <label for="journalEntryContent">Notes</label>
+                        <textarea id="journalEntryContent" class="journal-textarea" rows="4" placeholder="Write your thoughts..."></textarea>
+                    </div>
+                    <div class="journal-form-row">
+                        <label>Images <span class="journal-image-hint">(max 3, under 500KB each)</span></label>
+                        <div class="journal-image-upload">
+                            <input type="file" id="journalImageInput" accept="image/*" multiple hidden>
+                            <button type="button" class="btn btn-secondary btn-small" id="journalAddImageBtn">
+                                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                    <polyline points="21 15 16 10 5 21"></polyline>
+                                </svg>
+                                Add Image
+                            </button>
+                            <div class="journal-image-previews" id="journalImagePreviews"></div>
+                        </div>
+                    </div>
+                    <div class="journal-form-actions">
+                        <button type="button" class="btn btn-secondary btn-small" id="cancelJournalEntryBtn">Cancel</button>
+                        <button type="button" class="btn btn-primary btn-small" id="saveJournalEntryBtn">Save Entry</button>
+                    </div>
+                </div>
+
+                <!-- Journal Entries List -->
+                <div class="journal-entries" id="journalEntriesList">
+                    <!-- Rendered by JS -->
+                </div>
+            </div>
+            </div><!-- End trade-details-body -->
 
             <div class="modal-actions trade-details-actions">
                 <button type="button" class="copy-details-link" id="copyTradeDetailsBtn">Copy to clipboard</button>

@@ -452,12 +452,52 @@ statusFilter.addEventListener('change', () => {
     renderTrades();
 });
 
+// Journal entry type constants
+const JOURNAL_TYPES = {
+    ENTRY_THESIS: 'entry_thesis',
+    DURING_TRADE: 'during_trade',
+    EXIT_REVIEW: 'exit_review',
+    LESSONS_LEARNED: 'lessons_learned'
+};
+
+const JOURNAL_TYPE_LABELS = {
+    [JOURNAL_TYPES.ENTRY_THESIS]: 'Entry Thesis',
+    [JOURNAL_TYPES.DURING_TRADE]: 'During Trade',
+    [JOURNAL_TYPES.EXIT_REVIEW]: 'Exit Review',
+    [JOURNAL_TYPES.LESSONS_LEARNED]: 'Lessons Learned'
+};
+
+const JOURNAL_TYPE_COLORS = {
+    [JOURNAL_TYPES.ENTRY_THESIS]: 'blue',
+    [JOURNAL_TYPES.DURING_TRADE]: 'amber',
+    [JOURNAL_TYPES.EXIT_REVIEW]: 'green',
+    [JOURNAL_TYPES.LESSONS_LEARNED]: 'purple'
+};
+
+// Migrate trade to add new fields (archive & journal)
+function migrateTrade(trade) {
+    // Add archived fields if missing
+    if (trade.archived === undefined) {
+        trade.archived = false;
+    }
+    if (trade.archivedAt === undefined) {
+        trade.archivedAt = null;
+    }
+    // Add journal array if missing
+    if (!Array.isArray(trade.journal)) {
+        trade.journal = [];
+    }
+    return trade;
+}
+
 // Load trades from localStorage
 function loadTrades() {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
         try {
             trades = JSON.parse(stored);
+            // Migrate all trades to ensure they have new fields
+            trades = trades.map(migrateTrade);
         } catch (e) {
             console.error('Failed to parse trades from localStorage:', e);
             trades = [];
@@ -630,11 +670,16 @@ function formatShortDate(dateString) {
 
 // Format sale for display
 function formatSale(sale, forHtml = true) {
-    if (!sale || !sale.portion || !sale.price) {
+    if (!sale || (!sale.portion && !sale.shares) || !sale.price) {
         return forHtml ? '<span class="sale-empty">-</span>' : '-';
     }
     const dateStr = sale.date ? ` ${formatShortDate(sale.date)}` : '';
-    return `${sale.portion} @ ${sale.price.toFixed(2)}${dateStr}`;
+    // Handle "remaining" portion - show shares count if available
+    let portionStr = sale.portion;
+    if (sale.portion === 'remaining' && sale.shares) {
+        portionStr = `${sale.shares} shares`;
+    }
+    return `${portionStr} @ ${sale.price.toFixed(2)}${dateStr}`;
 }
 
 // Get sales array from trade (handles both new and legacy format)
@@ -667,7 +712,14 @@ function formatStatus(status, trade = null) {
 function renderSellProgressDots(trade) {
     if (!trade.sellPlan || !trade.sellPlan.targets) return '';
 
-    const targets = trade.sellPlan.targets;
+    // Don't show dots for closed trades - the position is done
+    const isClosed = trade.status === STATUS.CLOSED || trade.status === STATUS.STOPPED_OUT;
+    if (isClosed) return '';
+
+    // Filter out the "exit" target - only show R-level targets
+    const targets = trade.sellPlan.targets.filter(t => t.rLevel !== 'exit');
+    if (targets.length === 0) return '';
+
     const completed = targets.filter(t => t.status === 'executed').length;
     const total = targets.length;
 
@@ -687,14 +739,107 @@ function renderSellProgressDots(trade) {
     return `<div class="sell-progress-dots" title="${completed}/${total} R-levels hit">${dots}</div>`;
 }
 
+// Generate action buttons based on trade state
+function renderTradeActions(trade) {
+    const isArchived = trade.archived;
+    const isTerminal = trade.status === STATUS.CLOSED || trade.status === STATUS.STOPPED_OUT;
+
+    // Archived trades: View (eye) | Restore | Delete
+    if (isArchived) {
+        return `
+            <button class="btn-icon btn-view" onclick="manageTrade('${trade.id}')" data-tooltip="View">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+            </button>
+            <button class="btn-icon btn-restore" onclick="restoreTrade('${trade.id}')" data-tooltip="Restore">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                    <path d="M3 3v5h5"></path>
+                </svg>
+            </button>
+            <button class="btn-icon btn-delete" onclick="deleteTrade('${trade.id}')" data-tooltip="Delete">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                </svg>
+            </button>
+        `;
+    }
+
+    // Terminal trades (closed, stopped_out) - NOT archived: Manage | Edit | Archive | Delete
+    if (isTerminal) {
+        return `
+            <button class="btn-icon btn-manage" onclick="manageTrade('${trade.id}')" data-tooltip="Manage">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="14" width="7" height="7"></rect>
+                    <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+            </button>
+            <button class="btn-icon btn-edit" onclick="editTrade('${trade.id}')" data-tooltip="Edit">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                </svg>
+            </button>
+            <button class="btn-icon btn-archive" onclick="archiveTrade('${trade.id}')" data-tooltip="Archive">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="21 8 21 21 3 21 3 8"></polyline>
+                    <rect x="1" y="3" width="22" height="5"></rect>
+                    <line x1="10" y1="12" x2="14" y2="12"></line>
+                </svg>
+            </button>
+            <button class="btn-icon btn-delete" onclick="deleteTrade('${trade.id}')" data-tooltip="Delete">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                </svg>
+            </button>
+        `;
+    }
+
+    // Active trades (open, partially_closed): Manage | Edit | Delete
+    return `
+        <button class="btn-icon btn-manage" onclick="manageTrade('${trade.id}')" data-tooltip="Manage">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="14" y="14" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+            </svg>
+        </button>
+        <button class="btn-icon btn-edit" onclick="editTrade('${trade.id}')" data-tooltip="Edit">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
+        </button>
+        <button class="btn-icon btn-delete" onclick="deleteTrade('${trade.id}')" data-tooltip="Delete">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            </svg>
+        </button>
+    `;
+}
+
 // Render trades table
 function renderTrades() {
     const filter = statusFilter.value;
     let filteredTrades = trades;
 
-    // Filter by status
-    if (filter !== 'all') {
-        filteredTrades = filteredTrades.filter(t => t.status === filter);
+    // Filter by status - handle archived filter separately
+    if (filter === 'archived') {
+        filteredTrades = filteredTrades.filter(t => t.archived === true);
+    } else if (filter !== 'all') {
+        // For other filters, exclude archived trades and filter by status
+        filteredTrades = filteredTrades.filter(t => !t.archived && t.status === filter);
+    } else {
+        // "All Active" - show all non-archived trades
+        filteredTrades = filteredTrades.filter(t => !t.archived);
     }
 
     // Filter by date range
@@ -717,9 +862,13 @@ function renderTrades() {
         tradesTable.classList.add('hidden');
         noTradesMsg.classList.remove('hidden');
         tableContainer.classList.add('empty');
-        noTradesMsg.textContent = filter === 'all'
-            ? 'No trades logged yet. Click "Add New Trade" to get started.'
-            : `No ${STATUS_LABELS[filter] || filter} trades found.`;
+        if (filter === 'archived') {
+            noTradesMsg.textContent = 'No archived trades.';
+        } else if (filter === 'all') {
+            noTradesMsg.textContent = 'No trades logged yet. Click "Add New Trade" to get started.';
+        } else {
+            noTradesMsg.textContent = `No ${STATUS_LABELS[filter] || filter} trades found.`;
+        }
         hidePagination();
         return;
     }
@@ -742,7 +891,7 @@ function renderTrades() {
     tradesBody.innerHTML = paginatedTrades.map(trade => {
         const sales = getTradeSales(trade);
         return `
-        <tr data-id="${trade.id}">
+        <tr data-id="${trade.id}" ${trade.archived ? 'class="archived-row"' : ''}>
             <td><strong>${trade.ticker}</strong></td>
             <td class="cell-price">${trade.entryPrice.toFixed(2)}</td>
             <td class="cell-date">${formatDate(trade.entryDate)}</td>
@@ -752,26 +901,7 @@ function renderTrades() {
             <td class="sale-display">${formatSale(sales[1])}</td>
             <td class="sale-display">${formatSale(sales[2])}</td>
             <td>${formatStatus(trade.status, trade)}</td>
-            <td class="actions-cell">
-                <button class="btn-icon btn-view" onclick="viewTrade('${trade.id}')" data-tooltip="View">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                        <circle cx="12" cy="12" r="3"></circle>
-                    </svg>
-                </button>
-                <button class="btn-icon btn-edit" onclick="editTrade('${trade.id}')" data-tooltip="Edit">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                    </svg>
-                </button>
-                <button class="btn-icon btn-delete" onclick="deleteTrade('${trade.id}')" data-tooltip="Delete">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="3 6 5 6 21 6"></polyline>
-                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                    </svg>
-                </button>
-            </td>
+            <td class="actions-cell">${renderTradeActions(trade)}</td>
         </tr>
     `}).join('');
 
@@ -885,6 +1015,37 @@ function deleteTrade(id) {
     renderTrades();
 }
 
+// Manage trade (alias for viewTrade, used for active trades)
+function manageTrade(id) {
+    viewTrade(id);
+}
+
+// Archive a trade
+function archiveTrade(id) {
+    const trade = trades.find(t => t.id === id);
+    if (!trade) return;
+
+    if (!confirm(`Archive "${trade.ticker}"? You can restore it later from the Archived filter.`)) return;
+
+    trade.archived = true;
+    trade.archivedAt = new Date().toISOString();
+    saveTrades();
+    renderTrades();
+    showToast(`Archived ${trade.ticker}`);
+}
+
+// Restore an archived trade
+function restoreTrade(id) {
+    const trade = trades.find(t => t.id === id);
+    if (!trade) return;
+
+    trade.archived = false;
+    trade.archivedAt = null;
+    saveTrades();
+    renderTrades();
+    showToast(`Restored ${trade.ticker}`);
+}
+
 // Delete all trades
 document.getElementById('deleteAllTradesBtn')?.addEventListener('click', () => {
     if (trades.length === 0) {
@@ -996,6 +1157,21 @@ function viewTrade(id) {
         renderSellPlanProgress(trade);
     }
 
+    // Render journal entries
+    renderJournalEntries(trade);
+
+    // Show/hide add entry button based on archived state
+    const addEntryBtn = document.getElementById('addJournalEntryBtn');
+    if (addEntryBtn) {
+        addEntryBtn.classList.toggle('hidden', trade.archived);
+    }
+
+    // Reset journal form
+    const journalForm = document.getElementById('journalEntryForm');
+    if (journalForm) {
+        journalForm.classList.add('hidden');
+    }
+
     tradeDetailsModal.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
 }
@@ -1038,6 +1214,286 @@ function closeTradeDetailsModal() {
 }
 
 document.getElementById('closeTradeDetailsModal')?.addEventListener('click', closeTradeDetailsModal);
+
+// =====================
+// Journal System
+// =====================
+
+// Journal image limits
+const JOURNAL_MAX_IMAGES = 3;
+const JOURNAL_MAX_IMAGE_SIZE = 500 * 1024; // 500KB
+
+// Pending images for current journal entry being created
+let pendingJournalImages = [];
+
+function renderJournalEntries(trade) {
+    const container = document.getElementById('journalEntriesList');
+    if (!container) return;
+
+    if (!trade.journal || trade.journal.length === 0) {
+        container.innerHTML = `
+            <div class="journal-empty">
+                <p>No journal entries yet.</p>
+            </div>
+        `;
+        return;
+    }
+
+    // Sort entries by timestamp (newest first)
+    const sortedEntries = [...trade.journal].sort((a, b) =>
+        new Date(b.timestamp) - new Date(a.timestamp)
+    );
+
+    container.innerHTML = sortedEntries.map(entry => {
+        const typeLabel = JOURNAL_TYPE_LABELS[entry.type] || entry.type;
+        const typeColor = JOURNAL_TYPE_COLORS[entry.type] || 'gray';
+        const date = new Date(entry.timestamp);
+        const formattedDate = date.toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric'
+        });
+        const formattedTime = date.toLocaleTimeString('en-US', {
+            hour: 'numeric',
+            minute: '2-digit'
+        });
+
+        const deleteBtn = trade.archived ? '' : `
+            <button class="journal-entry-delete" onclick="deleteJournalEntry('${trade.id}', '${entry.id}')" title="Delete entry">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        `;
+
+        // Render images if present
+        let imagesHtml = '';
+        if (entry.images && entry.images.length > 0) {
+            imagesHtml = `
+                <div class="journal-entry-images">
+                    ${entry.images.map((img, idx) => `
+                        <img src="${img}" alt="Journal image ${idx + 1}" class="journal-entry-image" onclick="openJournalImage('${trade.id}', '${entry.id}', ${idx})">
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        return `
+            <div class="journal-entry">
+                <div class="journal-entry-header">
+                    <span class="journal-entry-badge badge-${typeColor}">${typeLabel}</span>
+                    <span class="journal-entry-date">${formattedDate} at ${formattedTime}</span>
+                    ${deleteBtn}
+                </div>
+                <div class="journal-entry-content">${escapeHtml(entry.content)}</div>
+                ${imagesHtml}
+            </div>
+        `;
+    }).join('');
+}
+
+function openJournalImage(tradeId, entryId, imageIndex) {
+    const trade = trades.find(t => t.id === tradeId);
+    if (!trade || !trade.journal) return;
+
+    const entry = trade.journal.find(e => e.id === entryId);
+    if (!entry || !entry.images || !entry.images[imageIndex]) return;
+
+    // Open image in new tab
+    const newTab = window.open();
+    newTab.document.write(`<img src="${entry.images[imageIndex]}" style="max-width: 100%; height: auto;">`);
+    newTab.document.title = 'Journal Image';
+}
+
+window.openJournalImage = openJournalImage;
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+function addJournalEntry(tradeId, type, content, images = []) {
+    const trade = trades.find(t => t.id === tradeId);
+    if (!trade) return;
+
+    if (!trade.journal) {
+        trade.journal = [];
+    }
+
+    const entry = {
+        id: Date.now().toString(),
+        timestamp: new Date().toISOString(),
+        type: type,
+        content: content.trim()
+    };
+
+    // Add images if present
+    if (images.length > 0) {
+        entry.images = images;
+    }
+
+    trade.journal.push(entry);
+    saveTrades();
+    renderJournalEntries(trade);
+    showToast('Journal entry added');
+}
+
+function deleteJournalEntry(tradeId, entryId) {
+    const trade = trades.find(t => t.id === tradeId);
+    if (!trade || !trade.journal) return;
+
+    if (!confirm('Delete this journal entry?')) return;
+
+    trade.journal = trade.journal.filter(e => e.id !== entryId);
+    saveTrades();
+    renderJournalEntries(trade);
+    showToast('Entry deleted');
+}
+
+// Journal form event handlers
+document.getElementById('addJournalEntryBtn')?.addEventListener('click', () => {
+    const form = document.getElementById('journalEntryForm');
+    if (form) {
+        form.classList.remove('hidden');
+        document.getElementById('journalEntryContent')?.focus();
+    }
+});
+
+document.getElementById('cancelJournalEntryBtn')?.addEventListener('click', () => {
+    resetJournalForm();
+});
+
+document.getElementById('saveJournalEntryBtn')?.addEventListener('click', () => {
+    const type = document.getElementById('journalEntryType')?.value;
+    const content = document.getElementById('journalEntryContent')?.value;
+
+    if (!content || !content.trim()) {
+        showToast('Please enter some content');
+        return;
+    }
+
+    if (viewingTradeId) {
+        addJournalEntry(viewingTradeId, type, content, [...pendingJournalImages]);
+
+        // Reset and hide form
+        resetJournalForm();
+    }
+});
+
+function resetJournalForm() {
+    const form = document.getElementById('journalEntryForm');
+    if (form) {
+        form.classList.add('hidden');
+        document.getElementById('journalEntryContent').value = '';
+        document.getElementById('journalEntryType').value = 'entry_thesis';
+        pendingJournalImages = [];
+        renderJournalImagePreviews();
+    }
+}
+
+// Image upload handling
+document.getElementById('journalAddImageBtn')?.addEventListener('click', () => {
+    document.getElementById('journalImageInput')?.click();
+});
+
+document.getElementById('journalImageInput')?.addEventListener('change', (e) => {
+    handleJournalImageFiles(e.target.files);
+    e.target.value = ''; // Reset input so same file can be selected again
+});
+
+function handleJournalImageFiles(files) {
+    if (!files || files.length === 0) return;
+
+    const remainingSlots = JOURNAL_MAX_IMAGES - pendingJournalImages.length;
+    if (remainingSlots <= 0) {
+        showToast(`Maximum ${JOURNAL_MAX_IMAGES} images allowed`);
+        return;
+    }
+
+    const filesToProcess = Array.from(files).slice(0, remainingSlots);
+
+    filesToProcess.forEach(file => {
+        if (!file.type.startsWith('image/')) {
+            showToast(`${file.name} is not an image`);
+            return;
+        }
+
+        if (file.size > JOURNAL_MAX_IMAGE_SIZE) {
+            showToast(`${file.name} exceeds 500KB limit`);
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            if (pendingJournalImages.length < JOURNAL_MAX_IMAGES) {
+                pendingJournalImages.push(e.target.result);
+                renderJournalImagePreviews();
+            }
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+function renderJournalImagePreviews() {
+    const container = document.getElementById('journalImagePreviews');
+    if (!container) return;
+
+    if (pendingJournalImages.length === 0) {
+        container.innerHTML = '';
+        return;
+    }
+
+    container.innerHTML = pendingJournalImages.map((img, idx) => `
+        <div class="journal-image-preview">
+            <img src="${img}" alt="Preview ${idx + 1}">
+            <button type="button" class="journal-image-remove" onclick="removeJournalImage(${idx})" title="Remove">
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+    `).join('');
+}
+
+function removeJournalImage(index) {
+    pendingJournalImages.splice(index, 1);
+    renderJournalImagePreviews();
+}
+
+window.removeJournalImage = removeJournalImage;
+
+// Drag and drop support for journal images
+const journalForm = document.getElementById('journalEntryForm');
+if (journalForm) {
+    journalForm.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        journalForm.classList.add('drag-over');
+    });
+
+    journalForm.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        journalForm.classList.remove('drag-over');
+    });
+
+    journalForm.addEventListener('drop', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        journalForm.classList.remove('drag-over');
+
+        const files = e.dataTransfer?.files;
+        if (files) {
+            handleJournalImageFiles(files);
+        }
+    });
+}
+
+// Export journal functions for global access
+window.deleteJournalEntry = deleteJournalEntry;
 document.getElementById('closeTradeDetailsBtn')?.addEventListener('click', closeTradeDetailsModal);
 
 // Escape key to close trade details modal
@@ -1105,6 +1561,9 @@ document.getElementById('copyTradeDetailsBtn')?.addEventListener('click', async 
 window.editTrade = editTrade;
 window.deleteTrade = deleteTrade;
 window.viewTrade = viewTrade;
+window.manageTrade = manageTrade;
+window.archiveTrade = archiveTrade;
+window.restoreTrade = restoreTrade;
 window.prevPage = prevPage;
 window.nextPage = nextPage;
 
@@ -4262,16 +4721,27 @@ function renderSellPlanProgress(trade) {
     const targetsHtml = trade.sellPlan.targets.map((target, index) => {
         const isCompleted = target.status === 'executed';
         const isPending = !isCompleted;
+        const isExitTarget = target.rLevel === 'exit';
 
         let statusClass = isCompleted ? 'completed' : 'pending';
         let iconContent = isCompleted ? '✓' : (index + 1);
 
+        // Format the level label
+        let levelLabel;
+        if (isExitTarget) {
+            levelLabel = `Exit @ ${formatCurrency(target.targetPrice)}`;
+        } else {
+            levelLabel = `${target.rLevel}R @ ${formatCurrency(target.targetPrice)}`;
+        }
+
         let resultHtml = '';
         if (isCompleted) {
             const profit = (target.sharesSold || 0) * (target.executedPrice - trade.entryPrice);
+            const profitSign = profit >= 0 ? '+' : '';
+            const profitClass = profit >= 0 ? 'spp-profit' : 'spp-loss';
             resultHtml = `
                 <div class="spp-result">
-                    <span class="spp-profit">+${formatCurrency(profit)}</span>
+                    <span class="${profitClass}">${profitSign}${formatCurrency(profit)}</span>
                     <span class="spp-date">${target.executedDate ? formatShortDate(target.executedDate) : ''}</span>
                 </div>
             `;
@@ -4284,13 +4754,51 @@ function renderSellPlanProgress(trade) {
             <div class="spp-target ${statusClass}">
                 <div class="spp-status-icon">${iconContent}</div>
                 <div class="spp-info">
-                    <span class="spp-level">${target.rLevel}R @ ${formatCurrency(target.targetPrice)}</span>
+                    <span class="spp-level">${levelLabel}</span>
                     <span class="spp-action">${isCompleted ? 'Sold' : 'Sell'} ${target.sharesSold || target.plannedShares} shares (${target.portion})</span>
                 </div>
                 ${resultHtml}
             </div>
         `;
     }).join('');
+
+    // Close position section (only show if remaining > 0 and not archived)
+    const closePositionHtml = position.remaining > 0 && !trade.archived ? `
+        <div class="close-position-section" id="closePositionSection">
+            <div class="close-position-header">
+                <span class="close-position-label">Close remaining position</span>
+                <span class="close-position-remaining">${formatNumber(position.remaining)} shares @ ${formatCurrency(trade.entryPrice)} entry</span>
+            </div>
+            <div class="close-position-form hidden" id="closePositionForm">
+                <div class="close-position-row">
+                    <div class="close-position-field">
+                        <label for="closePositionPrice">Exit Price <button type="button" class="btn-breakeven" onclick="setBreakevenPrice('${trade.id}')">= Breakeven</button></label>
+                        <div class="input-with-icon">
+                            <span class="input-icon">$</span>
+                            <input type="number" id="closePositionPrice" step="0.01" placeholder="0.00">
+                        </div>
+                    </div>
+                    <div class="close-position-field">
+                        <label for="closePositionDate">Date</label>
+                        <input type="date" id="closePositionDate" value="${new Date().toISOString().split('T')[0]}">
+                    </div>
+                </div>
+                <div class="close-position-preview" id="closePositionPreview"></div>
+                <div class="close-position-actions">
+                    <button type="button" class="btn btn-secondary btn-small" onclick="hideClosePositionForm()">Cancel</button>
+                    <button type="button" class="btn btn-primary btn-small" onclick="executeClosePosition('${trade.id}', ${position.remaining})">Close Position</button>
+                </div>
+            </div>
+            <button type="button" class="btn btn-outline btn-close-position" id="showClosePositionBtn" onclick="showClosePositionForm()">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                    <polyline points="16 17 21 12 16 7"></polyline>
+                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                </svg>
+                Exit Remaining Position
+            </button>
+        </div>
+    ` : '';
 
     container.innerHTML = `
         <h3>Position Progress</h3>
@@ -4315,7 +4823,16 @@ function renderSellPlanProgress(trade) {
         <div class="sell-plan-progress">
             ${targetsHtml}
         </div>
+        ${closePositionHtml}
     `;
+
+    // Add event listener for price input to show P/L preview
+    const priceInput = document.getElementById('closePositionPrice');
+    if (priceInput) {
+        priceInput.addEventListener('input', () => {
+            updateClosePositionPreview(trade, position.remaining);
+        });
+    }
 }
 
 // Quick Sell Modal
@@ -4480,3 +4997,135 @@ document.addEventListener('keydown', (e) => {
 window.openQuickSellModal = openQuickSellModal;
 window.closeQuickSellModal = closeQuickSellModal;
 window.executeQuickSell = executeQuickSell;
+
+// =====================
+// Close Position (Exit Remaining)
+// =====================
+
+function showClosePositionForm() {
+    const form = document.getElementById('closePositionForm');
+    const btn = document.getElementById('showClosePositionBtn');
+    if (form && btn) {
+        form.classList.remove('hidden');
+        btn.classList.add('hidden');
+        document.getElementById('closePositionPrice')?.focus();
+    }
+}
+
+function hideClosePositionForm() {
+    const form = document.getElementById('closePositionForm');
+    const btn = document.getElementById('showClosePositionBtn');
+    if (form && btn) {
+        form.classList.add('hidden');
+        btn.classList.remove('hidden');
+        document.getElementById('closePositionPrice').value = '';
+        const preview = document.getElementById('closePositionPreview');
+        if (preview) preview.innerHTML = '';
+    }
+}
+
+function updateClosePositionPreview(trade, remainingShares) {
+    const preview = document.getElementById('closePositionPreview');
+    const priceInput = document.getElementById('closePositionPrice');
+    if (!preview || !priceInput) return;
+
+    const exitPrice = parseFloat(priceInput.value);
+    if (!exitPrice || !trade.entryPrice) {
+        preview.innerHTML = '';
+        return;
+    }
+
+    const pnl = (exitPrice - trade.entryPrice) * remainingShares;
+    const pnlClass = pnl >= 0 ? 'profit' : 'loss';
+    const pnlSign = pnl >= 0 ? '+' : '';
+
+    preview.innerHTML = `
+        <div class="close-position-pnl ${pnlClass}">
+            ${pnlSign}${formatCurrency(pnl)} P/L on ${formatNumber(remainingShares)} shares
+        </div>
+    `;
+}
+
+function executeClosePosition(tradeId, remainingShares) {
+    const trade = trades.find(t => t.id === tradeId);
+    if (!trade || !trade.sellPlan) return;
+
+    const exitPrice = parseFloat(document.getElementById('closePositionPrice')?.value);
+    const exitDate = document.getElementById('closePositionDate')?.value || new Date().toISOString().split('T')[0];
+
+    if (!exitPrice) {
+        showToast('Please enter an exit price');
+        return;
+    }
+
+    // Add a "close" target to the sell plan
+    const closeTarget = {
+        rLevel: 'exit',
+        portion: 'remaining',
+        plannedShares: remainingShares,
+        targetPrice: exitPrice,
+        status: 'executed',
+        sharesSold: remainingShares,
+        executedPrice: exitPrice,
+        executedDate: exitDate
+    };
+
+    trade.sellPlan.targets.push(closeTarget);
+
+    // Add to sales array
+    if (!trade.sales) trade.sales = [];
+    trade.sales.push({
+        portion: 'remaining',
+        price: exitPrice,
+        date: exitDate,
+        shares: remainingShares
+    });
+
+    // Update trade status to closed
+    trade.status = STATUS.CLOSED;
+
+    saveTrades();
+
+    // Refresh the modal
+    if (viewingTradeId === tradeId) {
+        viewTrade(tradeId);
+    }
+
+    renderTrades();
+    showToast('Position closed');
+}
+
+function setBreakevenPrice(tradeId) {
+    const trade = trades.find(t => t.id === tradeId);
+    if (!trade || !trade.sellPlan) return;
+
+    // Calculate breakeven: need to find what price makes total P/L = 0
+    // Total profit from executed sales + (remaining shares * (breakeven - entry)) = 0
+    // So: breakeven = entry - (total profit from sales / remaining shares)
+
+    const position = getCurrentPosition(trade);
+    if (!position || position.remaining === 0) return;
+
+    let totalProfit = 0;
+    for (const target of trade.sellPlan.targets) {
+        if (target.status === 'executed' && target.executedPrice) {
+            const shares = target.sharesSold || 0;
+            totalProfit += shares * (target.executedPrice - trade.entryPrice);
+        }
+    }
+
+    // Breakeven price = entry - (profit already locked in / remaining shares)
+    const breakevenPrice = trade.entryPrice - (totalProfit / position.remaining);
+
+    const priceInput = document.getElementById('closePositionPrice');
+    if (priceInput) {
+        priceInput.value = breakevenPrice.toFixed(2);
+        // Trigger preview update
+        updateClosePositionPreview(trade, position.remaining);
+    }
+}
+
+window.showClosePositionForm = showClosePositionForm;
+window.hideClosePositionForm = hideClosePositionForm;
+window.executeClosePosition = executeClosePosition;
+window.setBreakevenPrice = setBreakevenPrice;
