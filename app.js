@@ -117,6 +117,7 @@ let saleCount = 0;
 const MAX_UNDO = 50;
 let watchlist = [];
 let pendingSnapshot = null; // Snapshot data when adding trade from calculator
+let pendingSellPlan = null; // Sell plan data when adding trade from calculator
 
 // Pagination
 const TRADES_PER_PAGE = 10;
@@ -148,6 +149,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     await initGistSync();
     renderTrades();
     initDatePickers();
+    initQuickSellModal();
+    initFreerollToggle();
 
     // Copy Initial SL to Current SL button
     document.getElementById('copyInitialSL').addEventListener('click', () => {
@@ -238,6 +241,41 @@ function initDatePickers() {
         dateFilterRange = null;
         currentPage = 1;
         renderTrades();
+    });
+
+    // Quick Sell Modal date picker
+    datePickers.qsDate = flatpickr('#qsDate', {
+        ...flatpickrConfig,
+        defaultDate: new Date()
+    });
+}
+
+// Initialize Quick Sell Modal event listeners
+function initQuickSellModal() {
+    const sharesInput = document.getElementById('qsShares');
+    const priceInput = document.getElementById('qsPrice');
+    const useTargetBtn = document.getElementById('qsUseTarget');
+
+    // Update profit preview when inputs change
+    sharesInput?.addEventListener('input', () => {
+        const trade = trades.find(t => t.id === quickSellTradeId);
+        if (trade) updateQuickSellProfit(trade.entryPrice);
+    });
+
+    priceInput?.addEventListener('input', () => {
+        const trade = trades.find(t => t.id === quickSellTradeId);
+        if (trade) updateQuickSellProfit(trade.entryPrice);
+    });
+
+    // Use target price button
+    useTargetBtn?.addEventListener('click', () => {
+        const trade = trades.find(t => t.id === quickSellTradeId);
+        if (!trade || !trade.sellPlan) return;
+        const target = trade.sellPlan.targets.find(t => t.rLevel === quickSellRLevel);
+        if (target) {
+            priceInput.value = target.targetPrice.toFixed(2);
+            updateQuickSellProfit(trade.entryPrice);
+        }
     });
 }
 
@@ -517,14 +555,23 @@ function handleFormSubmit(e) {
         trade.snapshot = pendingSnapshot;
     }
 
+    // Include sell plan if available (from calculator) and not editing
+    if (pendingSellPlan && !editingId) {
+        trade.sellPlan = pendingSellPlan;
+    }
+
     if (editingId) {
         const index = trades.findIndex(t => t.id === editingId);
         if (index !== -1) {
-            // Preserve existing snapshot when editing
+            // Preserve existing snapshot and sell plan when editing
             const existingSnapshot = trades[index].snapshot;
+            const existingSellPlan = trades[index].sellPlan;
             trades[index] = trade;
             if (existingSnapshot) {
                 trades[index].snapshot = existingSnapshot;
+            }
+            if (existingSellPlan) {
+                trades[index].sellPlan = existingSellPlan;
             }
         }
     } else {
@@ -545,6 +592,7 @@ function resetForm() {
     document.getElementById('tradeId').value = '';
     editingId = null;
     pendingSnapshot = null;
+    pendingSellPlan = null;
     formTitle.textContent = 'Add New Trade';
 
     // Reset Flatpickr instances
@@ -603,8 +651,40 @@ function getTradeSales(trade) {
 }
 
 // Format status for display
-function formatStatus(status) {
-    return `<span class="status-badge status-${status}">${STATUS_LABELS[status] || status}</span>`;
+function formatStatus(status, trade = null) {
+    const badgeHtml = `<span class="status-badge status-${status}">${STATUS_LABELS[status] || status}</span>`;
+
+    // Add sell plan progress dots if trade has a sell plan
+    if (trade && trade.sellPlan && trade.sellPlan.enabled) {
+        const dotsHtml = renderSellProgressDots(trade);
+        return `<div class="status-with-dots">${badgeHtml}${dotsHtml}</div>`;
+    }
+
+    return badgeHtml;
+}
+
+// Render sell progress dots for table row
+function renderSellProgressDots(trade) {
+    if (!trade.sellPlan || !trade.sellPlan.targets) return '';
+
+    const targets = trade.sellPlan.targets;
+    const completed = targets.filter(t => t.status === 'executed').length;
+    const total = targets.length;
+
+    // Find next pending target
+    let nextIndex = targets.findIndex(t => t.status !== 'executed' && t.status !== 'skipped');
+
+    const dots = targets.map((target, i) => {
+        let dotClass = 'sp-dot';
+        if (target.status === 'executed') {
+            dotClass += ' completed';
+        } else if (i === nextIndex) {
+            dotClass += ' next';
+        }
+        return `<span class="${dotClass}"></span>`;
+    }).join('');
+
+    return `<div class="sell-progress-dots" title="${completed}/${total} R-levels hit">${dots}</div>`;
 }
 
 // Render trades table
@@ -671,7 +751,7 @@ function renderTrades() {
             <td class="sale-display">${formatSale(sales[0])}</td>
             <td class="sale-display">${formatSale(sales[1])}</td>
             <td class="sale-display">${formatSale(sales[2])}</td>
-            <td>${formatStatus(trade.status)}</td>
+            <td>${formatStatus(trade.status, trade)}</td>
             <td class="actions-cell">
                 <button class="btn-icon btn-view" onclick="viewTrade('${trade.id}')" data-tooltip="View">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -911,7 +991,13 @@ function viewTrade(id) {
         });
     }
 
+    // Render sell plan progress if available
+    if (typeof renderSellPlanProgress === 'function') {
+        renderSellPlanProgress(trade);
+    }
+
     tradeDetailsModal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
 }
 
 // Record snapshot for existing trade from current calculator state
@@ -945,20 +1031,19 @@ function recordSnapshotForTrade(tradeId) {
 }
 
 // Close trade details modal
-document.getElementById('closeTradeDetailsModal')?.addEventListener('click', () => {
+function closeTradeDetailsModal() {
     tradeDetailsModal.classList.add('hidden');
+    document.body.style.overflow = '';
     viewingTradeId = null;
-});
+}
 
-document.getElementById('closeTradeDetailsBtn')?.addEventListener('click', () => {
-    tradeDetailsModal.classList.add('hidden');
-    viewingTradeId = null;
-});
+document.getElementById('closeTradeDetailsModal')?.addEventListener('click', closeTradeDetailsModal);
+document.getElementById('closeTradeDetailsBtn')?.addEventListener('click', closeTradeDetailsModal);
 
-tradeDetailsModal?.addEventListener('click', (e) => {
-    if (e.target === tradeDetailsModal) {
-        tradeDetailsModal.classList.add('hidden');
-        viewingTradeId = null;
+// Escape key to close trade details modal
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !tradeDetailsModal.classList.contains('hidden')) {
+        closeTradeDetailsModal();
     }
 });
 
@@ -1809,6 +1894,11 @@ function calculatePosition() {
     if (typeof updateExportState === 'function') {
         updateExportState();
     }
+
+    // Update sell plan preview
+    if (typeof updateSellPlanPreview === 'function') {
+        updateSellPlanPreview();
+    }
 }
 
 // Update R-levels bar
@@ -1925,6 +2015,10 @@ function resetCalcResults() {
     // Disable export button
     const exportBtn = document.getElementById('exportTradeCard');
     if (exportBtn) exportBtn.disabled = true;
+
+    // Hide freeroll toggle
+    const toggleContainer = document.getElementById('calcSellPlanToggle');
+    if (toggleContainer) toggleContainer.classList.add('hidden');
 }
 
 // Show calculator error
@@ -3323,6 +3417,13 @@ document.getElementById('addToTrackerBtn')?.addEventListener('click', () => {
         totalRisk: state.shares * riskPerShare
     };
 
+    // Store sell plan if enabled
+    if (sellPlanEnabled) {
+        pendingSellPlan = generateSellPlan(state.shares, state.entryPrice, state.stopLoss);
+    } else {
+        pendingSellPlan = null;
+    }
+
     // Populate form fields
     document.getElementById('ticker').value = state.ticker;
     document.getElementById('entryPrice').value = state.entryPrice.toFixed(2);
@@ -4009,3 +4110,373 @@ loadSettingsFromGist = async function() {
         isLoadingSettings = false;
     }
 };
+
+// ============================================
+// Sell Plan Feature
+// ============================================
+
+// Default sell plan targets configuration
+const DEFAULT_SELL_PLAN_TARGETS = [
+    { rLevel: 1, portion: '1/2', fractionOfRemaining: 0.5 },
+    { rLevel: 2, portion: '1/3', fractionOfRemaining: 1/3 },
+    { rLevel: 3, portion: '1/4', fractionOfRemaining: 0.25 },
+    { rLevel: 4, portion: '1/5', fractionOfRemaining: 0.2 }
+];
+
+// Calculate shares for each R-level target
+function calculateSellPlanShares(initialShares, targets) {
+    let remaining = initialShares;
+    const result = [];
+
+    for (const target of targets) {
+        const sharesToSell = Math.floor(remaining * target.fractionOfRemaining);
+        result.push({
+            ...target,
+            shares: sharesToSell
+        });
+        remaining -= sharesToSell;
+    }
+
+    return { targets: result, runner: remaining };
+}
+
+// Generate a sell plan for a given position
+function generateSellPlan(shares, entry, stop) {
+    if (!shares || !entry || !stop || stop >= entry) {
+        return null;
+    }
+
+    const riskPerShare = entry - stop;
+    const { targets, runner } = calculateSellPlanShares(shares, DEFAULT_SELL_PLAN_TARGETS);
+
+    return {
+        enabled: true,
+        initialShares: shares,
+        targets: targets.map(t => ({
+            rLevel: t.rLevel,
+            portion: t.portion,
+            targetPrice: parseFloat((entry + (riskPerShare * t.rLevel)).toFixed(2)),
+            plannedShares: t.shares,
+            status: 'pending',
+            executedDate: null,
+            executedPrice: null,
+            sharesSold: null
+        })),
+        runner: runner
+    };
+}
+
+// Get current position status from a trade with sell plan
+function getCurrentPosition(trade) {
+    if (!trade.sellPlan || !trade.sellPlan.enabled) {
+        return null;
+    }
+
+    const initial = trade.sellPlan.initialShares;
+    let sold = 0;
+    let completedLevels = 0;
+    let nextLevel = null;
+
+    for (const target of trade.sellPlan.targets) {
+        if (target.status === 'executed') {
+            sold += target.sharesSold || 0;
+            completedLevels++;
+        } else if (target.status === 'pending' && !nextLevel) {
+            nextLevel = target;
+        }
+    }
+
+    return {
+        initial,
+        sold,
+        remaining: initial - sold,
+        completedLevels,
+        totalLevels: trade.sellPlan.targets.length,
+        nextLevel
+    };
+}
+
+// Calculate profit for a sell plan target
+function calculateTargetProfit(target, entry) {
+    if (!target || !entry || !target.targetPrice) return 0;
+    const shares = target.sharesSold || target.plannedShares;
+    return shares * (target.targetPrice - entry);
+}
+
+// Freeroll sell rules toggle
+let sellPlanEnabled = true; // Default to enabled
+
+function updateSellPlanPreview() {
+    const toggleContainer = document.getElementById('calcSellPlanToggle');
+    if (!toggleContainer) return;
+
+    const shares = parseInt(calcShares.textContent.replace(/,/g, '').replace(/[^0-9]/g, '')) || 0;
+    const entry = parseFloat(calcEntryPrice.value) || 0;
+    const stopLoss = parseFloat(calcStopLoss.value) || 0;
+
+    // Hide if no valid position calculated
+    if (!shares || !entry || !stopLoss || stopLoss >= entry) {
+        toggleContainer.classList.add('hidden');
+        return;
+    }
+
+    toggleContainer.classList.remove('hidden');
+}
+
+// Initialize freeroll toggle
+function initFreerollToggle() {
+    const toggle = document.getElementById('sellPlanToggle');
+    if (!toggle) return;
+
+    // Set initial state
+    toggle.setAttribute('aria-pressed', sellPlanEnabled ? 'true' : 'false');
+
+    toggle.addEventListener('click', () => {
+        sellPlanEnabled = !sellPlanEnabled;
+        toggle.setAttribute('aria-pressed', sellPlanEnabled ? 'true' : 'false');
+    });
+}
+
+// Render sell plan progress in trade details modal
+function renderSellPlanProgress(trade) {
+    const container = document.getElementById('sellPlanProgressSection');
+    if (!container) return;
+
+    if (!trade.sellPlan || !trade.sellPlan.enabled) {
+        container.classList.add('hidden');
+        return;
+    }
+
+    container.classList.remove('hidden');
+
+    const position = getCurrentPosition(trade);
+    if (!position) {
+        container.classList.add('hidden');
+        return;
+    }
+
+    const soldPercent = (position.sold / position.initial) * 100;
+    const remainingPercent = 100 - soldPercent;
+
+    // Build targets HTML - allow logging any pending target (not just sequential)
+    const targetsHtml = trade.sellPlan.targets.map((target, index) => {
+        const isCompleted = target.status === 'executed';
+        const isPending = !isCompleted;
+
+        let statusClass = isCompleted ? 'completed' : 'pending';
+        let iconContent = isCompleted ? '✓' : (index + 1);
+
+        let resultHtml = '';
+        if (isCompleted) {
+            const profit = (target.sharesSold || 0) * (target.executedPrice - trade.entryPrice);
+            resultHtml = `
+                <div class="spp-result">
+                    <span class="spp-profit">+${formatCurrency(profit)}</span>
+                    <span class="spp-date">${target.executedDate ? formatShortDate(target.executedDate) : ''}</span>
+                </div>
+            `;
+        } else if (isPending && position.remaining > 0) {
+            // Show Log Sale button for any pending target (flexible R-level logging)
+            resultHtml = `<button class="btn-quick-sell" onclick="openQuickSellModal('${trade.id}', ${target.rLevel})">Log Sale</button>`;
+        }
+
+        return `
+            <div class="spp-target ${statusClass}">
+                <div class="spp-status-icon">${iconContent}</div>
+                <div class="spp-info">
+                    <span class="spp-level">${target.rLevel}R @ ${formatCurrency(target.targetPrice)}</span>
+                    <span class="spp-action">${isCompleted ? 'Sold' : 'Sell'} ${target.sharesSold || target.plannedShares} shares (${target.portion})</span>
+                </div>
+                ${resultHtml}
+            </div>
+        `;
+    }).join('');
+
+    container.innerHTML = `
+        <h3>Position Progress</h3>
+        <div class="position-overview">
+            <div class="po-stat">
+                <span class="po-label">Initial</span>
+                <span class="po-value">${formatNumber(position.initial)}</span>
+            </div>
+            <div class="po-stat">
+                <span class="po-label">Sold</span>
+                <span class="po-value sold">${formatNumber(position.sold)}</span>
+            </div>
+            <div class="po-stat">
+                <span class="po-label">Remaining</span>
+                <span class="po-value remaining">${formatNumber(position.remaining)}</span>
+            </div>
+        </div>
+        <div class="position-progress-bar">
+            <div class="ppb-sold" style="width: ${soldPercent}%"></div>
+            <div class="ppb-remaining" style="width: ${remainingPercent}%"></div>
+        </div>
+        <div class="sell-plan-progress">
+            ${targetsHtml}
+        </div>
+    `;
+}
+
+// Quick Sell Modal
+let quickSellTradeId = null;
+let quickSellRLevel = null;
+
+function openQuickSellModal(tradeId, rLevel) {
+    const trade = trades.find(t => t.id === tradeId);
+    if (!trade || !trade.sellPlan) return;
+
+    const target = trade.sellPlan.targets.find(t => t.rLevel === rLevel);
+    if (!target) return;
+
+    quickSellTradeId = tradeId;
+    quickSellRLevel = rLevel;
+
+    const position = getCurrentPosition(trade);
+    const remaining = position ? position.remaining : 0;
+
+    const modal = document.getElementById('quickSellModal');
+    if (!modal) return;
+
+    // Populate modal
+    document.getElementById('qsTicker').textContent = trade.ticker;
+    document.getElementById('qsRLevel').textContent = `${rLevel}R`;
+    document.getElementById('qsTargetPrice').textContent = formatCurrency(target.targetPrice);
+    document.getElementById('qsShares').value = target.plannedShares;
+    document.getElementById('qsRemaining').textContent = formatNumber(remaining);
+    document.getElementById('qsPrice').value = target.targetPrice.toFixed(2);
+    document.getElementById('qsTargetBtn').textContent = formatCurrency(target.targetPrice);
+
+    // Set date to today
+    const today = new Date().toISOString().split('T')[0];
+    if (datePickers.qsDate) {
+        datePickers.qsDate.setDate(today);
+    } else {
+        document.getElementById('qsDate').value = today;
+    }
+
+    // Update profit preview
+    updateQuickSellProfit(trade.entryPrice);
+
+    // Update portion presets
+    updateQuickSellPresets(remaining, target.plannedShares);
+
+    modal.classList.remove('hidden');
+}
+
+function updateQuickSellProfit(entryPrice) {
+    const shares = parseInt(document.getElementById('qsShares')?.value) || 0;
+    const price = parseFloat(document.getElementById('qsPrice')?.value) || 0;
+    const profit = shares * (price - entryPrice);
+
+    const profitEl = document.getElementById('qsProfitPreview');
+    if (profitEl) {
+        profitEl.textContent = profit >= 0 ? `+${formatCurrency(profit)}` : formatCurrency(profit);
+        profitEl.classList.toggle('negative', profit < 0);
+    }
+}
+
+function updateQuickSellPresets(remaining, suggested) {
+    const presetsContainer = document.getElementById('qsPresets');
+    if (!presetsContainer) return;
+
+    const presets = [
+        { label: '1/3', shares: Math.floor(remaining / 3) },
+        { label: '1/4', shares: Math.floor(remaining / 4) },
+        { label: '1/2', shares: Math.floor(remaining / 2) },
+        { label: 'All', shares: remaining }
+    ];
+
+    presetsContainer.innerHTML = presets.map(p => `
+        <button type="button" class="qs-preset ${p.shares === suggested ? 'active' : ''}" data-shares="${p.shares}">
+            ${p.label} (${formatNumber(p.shares)})
+        </button>
+    `).join('');
+
+    // Add click listeners
+    presetsContainer.querySelectorAll('.qs-preset').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.getElementById('qsShares').value = btn.dataset.shares;
+            presetsContainer.querySelectorAll('.qs-preset').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            // Get entry price from trade
+            const trade = trades.find(t => t.id === quickSellTradeId);
+            if (trade) updateQuickSellProfit(trade.entryPrice);
+        });
+    });
+}
+
+function closeQuickSellModal() {
+    const modal = document.getElementById('quickSellModal');
+    if (modal) modal.classList.add('hidden');
+    quickSellTradeId = null;
+    quickSellRLevel = null;
+}
+
+function executeQuickSell() {
+    if (!quickSellTradeId || !quickSellRLevel) return;
+
+    const trade = trades.find(t => t.id === quickSellTradeId);
+    if (!trade || !trade.sellPlan) return;
+
+    const target = trade.sellPlan.targets.find(t => t.rLevel === quickSellRLevel);
+    if (!target) return;
+
+    const shares = parseInt(document.getElementById('qsShares')?.value) || 0;
+    const price = parseFloat(document.getElementById('qsPrice')?.value) || 0;
+    const date = document.getElementById('qsDate')?.value || new Date().toISOString().split('T')[0];
+
+    if (!shares || !price) {
+        showToast('Please enter shares and price');
+        return;
+    }
+
+    // Update the sell plan target
+    target.status = 'executed';
+    target.sharesSold = shares;
+    target.executedPrice = price;
+    target.executedDate = date;
+
+    // Add to trade's sales array
+    if (!trade.sales) trade.sales = [];
+    trade.sales.push({
+        portion: target.portion,
+        price: price,
+        date: date
+    });
+
+    // Update trade status if needed
+    const position = getCurrentPosition(trade);
+    if (position) {
+        if (position.remaining === 0) {
+            trade.status = STATUS.CLOSED;
+        } else if (position.sold > 0) {
+            trade.status = STATUS.PARTIALLY_CLOSED;
+        }
+    }
+
+    saveTrades();
+    closeQuickSellModal();
+
+    // Refresh the trade details modal if open
+    if (viewingTradeId === quickSellTradeId) {
+        viewTrade(quickSellTradeId);
+    }
+
+    renderTrades();
+    showToast('Sale logged successfully');
+}
+
+// Escape key to close quick sell modal
+document.addEventListener('keydown', (e) => {
+    const quickSellModal = document.getElementById('quickSellModal');
+    if (e.key === 'Escape' && quickSellModal && !quickSellModal.classList.contains('hidden')) {
+        closeQuickSellModal();
+    }
+});
+
+// Export functions for onclick handlers
+window.openQuickSellModal = openQuickSellModal;
+window.closeQuickSellModal = closeQuickSellModal;
+window.executeQuickSell = executeQuickSell;

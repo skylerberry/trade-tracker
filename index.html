@@ -281,6 +281,14 @@
                     </div>
                 </div>
 
+                <!-- Freeroll Sell Rules Toggle -->
+                <div id="calcSellPlanToggle" class="calc-freeroll-toggle hidden">
+                    <span class="freeroll-label">R-Multiple Freeroll Sell Rules</span>
+                    <button type="button" class="toggle-switch" id="sellPlanToggle" aria-pressed="true">
+                        <span class="toggle-knob"></span>
+                    </button>
+                </div>
+
                 <!-- Log Trade Button -->
                 <button type="button" class="btn-add-to-tracker" id="addToTrackerBtn" disabled>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -679,6 +687,20 @@ Risking 1%
                 </div>
             </div>
 
+            <div class="trade-details-section hidden" id="sellPlanProgressSection">
+                <h3>Position Progress</h3>
+                <div class="position-overview" id="positionOverview">
+                    <!-- Rendered by JS -->
+                </div>
+                <div class="position-progress-bar" id="positionProgressBar">
+                    <div class="ppb-sold"></div>
+                    <div class="ppb-remaining"></div>
+                </div>
+                <div class="sell-plan-progress" id="sellPlanProgress">
+                    <!-- Rendered by JS -->
+                </div>
+            </div>
+
             <div class="trade-details-section" id="detailsSalesSection">
                 <h3>Sales</h3>
                 <div class="trade-details-sales" id="detailsSales">
@@ -696,6 +718,52 @@ Risking 1%
             <div class="modal-actions trade-details-actions">
                 <button type="button" class="copy-details-link" id="copyTradeDetailsBtn">Copy to clipboard</button>
                 <button class="btn btn-secondary" id="closeTradeDetailsBtn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Sell Modal -->
+    <div id="quickSellModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="quickSellModalTitle">
+        <div class="modal-content quick-sell-modal">
+            <div class="qs-header">
+                <h3 id="quickSellModalTitle">Log Sale at <span id="qsRLevel">1R</span></h3>
+                <div class="qs-ticker"><span id="qsTicker">AAPL</span> - Target: <span id="qsTargetPrice">$0.00</span></div>
+            </div>
+
+            <div class="qs-body">
+                <div class="qs-row">
+                    <label for="qsShares">Shares to sell</label>
+                    <div class="qs-input-group">
+                        <input type="number" class="qs-input" id="qsShares" min="1">
+                        <span class="qs-hint">of <span id="qsRemaining">0</span> remaining</span>
+                    </div>
+                    <div class="qs-presets" id="qsPresets">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <div class="qs-row">
+                    <label for="qsPrice">Sale price</label>
+                    <div class="qs-input-group">
+                        <input type="number" class="qs-input" id="qsPrice" step="0.01">
+                        <button type="button" class="qs-preset" id="qsUseTarget">Use <span id="qsTargetBtn">$0.00</span></button>
+                    </div>
+                </div>
+
+                <div class="qs-row">
+                    <label for="qsDate">Date</label>
+                    <input type="text" class="qs-input qs-date-input" id="qsDate">
+                </div>
+
+                <div class="qs-profit-preview">
+                    <span class="qs-profit-label">Profit from this sale</span>
+                    <span class="qs-profit-value" id="qsProfitPreview">+$0.00</span>
+                </div>
+
+                <div class="qs-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeQuickSellModal()">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="executeQuickSell()">Log Sale</button>
+                </div>
             </div>
         </div>
     </div>

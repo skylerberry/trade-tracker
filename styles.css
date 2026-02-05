@@ -4330,6 +4330,8 @@ tbody tr:last-child td {
 
 .trade-details-modal-content {
     max-width: 480px;
+    max-height: 90vh;
+    overflow-y: auto;
 }
 
 .trade-details-header {
@@ -4563,5 +4565,695 @@ tbody tr:last-child td {
 
     :root:not([data-theme="light"]) .snapshot-empty {
         background: #27272a;
+    }
+}
+
+/* ============================================
+   Sell Plan Feature
+   ============================================ */
+
+/* Calculator Freeroll Toggle */
+.calc-freeroll-toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 16px;
+    padding: 12px 16px;
+    background: var(--color-gray-100);
+    border-radius: 8px;
+}
+
+.freeroll-label {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--color-gray-700);
+}
+
+/* Toggle Switch */
+.toggle-switch {
+    position: relative;
+    width: 44px;
+    height: 24px;
+    background: var(--color-gray-300);
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 0.2s;
+    padding: 0;
+}
+
+.toggle-switch[aria-pressed="true"] {
+    background: var(--color-primary);
+}
+
+.toggle-knob {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 50%;
+    transition: transform 0.2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.toggle-switch[aria-pressed="true"] .toggle-knob {
+    transform: translateX(20px);
+}
+
+/* Position Progress (Trade Details Modal) */
+.position-overview {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.po-stat {
+    text-align: center;
+    padding: 12px;
+    background: var(--color-gray-50);
+    border-radius: 8px;
+}
+
+.po-label {
+    font-size: 0.75rem;
+    color: var(--color-gray-500);
+    display: block;
+    margin-bottom: 4px;
+}
+
+.po-value {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--color-gray-800);
+}
+
+.po-value.sold {
+    color: var(--color-success);
+}
+
+.po-value.remaining {
+    color: var(--color-primary);
+}
+
+/* Progress Bar */
+.position-progress-bar {
+    height: 8px;
+    border-radius: 4px;
+    background: var(--color-gray-200);
+    display: flex;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.ppb-sold {
+    background: var(--color-success);
+    transition: width 0.3s ease;
+}
+
+.ppb-remaining {
+    background: var(--color-primary-light);
+}
+
+/* R-Level Progress Items */
+.sell-plan-progress {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.spp-target {
+    display: grid;
+    grid-template-columns: 32px 1fr auto;
+    gap: 12px;
+    align-items: center;
+    padding: 12px 16px;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+}
+
+.spp-target.completed {
+    background: var(--color-success-light);
+}
+
+.spp-target.next {
+    background: var(--color-primary-light);
+    border: 2px solid var(--color-primary);
+}
+
+.spp-target.pending {
+    background: var(--color-gray-100);
+}
+
+.spp-status-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.spp-target.completed .spp-status-icon {
+    background: var(--color-success);
+    color: white;
+}
+
+.spp-target.next .spp-status-icon {
+    background: var(--color-primary);
+    color: white;
+    font-size: 0.8rem;
+}
+
+.spp-target.pending .spp-status-icon {
+    background: var(--color-gray-300);
+    color: var(--color-gray-500);
+    font-size: 0.8rem;
+}
+
+.spp-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.spp-level {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--color-gray-800);
+}
+
+.spp-action {
+    font-size: 0.8rem;
+    color: var(--color-gray-500);
+}
+
+.spp-result {
+    text-align: right;
+}
+
+.spp-profit {
+    font-weight: 600;
+    color: var(--color-success);
+    display: block;
+}
+
+.spp-date {
+    font-size: 0.75rem;
+    color: var(--color-gray-400);
+}
+
+.btn-quick-sell {
+    padding: 8px 16px;
+    background: var(--color-primary);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-quick-sell:hover {
+    background: #2d4a7c;
+}
+
+/* Sell Progress Dots (Table Row) */
+.status-with-dots {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sell-progress-dots {
+    display: flex;
+    gap: 4px;
+}
+
+.sp-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-gray-300);
+}
+
+.sp-dot.completed {
+    background: var(--color-success);
+}
+
+.sp-dot.next {
+    background: var(--color-primary);
+    animation: pulse 1.5s infinite;
+}
+
+/* Quick Sell Modal */
+.quick-sell-modal {
+    max-width: 400px;
+    padding: 0;
+}
+
+.qs-header {
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid var(--color-gray-200);
+}
+
+.qs-header h3 {
+    font-size: 1.1rem;
+    margin-bottom: 2px;
+}
+
+.qs-header h3 span {
+    color: var(--color-primary);
+}
+
+.qs-ticker {
+    font-size: 0.85rem;
+    color: var(--color-gray-500);
+}
+
+.qs-body {
+    padding: 20px 24px 24px;
+}
+
+.qs-row {
+    margin-bottom: 16px;
+}
+
+.qs-row label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--color-gray-600);
+    margin-bottom: 6px;
+}
+
+.qs-input-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.qs-input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid var(--color-gray-300);
+    border-radius: 6px;
+    font-size: 0.95rem;
+}
+
+.qs-input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(26, 54, 93, 0.15);
+}
+
+.qs-hint {
+    font-size: 0.8rem;
+    color: var(--color-gray-400);
+    white-space: nowrap;
+}
+
+.qs-date-input {
+    width: auto;
+    min-width: 140px;
+}
+
+.qs-presets {
+    display: flex;
+    gap: 6px;
+    margin-top: 6px;
+}
+
+.qs-preset {
+    padding: 5px 10px;
+    border: 1px solid var(--color-gray-300);
+    border-radius: 6px;
+    background: white;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+}
+
+.qs-preset:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+.qs-preset.active {
+    background: var(--color-primary);
+    color: white;
+    border-color: var(--color-primary);
+}
+
+.qs-profit-preview {
+    background: var(--color-success-light);
+    padding: 12px 16px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.qs-profit-label {
+    font-size: 0.85rem;
+    color: var(--color-gray-600);
+}
+
+.qs-profit-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--color-success);
+}
+
+.qs-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.qs-actions .btn {
+    flex: 1;
+}
+
+/* ============================================
+   Sell Plan Dark Mode Styles
+   ============================================ */
+
+/* Position Progress - Dark Mode */
+[data-theme="dark"] .po-stat {
+    background: #27272a;
+}
+
+[data-theme="dark"] .po-label {
+    color: #a1a1aa;
+}
+
+[data-theme="dark"] .po-value {
+    color: #f4f4f5;
+}
+
+[data-theme="dark"] .po-value.sold {
+    color: #4ade80;
+}
+
+[data-theme="dark"] .po-value.remaining {
+    color: #60a5fa;
+}
+
+[data-theme="dark"] .position-progress-bar {
+    background: #3f3f46;
+}
+
+[data-theme="dark"] .ppb-remaining {
+    background: rgba(59, 130, 246, 0.3);
+}
+
+[data-theme="dark"] .spp-target.completed {
+    background: rgba(34, 197, 94, 0.15);
+}
+
+[data-theme="dark"] .spp-target.next {
+    background: rgba(59, 130, 246, 0.15);
+    border-color: #3b82f6;
+}
+
+[data-theme="dark"] .spp-target.pending {
+    background: #27272a;
+}
+
+[data-theme="dark"] .spp-level {
+    color: #f4f4f5;
+}
+
+[data-theme="dark"] .spp-action {
+    color: #a1a1aa;
+}
+
+[data-theme="dark"] .spp-date {
+    color: #71717a;
+}
+
+/* Freeroll Toggle - Dark Mode */
+[data-theme="dark"] .calc-freeroll-toggle {
+    background: #27272a;
+}
+
+[data-theme="dark"] .freeroll-label {
+    color: #e4e4e7;
+}
+
+[data-theme="dark"] .toggle-switch {
+    background: #52525b;
+}
+
+[data-theme="dark"] .toggle-switch[aria-pressed="true"] {
+    background: #3b82f6;
+}
+
+/* Sell Progress Dots - Dark Mode */
+[data-theme="dark"] .sp-dot {
+    background: #52525b;
+}
+
+[data-theme="dark"] .sp-dot.completed {
+    background: #4ade80;
+}
+
+[data-theme="dark"] .sp-dot.next {
+    background: #3b82f6;
+}
+
+/* Quick Sell Modal - Dark Mode */
+[data-theme="dark"] .quick-sell-modal {
+    background: #18181b;
+}
+
+[data-theme="dark"] .qs-header {
+    border-bottom-color: #3f3f46;
+}
+
+[data-theme="dark"] .qs-header h3 {
+    color: #f4f4f5;
+}
+
+[data-theme="dark"] .qs-header h3 span {
+    color: #60a5fa;
+}
+
+[data-theme="dark"] .qs-ticker {
+    color: #a1a1aa;
+}
+
+[data-theme="dark"] .qs-row label {
+    color: #a1a1aa;
+}
+
+[data-theme="dark"] .qs-input {
+    background: #27272a;
+    border-color: #3f3f46;
+    color: #f4f4f5;
+}
+
+[data-theme="dark"] .qs-input:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+[data-theme="dark"] .qs-hint {
+    color: #71717a;
+}
+
+[data-theme="dark"] .qs-preset {
+    background: #27272a;
+    border-color: #3f3f46;
+    color: #a1a1aa;
+}
+
+[data-theme="dark"] .qs-preset:hover {
+    border-color: #3b82f6;
+    color: #60a5fa;
+}
+
+[data-theme="dark"] .qs-preset.active {
+    background: #3b82f6;
+    border-color: #3b82f6;
+    color: white;
+}
+
+[data-theme="dark"] .qs-profit-preview {
+    background: rgba(34, 197, 94, 0.15);
+}
+
+[data-theme="dark"] .qs-profit-label {
+    color: #a1a1aa;
+}
+
+[data-theme="dark"] .qs-profit-value {
+    color: #4ade80;
+}
+
+[data-theme="dark"] .qs-profit-value.negative {
+    color: #f87171;
+}
+
+/* System dark mode preference for sell plan components */
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .calc-freeroll-toggle {
+        background: #27272a;
+    }
+
+    :root:not([data-theme="light"]) .freeroll-label {
+        color: #e4e4e7;
+    }
+
+    :root:not([data-theme="light"]) .toggle-switch {
+        background: #52525b;
+    }
+
+    :root:not([data-theme="light"]) .toggle-switch[aria-pressed="true"] {
+        background: #3b82f6;
+    }
+
+    :root:not([data-theme="light"]) .po-stat {
+        background: #27272a;
+    }
+
+    :root:not([data-theme="light"]) .po-label {
+        color: #a1a1aa;
+    }
+
+    :root:not([data-theme="light"]) .po-value {
+        color: #f4f4f5;
+    }
+
+    :root:not([data-theme="light"]) .po-value.sold {
+        color: #4ade80;
+    }
+
+    :root:not([data-theme="light"]) .po-value.remaining {
+        color: #60a5fa;
+    }
+
+    :root:not([data-theme="light"]) .position-progress-bar {
+        background: #3f3f46;
+    }
+
+    :root:not([data-theme="light"]) .ppb-remaining {
+        background: rgba(59, 130, 246, 0.3);
+    }
+
+    :root:not([data-theme="light"]) .spp-target.completed {
+        background: rgba(34, 197, 94, 0.15);
+    }
+
+    :root:not([data-theme="light"]) .spp-target.next {
+        background: rgba(59, 130, 246, 0.15);
+        border-color: #3b82f6;
+    }
+
+    :root:not([data-theme="light"]) .spp-target.pending {
+        background: #27272a;
+    }
+
+    :root:not([data-theme="light"]) .spp-level {
+        color: #f4f4f5;
+    }
+
+    :root:not([data-theme="light"]) .spp-action {
+        color: #a1a1aa;
+    }
+
+    :root:not([data-theme="light"]) .spp-date {
+        color: #71717a;
+    }
+
+    :root:not([data-theme="light"]) .sp-dot {
+        background: #52525b;
+    }
+
+    :root:not([data-theme="light"]) .sp-dot.completed {
+        background: #4ade80;
+    }
+
+    :root:not([data-theme="light"]) .sp-dot.next {
+        background: #3b82f6;
+    }
+
+    :root:not([data-theme="light"]) .quick-sell-modal {
+        background: #18181b;
+    }
+
+    :root:not([data-theme="light"]) .qs-header {
+        border-bottom-color: #3f3f46;
+    }
+
+    :root:not([data-theme="light"]) .qs-header h3 {
+        color: #f4f4f5;
+    }
+
+    :root:not([data-theme="light"]) .qs-header h3 span {
+        color: #60a5fa;
+    }
+
+    :root:not([data-theme="light"]) .qs-ticker {
+        color: #a1a1aa;
+    }
+
+    :root:not([data-theme="light"]) .qs-row label {
+        color: #a1a1aa;
+    }
+
+    :root:not([data-theme="light"]) .qs-input {
+        background: #27272a;
+        border-color: #3f3f46;
+        color: #f4f4f5;
+    }
+
+    :root:not([data-theme="light"]) .qs-input:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    }
+
+    :root:not([data-theme="light"]) .qs-hint {
+        color: #71717a;
+    }
+
+    :root:not([data-theme="light"]) .qs-preset {
+        background: #27272a;
+        border-color: #3f3f46;
+        color: #a1a1aa;
+    }
+
+    :root:not([data-theme="light"]) .qs-preset:hover {
+        border-color: #3b82f6;
+        color: #60a5fa;
+    }
+
+    :root:not([data-theme="light"]) .qs-preset.active {
+        background: #3b82f6;
+        border-color: #3b82f6;
+        color: white;
+    }
+
+    :root:not([data-theme="light"]) .qs-profit-preview {
+        background: rgba(34, 197, 94, 0.15);
+    }
+
+    :root:not([data-theme="light"]) .qs-profit-label {
+        color: #a1a1aa;
+    }
+
+    :root:not([data-theme="light"]) .qs-profit-value {
+        color: #4ade80;
+    }
+
+    :root:not([data-theme="light"]) .qs-profit-value.negative {
+        color: #f87171;
     }
 }
