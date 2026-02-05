@@ -18,7 +18,15 @@
 <body>
     <div class="container">
         <header>
-            <h1>Trade Management Dashboard</h1>
+            <div class="header-left">
+                <h1>Trade Management Dashboard</h1>
+                <div class="open-risk-status hidden" id="openRiskCard" title="Total account risk from non-freerolled positions">
+                    <span class="open-risk-text">Open Risk:</span>
+                    <span class="open-risk-amount" id="openRiskAmount">$0</span>
+                    <span class="open-risk-percent" id="openRiskPercent">(0%)</span>
+                    <span class="open-risk-badge" id="openRiskLevel">CASH</span>
+                </div>
+            </div>
             <div class="header-actions">
                 <div class="sync-status" id="syncStatus" role="button" tabindex="0" aria-label="Sync settings">
                     <svg class="sync-icon icon-cloud" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -396,12 +404,7 @@
                 <input type="text" id="dateFilter" class="date-filter-input" placeholder="All dates" readonly>
                 <button type="button" class="btn-clear-filter" id="clearDateFilter" title="Clear date filter">× Clear Filter</button>
             </div>
-            <div class="open-heat-indicator hidden" id="openHeatIndicator" title="Total account risk from non-freerolled positions">
-                <span class="heat-icon">🔥</span>
-                <span class="heat-label">Open Heat:</span>
-                <span class="heat-value" id="openHeatValue">0%</span>
-            </div>
-            <button id="exportPdfBtn" class="btn btn-export">Export Open Trades to PDF</button>
+<button id="exportPdfBtn" class="btn btn-export">Export Open Trades to PDF</button>
             <button id="gistSettingsBtn" class="btn btn-settings">Sync Settings</button>
         </section>
 

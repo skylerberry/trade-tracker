@@ -184,6 +184,7 @@ header h1 {
     color: var(--color-primary);
 }
 
+
 /* Sync status - minimalist dot style for both themes */
 .sync-status {
     display: flex;
@@ -272,7 +273,7 @@ header h1 {
 }
 
 .sync-status .sync-time:not(:empty)::before {
-    content: '· ';
+    content: '• ';
 }
 
 /* Add Trade Section */
@@ -970,6 +971,10 @@ tbody tr:last-child td {
         flex-direction: column;
         gap: 10px;
         text-align: center;
+    }
+
+    .header-left {
+        align-items: center;
     }
 
     /* Hide keyboard shortcuts button on mobile - not relevant for touch devices */
@@ -6224,84 +6229,129 @@ tbody tr:last-child td {
     }
 }
 
-/* ===== OPEN HEAT INDICATOR (Pill) ===== */
-.open-heat-indicator {
-    display: inline-flex;
+/* ===== OPEN RISK STATUS ===== */
+.header-left {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.open-risk-status {
+    display: flex;
     align-items: center;
-    gap: 5px;
-    padding: 4px 10px;
-    border-radius: 999px;
-    font-size: 12px;
+    gap: 6px;
+    font-size: 0.8rem;
+    color: #71717a;
     cursor: default;
     user-select: none;
 }
 
-.open-heat-indicator.hidden {
+.open-risk-status.hidden {
     display: none;
 }
 
-.heat-icon {
-    font-size: 12px;
-    line-height: 1;
+.open-risk-text {
+    color: #71717a;
+    font-weight: 600;
 }
 
-.heat-label {
+.open-risk-amount {
     font-weight: 500;
+    color: #71717a;
 }
 
-.heat-value {
-    font-weight: 700;
-    font-variant-numeric: tabular-nums;
+.open-risk-percent {
+    color: #71717a;
 }
 
-/* Heat level: Green (0%) */
-.open-heat-indicator.heat-green {
-    background: var(--color-success-light);
-    color: var(--color-success-dark);
+.open-risk-badge {
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 10px;
+    font-weight: 600;
 }
 
-/* Heat level: Yellow (1-3%) */
-.open-heat-indicator.heat-yellow {
-    background: var(--color-warning-light);
-    color: var(--color-warning-dark);
+/* Risk levels */
+.open-risk-status.risk-cash .open-risk-badge {
+    background-color: var(--color-gray-200);
+    color: var(--color-gray-600);
 }
 
-/* Heat level: Red (4%+) */
-.open-heat-indicator.heat-red {
-    background: var(--color-error-light);
-    color: var(--color-error-dark);
+.open-risk-status.risk-low .open-risk-badge {
+    background-color: #dcfce7;
+    color: #15803d;
+}
+
+.open-risk-status.risk-med .open-risk-badge {
+    background-color: #fef3c7;
+    color: #b45309;
+}
+
+.open-risk-status.risk-high .open-risk-badge {
+    background-color: #fee2e2;
+    color: #b91c1c;
 }
 
 /* Dark mode */
 @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) .open-heat-indicator.heat-green {
+    :root:not([data-theme="light"]) .open-risk-status {
+        color: #a1a1aa;
+    }
+
+    :root:not([data-theme="light"]) .open-risk-text,
+    :root:not([data-theme="light"]) .open-risk-amount,
+    :root:not([data-theme="light"]) .open-risk-percent {
+        color: #a1a1aa;
+    }
+
+    :root:not([data-theme="light"]) .open-risk-status.risk-cash .open-risk-badge {
+        background-color: #3f3f46;
+        color: #a1a1aa;
+    }
+
+    :root:not([data-theme="light"]) .open-risk-status.risk-low .open-risk-badge {
         background: rgba(34, 197, 94, 0.2);
         color: #4ade80;
     }
 
-    :root:not([data-theme="light"]) .open-heat-indicator.heat-yellow {
+    :root:not([data-theme="light"]) .open-risk-status.risk-med .open-risk-badge {
         background: rgba(251, 191, 36, 0.2);
         color: #fbbf24;
     }
 
-    :root:not([data-theme="light"]) .open-heat-indicator.heat-red {
+    :root:not([data-theme="light"]) .open-risk-status.risk-high .open-risk-badge {
         background: rgba(239, 68, 68, 0.2);
         color: #f87171;
     }
 }
 
 /* Explicit dark mode */
-[data-theme="dark"] .open-heat-indicator.heat-green {
+[data-theme="dark"] .open-risk-status {
+    color: #a1a1aa;
+}
+
+[data-theme="dark"] .open-risk-text,
+[data-theme="dark"] .open-risk-amount,
+[data-theme="dark"] .open-risk-percent {
+    color: #a1a1aa;
+}
+
+[data-theme="dark"] .open-risk-status.risk-cash .open-risk-badge {
+    background-color: #3f3f46;
+    color: #a1a1aa;
+}
+
+[data-theme="dark"] .open-risk-status.risk-low .open-risk-badge {
     background: rgba(34, 197, 94, 0.2);
     color: #4ade80;
 }
 
-[data-theme="dark"] .open-heat-indicator.heat-yellow {
+[data-theme="dark"] .open-risk-status.risk-med .open-risk-badge {
     background: rgba(251, 191, 36, 0.2);
     color: #fbbf24;
 }
 
-[data-theme="dark"] .open-heat-indicator.heat-red {
+[data-theme="dark"] .open-risk-status.risk-high .open-risk-badge {
     background: rgba(239, 68, 68, 0.2);
     color: #f87171;
 }

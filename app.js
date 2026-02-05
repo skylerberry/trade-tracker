@@ -5203,40 +5203,50 @@ function calculateOpenHeat() {
  * Update the Open Heat indicator display
  */
 function updateOpenHeatDisplay() {
-    const indicator = document.getElementById('openHeatIndicator');
-    const valueEl = document.getElementById('openHeatValue');
+    const card = document.getElementById('openRiskCard');
+    const amountEl = document.getElementById('openRiskAmount');
+    const percentEl = document.getElementById('openRiskPercent');
+    const levelEl = document.getElementById('openRiskLevel');
 
-    if (!indicator || !valueEl) return;
+    if (!card || !amountEl || !percentEl || !levelEl) return;
 
     // Hide if no account size set
     if (!accountSize || accountSize <= 0) {
-        indicator.classList.add('hidden');
+        card.classList.add('hidden');
         return;
     }
 
-    indicator.classList.remove('hidden');
+    card.classList.remove('hidden');
 
     const heat = calculateOpenHeat();
 
-    // Update value - show more precision for small values
+    // Update values
+    amountEl.textContent = formatCurrency(heat.totalRisk);
+
     const displayPercent = heat.percent < 1
         ? heat.percent.toFixed(2)
         : heat.percent.toFixed(1);
-    valueEl.textContent = `${displayPercent}%`;
+    percentEl.textContent = `(${displayPercent}%)`;
 
     // Update tooltip with details
-    indicator.title = heat.tradeCount > 0
-        ? `${heat.tradeCount} position${heat.tradeCount > 1 ? 's' : ''} at risk: ${formatCurrency(heat.totalRisk)}`
+    card.title = heat.tradeCount > 0
+        ? `${heat.tradeCount} position${heat.tradeCount > 1 ? 's' : ''} at risk`
         : 'No open positions at risk';
 
-    // Color coding based on risk level: 0 = green, 1-3 = yellow, 4+ = red
-    indicator.classList.remove('heat-green', 'heat-yellow', 'heat-red');
+    // Risk level badge: CASH (0), LOW (<1%), MED (1-3%), HIGH (4%+)
+    card.classList.remove('risk-cash', 'risk-low', 'risk-med', 'risk-high');
 
-    if (heat.percent < 1) {
-        indicator.classList.add('heat-green');
+    if (heat.percent === 0) {
+        levelEl.textContent = 'CASH';
+        card.classList.add('risk-cash');
+    } else if (heat.percent < 1) {
+        levelEl.textContent = 'LOW';
+        card.classList.add('risk-low');
     } else if (heat.percent < 4) {
-        indicator.classList.add('heat-yellow');
+        levelEl.textContent = 'MED';
+        card.classList.add('risk-med');
     } else {
-        indicator.classList.add('heat-red');
+        levelEl.textContent = 'HIGH';
+        card.classList.add('risk-high');
     }
 }
