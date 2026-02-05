@@ -396,6 +396,11 @@
                 <input type="text" id="dateFilter" class="date-filter-input" placeholder="All dates" readonly>
                 <button type="button" class="btn-clear-filter" id="clearDateFilter" title="Clear date filter">× Clear Filter</button>
             </div>
+            <div class="open-heat-indicator hidden" id="openHeatIndicator" title="Total account risk from non-freerolled positions">
+                <span class="heat-icon">🔥</span>
+                <span class="heat-label">Open Heat:</span>
+                <span class="heat-value" id="openHeatValue">0%</span>
+            </div>
             <button id="exportPdfBtn" class="btn btn-export">Export Open Trades to PDF</button>
             <button id="gistSettingsBtn" class="btn btn-settings">Sync Settings</button>
         </section>

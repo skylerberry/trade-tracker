@@ -23,7 +23,9 @@
       "Bash(python3:*)",
       "Bash(lsof:*)",
       "WebFetch(domain:github.com)",
-      "Bash(git reset:*)"
+      "Bash(git reset:*)",
+      "Bash(open:*)",
+      "Bash(node -c app.js)"
     ]
   }
 }

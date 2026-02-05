@@ -870,6 +870,7 @@ function renderTrades() {
             noTradesMsg.textContent = `No ${STATUS_LABELS[filter] || filter} trades found.`;
         }
         hidePagination();
+        updateOpenHeatDisplay();
         return;
     }
 
@@ -907,6 +908,9 @@ function renderTrades() {
 
     // Update pagination controls
     updatePagination(filteredTrades.length, totalPages);
+
+    // Update open heat indicator
+    updateOpenHeatDisplay();
 }
 
 // Update pagination controls
@@ -2866,6 +2870,7 @@ let defaultMaxPercent = 100;
 function saveAccountSize() {
     localStorage.setItem(CALC_ACCOUNT_KEY, accountSize.toString());
     syncSettingsToGist();
+    updateOpenHeatDisplay();
 }
 
 // Set default risk handler
@@ -2967,6 +2972,7 @@ function loadAccountSize() {
             calcAccountSize.value = formatNumber(accountSize);
         }
     }
+    updateOpenHeatDisplay();
 }
 
 // Load calculator expanded state from localStorage
@@ -5129,3 +5135,100 @@ window.showClosePositionForm = showClosePositionForm;
 window.hideClosePositionForm = hideClosePositionForm;
 window.executeClosePosition = executeClosePosition;
 window.setBreakevenPrice = setBreakevenPrice;
+
+// ===== OPEN HEAT INDICATOR =====
+
+/**
+ * Calculate total account risk from non-freerolled open positions
+ * A trade is freerolled once any R-level target has been executed (excluding exit targets)
+ */
+function calculateOpenHeat() {
+    if (!accountSize || accountSize <= 0) {
+        return { totalRisk: 0, percent: 0, tradeCount: 0 };
+    }
+
+    let totalRisk = 0;
+    let tradeCount = 0;
+
+    // Filter to active trades that are not archived
+    const activeTrades = trades.filter(t =>
+        !t.archived &&
+        (t.status === 'open' || t.status === 'partially_closed')
+    );
+
+    for (const trade of activeTrades) {
+        // Check if trade has been freerolled (any R-level target executed)
+        let isFreerolled = false;
+        if (trade.sellPlan && trade.sellPlan.enabled && trade.sellPlan.targets) {
+            isFreerolled = trade.sellPlan.targets.some(target =>
+                target.status === 'executed' && target.rLevel !== 'exit'
+            );
+        }
+
+        // Skip freerolled trades - they have no risk
+        if (isFreerolled) continue;
+
+        // Calculate risk for this trade
+        const position = trade.sellPlan && trade.sellPlan.enabled
+            ? getCurrentPosition(trade)
+            : null;
+
+        const shares = position ? position.remaining : (trade.sellPlan?.initialShares || trade.snapshot?.shares || 0);
+        const entryPrice = trade.entryPrice || 0;
+        const currentSL = trade.currentSL || trade.initialSL || 0;
+
+        if (shares > 0 && entryPrice > 0 && currentSL > 0 && currentSL < entryPrice) {
+            const riskPerShare = entryPrice - currentSL;
+            const tradeRisk = shares * riskPerShare;
+            totalRisk += tradeRisk;
+            tradeCount++;
+        }
+    }
+
+    const percent = (totalRisk / accountSize) * 100;
+
+    return { totalRisk, percent, tradeCount };
+}
+
+/**
+ * Update the Open Heat indicator display
+ */
+function updateOpenHeatDisplay() {
+    const indicator = document.getElementById('openHeatIndicator');
+    const valueEl = document.getElementById('openHeatValue');
+
+    if (!indicator || !valueEl) return;
+
+    // Hide if no account size set
+    if (!accountSize || accountSize <= 0) {
+        indicator.classList.add('hidden');
+        return;
+    }
+
+    indicator.classList.remove('hidden');
+
+    const heat = calculateOpenHeat();
+
+    // Update value
+    valueEl.textContent = `${heat.percent.toFixed(1)}%`;
+
+    // Update tooltip with details
+    indicator.title = heat.tradeCount > 0
+        ? `${heat.tradeCount} position${heat.tradeCount > 1 ? 's' : ''} at risk: ${formatCurrency(heat.totalRisk)}`
+        : 'No open positions at risk';
+
+    // Color coding based on risk level
+    indicator.classList.remove('heat-low', 'heat-medium', 'heat-high', 'heat-critical');
+
+    if (heat.percent === 0) {
+        indicator.classList.add('heat-low');
+    } else if (heat.percent <= 2) {
+        indicator.classList.add('heat-low');
+    } else if (heat.percent <= 4) {
+        indicator.classList.add('heat-medium');
+    } else if (heat.percent <= 6) {
+        indicator.classList.add('heat-high');
+    } else {
+        indicator.classList.add('heat-critical');
+    }
+}
