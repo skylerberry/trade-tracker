@@ -3162,6 +3162,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (token && gistId) {
         await loadSettingsFromGist();
     }
+
+    // Update button states on initial load
+    updateExportState();
 });
 
 // ============================================
@@ -3691,12 +3694,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const openTickerChartBtn = document.getElementById('openTickerChart');
     const calcTickerInput = document.getElementById('calcTicker');
 
-    // Enable/disable chart button based on ticker input
-    calcTickerInput.addEventListener('input', () => {
-        const ticker = calcTickerInput.value.trim();
-        openTickerChartBtn.disabled = !ticker;
-    });
-
     // Click handler for chart button
     openTickerChartBtn.addEventListener('click', () => {
         const ticker = calcTickerInput.value.trim().toUpperCase();
@@ -3780,6 +3777,18 @@ function updateExportState() {
     const addToTrackerBtn = document.getElementById('addToTrackerBtn');
     if (addToTrackerBtn) {
         addToTrackerBtn.disabled = !hasValidData;
+    }
+
+    // Enable/disable ticker chart link button
+    const openTickerChartBtn = document.getElementById('openTickerChart');
+    if (openTickerChartBtn) {
+        openTickerChartBtn.disabled = !hasTicker;
+    }
+
+    // Enable/disable sell plan toggle
+    const sellPlanToggle = document.getElementById('sellPlanToggle');
+    if (sellPlanToggle) {
+        sellPlanToggle.disabled = !hasValidData;
     }
 
     // Update tooltip based on what's missing
@@ -5209,26 +5218,25 @@ function updateOpenHeatDisplay() {
 
     const heat = calculateOpenHeat();
 
-    // Update value
-    valueEl.textContent = `${heat.percent.toFixed(1)}%`;
+    // Update value - show more precision for small values
+    const displayPercent = heat.percent < 1
+        ? heat.percent.toFixed(2)
+        : heat.percent.toFixed(1);
+    valueEl.textContent = `${displayPercent}%`;
 
     // Update tooltip with details
     indicator.title = heat.tradeCount > 0
         ? `${heat.tradeCount} position${heat.tradeCount > 1 ? 's' : ''} at risk: ${formatCurrency(heat.totalRisk)}`
         : 'No open positions at risk';
 
-    // Color coding based on risk level
-    indicator.classList.remove('heat-low', 'heat-medium', 'heat-high', 'heat-critical');
+    // Color coding based on risk level: 0 = green, 1-3 = yellow, 4+ = red
+    indicator.classList.remove('heat-green', 'heat-yellow', 'heat-red');
 
-    if (heat.percent === 0) {
-        indicator.classList.add('heat-low');
-    } else if (heat.percent <= 2) {
-        indicator.classList.add('heat-low');
-    } else if (heat.percent <= 4) {
-        indicator.classList.add('heat-medium');
-    } else if (heat.percent <= 6) {
-        indicator.classList.add('heat-high');
+    if (heat.percent < 1) {
+        indicator.classList.add('heat-green');
+    } else if (heat.percent < 4) {
+        indicator.classList.add('heat-yellow');
     } else {
-        indicator.classList.add('heat-critical');
+        indicator.classList.add('heat-red');
     }
 }
