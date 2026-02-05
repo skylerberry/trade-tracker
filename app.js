@@ -2890,6 +2890,7 @@ document.getElementById('setDefaultMax').addEventListener('click', (e) => {
     const value = parseFloat(calcMaxPercent.value) || 100;
     defaultMaxPercent = value;
     localStorage.setItem('tradeTracker_defaultMax', value.toString());
+    console.log('Saved defaultMax to localStorage:', value, 'Verify:', localStorage.getItem('tradeTracker_defaultMax'));
     syncSettingsToGist();
 
     // Show saved feedback
@@ -2934,6 +2935,7 @@ function loadDefaultSettings() {
 
     if (storedMax) {
         defaultMaxPercent = parseFloat(storedMax);
+        console.log('Loading defaultMax from localStorage:', storedMax, 'parsed:', defaultMaxPercent);
         calcMaxPercent.value = defaultMaxPercent;
 
         // Check if value matches any preset
