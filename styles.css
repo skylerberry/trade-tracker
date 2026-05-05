@@ -1162,16 +1162,17 @@ tbody tr:last-child td {
 }
 
 /* Closing animation: override global .hidden { display: none } so the modal
-   stays in layout long enough to animate out, then ends with visibility:hidden
-   so it goes inert (no clicks, no tab focus). The animation property change
-   from .modal to .modal.hidden re-triggers the keyframes on toggle. */
-.modal.hidden {
+   stays in layout long enough to animate out, then ends with visibility:hidden.
+   Gated on .has-been-shown so modals that haven't been opened yet (i.e. on
+   initial page load, when every modal in the DOM has .hidden set) don't fire
+   the close animation as part of their first paint. */
+.modal.hidden.has-been-shown {
     display: flex !important; /* override global .hidden { display: none !important } */
     pointer-events: none;
     animation: modal-fade-out 0.16s ease-in forwards;
 }
 
-.modal.hidden .modal-content {
+.modal.hidden.has-been-shown .modal-content {
     animation: modal-content-out 0.16s ease-in forwards;
 }
 
@@ -1210,11 +1211,11 @@ tbody tr:last-child td {
 @media (prefers-reduced-motion: reduce) {
     .modal,
     .modal-content,
-    .modal.hidden,
-    .modal.hidden .modal-content {
+    .modal.hidden.has-been-shown,
+    .modal.hidden.has-been-shown .modal-content {
         animation: none;
     }
-    .modal.hidden {
+    .modal.hidden.has-been-shown {
         display: none !important;
     }
 }
