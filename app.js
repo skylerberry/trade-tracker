@@ -167,6 +167,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         input.addEventListener('focus', () => saveToUndoStack(input));
     });
 
+    // Auto-fill Current SL with Initial SL when tabbing into an empty field.
+    // Registered after the undo listener above, so the empty state is captured
+    // first and the auto-fill is reversible via Cmd+Z.
+    document.getElementById('currentSL').addEventListener('focus', (e) => {
+        if (e.target.value) return;
+        const initialSL = document.getElementById('initialSL').value;
+        if (initialSL) e.target.value = initialSL;
+    });
+
     // Cmd+Z / Ctrl+Z undo handler
     document.addEventListener('keydown', (e) => {
         if ((e.metaKey || e.ctrlKey) && e.key === 'z' && !e.shiftKey) {
