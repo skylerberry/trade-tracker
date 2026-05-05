@@ -801,7 +801,17 @@ function renderTradeActions(trade) {
         `;
     }
 
-    // Active trades (open, partially_closed): Manage | Edit | Delete
+    // Active trades (open, partially_closed): Manage | Add-to | Edit | Delete
+    const addBtnDisabled = !accountSize || accountSize <= 0;
+    const addBtn = `
+        <button class="btn-icon btn-add-position" onclick="openAddPositionModal('${trade.id}')" data-tooltip="${addBtnDisabled ? 'Set account size first' : 'Add to Position'}" ${addBtnDisabled ? 'disabled' : ''}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+        </button>
+    `;
+
     return `
         <button class="btn-icon btn-manage" onclick="manageTrade('${trade.id}')" data-tooltip="Manage">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -811,6 +821,7 @@ function renderTradeActions(trade) {
                 <rect x="3" y="14" width="7" height="7"></rect>
             </svg>
         </button>
+        ${addBtn}
         <button class="btn-icon btn-edit" onclick="editTrade('${trade.id}')" data-tooltip="Edit">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
@@ -5012,6 +5023,205 @@ document.addEventListener('keydown', (e) => {
 window.openQuickSellModal = openQuickSellModal;
 window.closeQuickSellModal = closeQuickSellModal;
 window.executeQuickSell = executeQuickSell;
+
+// =====================
+// Add to Position Modal
+// =====================
+
+// 1b seam: when adds become persistable, this is the only function that changes.
+function getEffectiveAvg(trade) {
+    return trade.entryPrice;
+}
+
+let addPositionTradeId = null;
+
+function openAddPositionModal(tradeId) {
+    const trade = trades.find(t => t.id === tradeId);
+    if (!trade) return;
+
+    addPositionTradeId = tradeId;
+
+    const modal = document.getElementById('addPositionModal');
+    if (!modal) return;
+
+    document.getElementById('apTicker').textContent = trade.ticker;
+    document.getElementById('apAccount').textContent = formatCurrency(accountSize || 0);
+    document.getElementById('apCurAvg').textContent = formatCurrency(getEffectiveAvg(trade));
+
+    const position = getCurrentPosition(trade);
+    const curSharesInput = document.getElementById('apCurShares');
+    if (position && position.remaining > 0) {
+        curSharesInput.value = position.remaining;
+    } else {
+        curSharesInput.value = '';
+    }
+
+    document.getElementById('apRiskPct').value = defaultRiskPercent;
+    document.getElementById('apAddPrice').value = '';
+    document.getElementById('apNewStop').value = trade.currentSL ? trade.currentSL.toFixed(2) : '';
+
+    document.getElementById('apFreerollBanner').classList.add('hidden');
+    document.getElementById('apError').classList.add('hidden');
+    document.getElementById('apMaxPctWarning').classList.add('hidden');
+
+    recomputeAddPosition();
+    modal.classList.remove('hidden');
+    document.getElementById('apAddPrice').focus();
+}
+
+function closeAddPositionModal() {
+    const modal = document.getElementById('addPositionModal');
+    if (modal) modal.classList.add('hidden');
+    addPositionTradeId = null;
+}
+
+function recomputeAddPosition() {
+    const trade = trades.find(t => t.id === addPositionTradeId);
+    if (!trade) return;
+
+    const sharesEl = document.getElementById('apSharesToAdd');
+    const newAvgEl = document.getElementById('apNewAvg');
+    const newSlEl = document.getElementById('apNewSlWidth');
+    const newPosEl = document.getElementById('apNewPosition');
+    const errorEl = document.getElementById('apError');
+    const freerollEl = document.getElementById('apFreerollBanner');
+    const warningEl = document.getElementById('apMaxPctWarning');
+    const copyBtn = document.getElementById('apCopyBtn');
+    const copyValEl = document.getElementById('apCopyValue');
+    const card = document.getElementById('apOutputCard');
+
+    const resetOutput = () => {
+        sharesEl.textContent = '—';
+        newAvgEl.textContent = '—';
+        newSlEl.textContent = '—';
+        newPosEl.textContent = '—';
+        copyBtn.disabled = true;
+        copyValEl.textContent = '';
+        warningEl.classList.add('hidden');
+        card.classList.remove('ap-output-error');
+    };
+
+    const curAvg = getEffectiveAvg(trade);
+    const account = accountSize || 0;
+    const curShares = parseFloat(document.getElementById('apCurShares').value) || 0;
+    const riskPct = parseFloat(document.getElementById('apRiskPct').value) || 0;
+    const addPrice = parseFloat(document.getElementById('apAddPrice').value) || 0;
+    const newStop = parseFloat(document.getElementById('apNewStop').value) || 0;
+
+    // Freeroll banner: based purely on curAvg vs newStop, independent of validity
+    if (newStop > 0 && curAvg > 0 && curAvg < newStop) {
+        freerollEl.classList.remove('hidden');
+    } else {
+        freerollEl.classList.add('hidden');
+    }
+
+    // Hard validation: stop must be below add price
+    if (addPrice > 0 && newStop > 0 && newStop >= addPrice) {
+        errorEl.textContent = 'Stop must be below add price';
+        errorEl.classList.remove('hidden');
+        resetOutput();
+        return;
+    }
+    errorEl.classList.add('hidden');
+
+    // Required inputs
+    if (!account || !curShares || !riskPct || !addPrice || !newStop) {
+        resetOutput();
+        return;
+    }
+
+    // Formulas (spreadsheet H24-H27, but ROUND on shares not ROUNDUP — see docs/phase1-add-to-position.md)
+    const riskBudget = account * (riskPct / 100);
+    const existingRisk = curShares * (curAvg - newStop);
+    const perShareRisk = addPrice - newStop;
+    const sharesToAdd = Math.round((riskBudget - existingRisk) / perShareRisk);
+
+    if (sharesToAdd <= 0) {
+        errorEl.textContent = 'No room to add — existing position already at or above the risk budget vs this stop.';
+        errorEl.classList.remove('hidden');
+        resetOutput();
+        card.classList.add('ap-output-error');
+        return;
+    }
+
+    const totalShares = curShares + sharesToAdd;
+    const newAvg = ((curShares * curAvg) + (sharesToAdd * addPrice)) / totalShares;
+    const newSlWidthPct = (newAvg - newStop) / newAvg;
+    const newPositionSize = totalShares * newAvg;
+
+    sharesEl.textContent = formatNumber(sharesToAdd);
+    newAvgEl.textContent = formatCurrency(newAvg);
+    newSlEl.textContent = `${(newSlWidthPct * 100).toFixed(2)}%`;
+    newPosEl.textContent = formatCurrency(newPositionSize);
+
+    copyBtn.disabled = false;
+    copyValEl.textContent = formatNumber(sharesToAdd);
+
+    // Max % of account warning (non-blocking)
+    const positionPct = (newPositionSize / account) * 100;
+    if (defaultMaxPercent > 0 && positionPct > defaultMaxPercent) {
+        warningEl.textContent = `This would be ${positionPct.toFixed(1)}% of your account, above your ${defaultMaxPercent}% max.`;
+        warningEl.classList.remove('hidden');
+    } else {
+        warningEl.classList.add('hidden');
+    }
+}
+
+function copyAddPositionResult() {
+    const sharesEl = document.getElementById('apSharesToAdd');
+    const value = sharesEl ? sharesEl.textContent.replace(/[^0-9]/g, '') : '';
+    if (!value) return;
+    navigator.clipboard.writeText(value).then(() => {
+        showToast(`Copied ${value} shares`);
+    }).catch(err => {
+        console.error('Failed to copy:', err);
+    });
+}
+
+// Modal click delegation: increment buttons + close + copy + done
+document.getElementById('addPositionModal')?.addEventListener('click', (e) => {
+    const target = e.target;
+
+    if (target.id === 'closeAddPositionModalBtn' || target.closest('#closeAddPositionModalBtn')) {
+        closeAddPositionModal();
+        return;
+    }
+    if (target.id === 'apDoneBtn') {
+        closeAddPositionModal();
+        return;
+    }
+    if (target.id === 'apCopyBtn' || target.closest('#apCopyBtn')) {
+        copyAddPositionResult();
+        return;
+    }
+
+    if (target.classList.contains('increment-btn')) {
+        const input = document.getElementById(target.dataset.target);
+        const delta = parseFloat(target.dataset.delta);
+        if (input && !isNaN(delta)) {
+            const current = parseFloat(input.value) || 0;
+            const next = Math.max(0, current + delta);
+            input.value = target.dataset.target === 'apCurShares' ? Math.round(next) : next.toFixed(2);
+            recomputeAddPosition();
+        }
+    }
+});
+
+// Recompute on input changes
+['apCurShares', 'apRiskPct', 'apAddPrice', 'apNewStop'].forEach(id => {
+    document.getElementById(id)?.addEventListener('input', recomputeAddPosition);
+});
+
+// Escape to close
+document.addEventListener('keydown', (e) => {
+    const modal = document.getElementById('addPositionModal');
+    if (e.key === 'Escape' && modal && !modal.classList.contains('hidden')) {
+        closeAddPositionModal();
+    }
+});
+
+window.openAddPositionModal = openAddPositionModal;
+window.closeAddPositionModal = closeAddPositionModal;
 
 // =====================
 // Close Position (Exit Remaining)
