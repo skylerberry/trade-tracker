@@ -1136,6 +1136,11 @@ tbody tr:last-child td {
 }
 
 /* Modal */
+/* Modals open/close via CSS transitions (not animations). Transitions don't
+   fire on initial render, so no JS gating is needed to avoid a flash. The
+   .hidden state keeps the modal in layout (display:flex !important overrides
+   the global utility) so the fade-out can play, ending at visibility:hidden
+   so the modal goes inert. */
 .modal {
     position: fixed;
     top: 0;
@@ -1147,7 +1152,16 @@ tbody tr:last-child td {
     align-items: center;
     justify-content: center;
     z-index: 1000;
-    animation: modal-fade-in 0.18s ease-out;
+    visibility: visible;
+    transition: background 0.18s ease-out, visibility 0s 0s;
+}
+
+.modal.hidden {
+    display: flex !important;
+    pointer-events: none;
+    background: rgba(0, 0, 0, 0);
+    visibility: hidden;
+    transition: background 0.16s ease-in, visibility 0s 0.16s;
 }
 
 .modal-content {
@@ -1158,64 +1172,26 @@ tbody tr:last-child td {
     max-width: 450px;
     width: 90%;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-    animation: modal-content-in 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Closing animation: override global .hidden { display: none } so the modal
-   stays in layout long enough to animate out, then ends with visibility:hidden.
-   Gated on .has-been-shown so modals that haven't been opened yet (i.e. on
-   initial page load, when every modal in the DOM has .hidden set) don't fire
-   the close animation as part of their first paint. */
-.modal.hidden.has-been-shown {
-    display: flex !important; /* override global .hidden { display: none !important } */
-    pointer-events: none;
-    animation: modal-fade-out 0.16s ease-in forwards;
-}
-
-.modal.hidden.has-been-shown .modal-content {
-    animation: modal-content-out 0.16s ease-in forwards;
-}
-
-@keyframes modal-fade-in {
-    from { background: rgba(0, 0, 0, 0); }
-    to   { background: rgba(0, 0, 0, 0.5); }
-}
-
-@keyframes modal-content-in {
-    from {
-        opacity: 0;
-        transform: translateY(8px) scale(0.98);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
-
-@keyframes modal-fade-out {
-    from { background: rgba(0, 0, 0, 0.5); visibility: visible; }
-    to   { background: rgba(0, 0, 0, 0); visibility: hidden; }
-}
-
-@keyframes modal-content-out {
-    from {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-    to {
-        opacity: 0;
-        transform: translateY(8px) scale(0.98);
-    }
+.modal.hidden .modal-content {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+    transition: opacity 0.16s ease-in, transform 0.16s ease-in;
 }
 
 @media (prefers-reduced-motion: reduce) {
     .modal,
+    .modal.hidden,
     .modal-content,
-    .modal.hidden.has-been-shown,
-    .modal.hidden.has-been-shown .modal-content {
-        animation: none;
+    .modal.hidden .modal-content {
+        transition: none;
     }
-    .modal.hidden.has-been-shown {
+    .modal.hidden {
         display: none !important;
     }
 }

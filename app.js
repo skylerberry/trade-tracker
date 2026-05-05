@@ -5037,18 +5037,6 @@ window.openQuickSellModal = openQuickSellModal;
 window.closeQuickSellModal = closeQuickSellModal;
 window.executeQuickSell = executeQuickSell;
 
-// Tag each modal with .has-been-shown the first time .hidden is removed.
-// CSS gates the close animation behind this class so initial page load
-// (where every modal in the DOM has .hidden) doesn't fire close-animations
-// on never-opened modals — that caused a brief flash on first paint.
-document.querySelectorAll('.modal').forEach(modal => {
-    new MutationObserver(() => {
-        if (!modal.classList.contains('hidden')) {
-            modal.classList.add('has-been-shown');
-        }
-    }).observe(modal, { attributes: true, attributeFilter: ['class'] });
-});
-
 // =====================
 // Add to Position Modal
 // =====================
