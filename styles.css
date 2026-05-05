@@ -5795,6 +5795,421 @@ tbody tr:last-child td {
 }
 
 /* ============================================
+   Add to Position Modal
+   ============================================ */
+
+.add-position-modal {
+    max-width: 480px;
+    padding: 0;
+    position: relative;
+}
+
+.add-position-modal .btn-modal-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+}
+
+.ap-header {
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid var(--color-gray-200);
+}
+
+.ap-header h3 {
+    font-size: 1.1rem;
+    margin: 0 0 4px 0;
+}
+
+.ap-header h3 span {
+    color: var(--color-primary);
+}
+
+.ap-context {
+    font-size: 0.85rem;
+    color: var(--color-gray-500);
+}
+
+.ap-context-sep {
+    margin: 0 6px;
+    color: var(--color-gray-300);
+}
+
+.ap-body {
+    padding: 20px 24px 24px;
+}
+
+.ap-freeroll-banner {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    padding: 10px 12px;
+    margin-bottom: 16px;
+    background: var(--color-gray-50);
+    border: 1px solid var(--color-gray-200);
+    border-left: 3px solid var(--color-primary);
+    border-radius: 6px;
+    font-size: 0.82rem;
+    color: var(--color-gray-700);
+    line-height: 1.4;
+}
+
+.ap-freeroll-banner svg {
+    flex-shrink: 0;
+    margin-top: 1px;
+    color: var(--color-primary);
+}
+
+.ap-input-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 14px;
+    margin-bottom: 12px;
+}
+
+.ap-field label {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--color-gray-600);
+    margin-bottom: 6px;
+}
+
+.ap-field .input-with-buttons {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    border: 1px solid var(--color-gray-300);
+    border-radius: 6px;
+    background: white;
+    overflow: hidden;
+}
+
+.ap-field .input-with-buttons:focus-within {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(26, 54, 93, 0.15);
+}
+
+.ap-input {
+    flex: 1;
+    min-width: 0;
+    padding: 8px 10px;
+    border: none;
+    background: transparent;
+    font-size: 0.95rem;
+    color: var(--color-gray-700);
+    outline: none;
+    -moz-appearance: textfield;
+}
+
+.ap-input::-webkit-outer-spin-button,
+.ap-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.ap-field .input-prefix {
+    display: flex;
+    align-items: center;
+    padding: 0 4px 0 10px;
+    color: var(--color-gray-500);
+    font-size: 0.95rem;
+}
+
+.ap-input-suffix {
+    display: flex;
+    align-items: center;
+    padding: 0 10px 0 4px;
+    color: var(--color-gray-500);
+    font-size: 0.95rem;
+}
+
+.ap-error {
+    font-size: 0.82rem;
+    color: var(--color-error);
+    margin-bottom: 12px;
+    padding: 8px 10px;
+    background: rgba(239, 68, 68, 0.08);
+    border-radius: 6px;
+    border-left: 3px solid var(--color-error);
+}
+
+.ap-output-card {
+    background: var(--color-gray-50);
+    border: 1px solid var(--color-gray-200);
+    border-radius: 8px;
+    padding: 16px 18px;
+    margin-bottom: 12px;
+}
+
+.ap-output-card.ap-output-error {
+    opacity: 0.5;
+}
+
+.ap-output-headline {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid var(--color-gray-200);
+}
+
+.ap-output-shares {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    line-height: 1;
+}
+
+.ap-output-shares-label {
+    font-size: 0.85rem;
+    color: var(--color-gray-600);
+}
+
+.ap-output-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.ap-output-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.88rem;
+}
+
+.ap-output-row span:first-child {
+    color: var(--color-gray-500);
+}
+
+.ap-output-row span:last-child {
+    color: var(--color-gray-700);
+    font-weight: 500;
+}
+
+.ap-warning {
+    font-size: 0.82rem;
+    color: #92400e;
+    background: rgba(251, 191, 36, 0.12);
+    border-left: 3px solid var(--color-warning);
+    border-radius: 6px;
+    padding: 8px 10px;
+    margin-bottom: 12px;
+}
+
+.ap-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.ap-actions .btn {
+    flex: 1;
+}
+
+.ap-actions .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Active-trade row "Add to Position" icon button — visually distinct from
+   the section-level "+ Add New Trade" button (which is a text button, not icon). */
+.btn-icon.btn-add-position {
+    color: var(--color-primary);
+}
+
+.btn-icon.btn-add-position:hover:not(:disabled) {
+    background: rgba(26, 54, 93, 0.1);
+}
+
+.btn-icon.btn-add-position:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* Add to Position Modal — Dark Mode */
+[data-theme="dark"] .add-position-modal {
+    background: #18181b;
+}
+
+[data-theme="dark"] .ap-header {
+    border-bottom-color: #3f3f46;
+}
+
+[data-theme="dark"] .ap-header h3 {
+    color: #f4f4f5;
+}
+
+[data-theme="dark"] .ap-header h3 span {
+    color: #60a5fa;
+}
+
+[data-theme="dark"] .ap-context {
+    color: #a1a1aa;
+}
+
+[data-theme="dark"] .ap-context-sep {
+    color: #52525b;
+}
+
+[data-theme="dark"] .ap-freeroll-banner {
+    background: #1f1f22;
+    border-color: #3f3f46;
+    border-left-color: #3b82f6;
+    color: #d4d4d8;
+}
+
+[data-theme="dark"] .ap-freeroll-banner svg {
+    color: #60a5fa;
+}
+
+[data-theme="dark"] .ap-field label {
+    color: #a1a1aa;
+}
+
+[data-theme="dark"] .ap-field .input-with-buttons {
+    background: #27272a;
+    border-color: #3f3f46;
+}
+
+[data-theme="dark"] .ap-field .input-with-buttons:focus-within {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+[data-theme="dark"] .ap-input {
+    color: #f4f4f5;
+}
+
+[data-theme="dark"] .ap-field .input-prefix,
+[data-theme="dark"] .ap-input-suffix {
+    color: #71717a;
+}
+
+[data-theme="dark"] .ap-error {
+    background: rgba(239, 68, 68, 0.15);
+    color: #fca5a5;
+}
+
+[data-theme="dark"] .ap-output-card {
+    background: #1f1f22;
+    border-color: #3f3f46;
+}
+
+[data-theme="dark"] .ap-output-headline {
+    border-bottom-color: #3f3f46;
+}
+
+[data-theme="dark"] .ap-output-shares {
+    color: #60a5fa;
+}
+
+[data-theme="dark"] .ap-output-shares-label {
+    color: #a1a1aa;
+}
+
+[data-theme="dark"] .ap-output-row span:first-child {
+    color: #71717a;
+}
+
+[data-theme="dark"] .ap-output-row span:last-child {
+    color: #e4e4e7;
+}
+
+[data-theme="dark"] .ap-warning {
+    background: rgba(251, 191, 36, 0.1);
+    color: #fcd34d;
+}
+
+[data-theme="dark"] .btn-icon.btn-add-position {
+    color: #93c5fd;
+}
+
+[data-theme="dark"] .btn-icon.btn-add-position:hover:not(:disabled) {
+    background: rgba(147, 197, 253, 0.1);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .add-position-modal {
+        background: #18181b;
+    }
+    :root:not([data-theme="light"]) .ap-header {
+        border-bottom-color: #3f3f46;
+    }
+    :root:not([data-theme="light"]) .ap-header h3 {
+        color: #f4f4f5;
+    }
+    :root:not([data-theme="light"]) .ap-header h3 span {
+        color: #60a5fa;
+    }
+    :root:not([data-theme="light"]) .ap-context {
+        color: #a1a1aa;
+    }
+    :root:not([data-theme="light"]) .ap-context-sep {
+        color: #52525b;
+    }
+    :root:not([data-theme="light"]) .ap-freeroll-banner {
+        background: #1f1f22;
+        border-color: #3f3f46;
+        border-left-color: #3b82f6;
+        color: #d4d4d8;
+    }
+    :root:not([data-theme="light"]) .ap-freeroll-banner svg {
+        color: #60a5fa;
+    }
+    :root:not([data-theme="light"]) .ap-field label {
+        color: #a1a1aa;
+    }
+    :root:not([data-theme="light"]) .ap-field .input-with-buttons {
+        background: #27272a;
+        border-color: #3f3f46;
+    }
+    :root:not([data-theme="light"]) .ap-field .input-with-buttons:focus-within {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    }
+    :root:not([data-theme="light"]) .ap-input {
+        color: #f4f4f5;
+    }
+    :root:not([data-theme="light"]) .ap-field .input-prefix,
+    :root:not([data-theme="light"]) .ap-input-suffix {
+        color: #71717a;
+    }
+    :root:not([data-theme="light"]) .ap-error {
+        background: rgba(239, 68, 68, 0.15);
+        color: #fca5a5;
+    }
+    :root:not([data-theme="light"]) .ap-output-card {
+        background: #1f1f22;
+        border-color: #3f3f46;
+    }
+    :root:not([data-theme="light"]) .ap-output-headline {
+        border-bottom-color: #3f3f46;
+    }
+    :root:not([data-theme="light"]) .ap-output-shares {
+        color: #60a5fa;
+    }
+    :root:not([data-theme="light"]) .ap-output-shares-label {
+        color: #a1a1aa;
+    }
+    :root:not([data-theme="light"]) .ap-output-row span:first-child {
+        color: #71717a;
+    }
+    :root:not([data-theme="light"]) .ap-output-row span:last-child {
+        color: #e4e4e7;
+    }
+    :root:not([data-theme="light"]) .ap-warning {
+        background: rgba(251, 191, 36, 0.1);
+        color: #fcd34d;
+    }
+    :root:not([data-theme="light"]) .btn-icon.btn-add-position {
+        color: #93c5fd;
+    }
+    :root:not([data-theme="light"]) .btn-icon.btn-add-position:hover:not(:disabled) {
+        background: rgba(147, 197, 253, 0.1);
+    }
+}
+
+/* ============================================
    Sell Plan Dark Mode Styles
    ============================================ */
 
