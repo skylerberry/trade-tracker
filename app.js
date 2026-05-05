@@ -170,10 +170,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Auto-fill Current SL with Initial SL when tabbing into an empty field.
     // Registered after the undo listener above, so the empty state is captured
     // first and the auto-fill is reversible via Cmd+Z.
+    // Auto-filled value is selected so any keystroke replaces it (no backspacing
+    // needed if the user wants a different stop). Tab out commits the default.
     document.getElementById('currentSL').addEventListener('focus', (e) => {
         if (e.target.value) return;
         const initialSL = document.getElementById('initialSL').value;
-        if (initialSL) e.target.value = initialSL;
+        if (!initialSL) return;
+        e.target.value = initialSL;
+        requestAnimationFrame(() => e.target.select());
     });
 
     // Cmd+Z / Ctrl+Z undo handler
