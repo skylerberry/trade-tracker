@@ -1161,6 +1161,20 @@ tbody tr:last-child td {
     animation: modal-content-in 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* Closing animation: override global .hidden { display: none } so the modal
+   stays in layout long enough to animate out, then ends with visibility:hidden
+   so it goes inert (no clicks, no tab focus). The animation property change
+   from .modal to .modal.hidden re-triggers the keyframes on toggle. */
+.modal.hidden {
+    display: flex !important; /* override global .hidden { display: none !important } */
+    pointer-events: none;
+    animation: modal-fade-out 0.16s ease-in forwards;
+}
+
+.modal.hidden .modal-content {
+    animation: modal-content-out 0.16s ease-in forwards;
+}
+
 @keyframes modal-fade-in {
     from { background: rgba(0, 0, 0, 0); }
     to   { background: rgba(0, 0, 0, 0.5); }
@@ -1177,10 +1191,31 @@ tbody tr:last-child td {
     }
 }
 
+@keyframes modal-fade-out {
+    from { background: rgba(0, 0, 0, 0.5); visibility: visible; }
+    to   { background: rgba(0, 0, 0, 0); visibility: hidden; }
+}
+
+@keyframes modal-content-out {
+    from {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(8px) scale(0.98);
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
     .modal,
-    .modal-content {
+    .modal-content,
+    .modal.hidden,
+    .modal.hidden .modal-content {
         animation: none;
+    }
+    .modal.hidden {
+        display: none !important;
     }
 }
 
