@@ -5,3 +5,9 @@ status.md
 
 # Local Netlify folder
 .netlify
+
+# Screenshots are local context for Claude, not committed
+screenshots/*.png
+screenshots/*.jpg
+screenshots/*.jpeg
+!screenshots/README.md
