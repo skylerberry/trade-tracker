@@ -5105,6 +5105,7 @@ function recomputeAddPosition() {
 
     const resetOutput = () => {
         sharesEl.textContent = '—';
+        sharesEl.classList.add('empty');
         newAvgEl.textContent = '—';
         newSlEl.textContent = '—';
         newPosEl.textContent = '—';
@@ -5163,6 +5164,7 @@ function recomputeAddPosition() {
     const newPositionSize = totalShares * newAvg;
 
     sharesEl.textContent = formatNumber(sharesToAdd);
+    sharesEl.classList.remove('empty');
     newAvgEl.textContent = formatCurrency(newAvg);
     newSlEl.textContent = `${(newSlWidthPct * 100).toFixed(2)}%`;
     newPosEl.textContent = formatCurrency(newPositionSize);

@@ -1147,6 +1147,7 @@ tbody tr:last-child td {
     align-items: center;
     justify-content: center;
     z-index: 1000;
+    animation: modal-fade-in 0.18s ease-out;
 }
 
 .modal-content {
@@ -1157,6 +1158,30 @@ tbody tr:last-child td {
     max-width: 450px;
     width: 90%;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    animation: modal-content-in 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modal-fade-in {
+    from { background: rgba(0, 0, 0, 0); }
+    to   { background: rgba(0, 0, 0, 0.5); }
+}
+
+@keyframes modal-content-in {
+    from {
+        opacity: 0;
+        transform: translateY(8px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .modal,
+    .modal-content {
+        animation: none;
+    }
 }
 
 .btn-modal-close {
@@ -5874,53 +5899,32 @@ tbody tr:last-child td {
     margin-bottom: 6px;
 }
 
-.ap-field .input-with-buttons {
-    position: relative;
-    display: flex;
-    align-items: stretch;
-    border: 1px solid var(--color-gray-300);
-    border-radius: 6px;
-    background: white;
-    overflow: hidden;
-}
-
-.ap-field .input-with-buttons:focus-within {
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(26, 54, 93, 0.15);
-}
-
-.ap-input {
-    flex: 1;
-    min-width: 0;
-    padding: 8px 10px;
-    border: none;
-    background: transparent;
-    font-size: 0.95rem;
-    color: var(--color-gray-700);
-    outline: none;
-    -moz-appearance: textfield;
-}
-
-.ap-input::-webkit-outer-spin-button,
-.ap-input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-
-.ap-field .input-prefix {
-    display: flex;
-    align-items: center;
-    padding: 0 4px 0 10px;
-    color: var(--color-gray-500);
-    font-size: 0.95rem;
-}
-
+/* Reuse the global .input-with-buttons system. Only the % suffix is novel —
+   matches the absolute-positioned .input-prefix pattern (right-side analog). */
 .ap-input-suffix {
-    display: flex;
-    align-items: center;
-    padding: 0 10px 0 4px;
+    position: absolute;
+    right: 38px; /* leaves space for increment-btn-stack if present */
+    top: 50%;
+    transform: translateY(-50%);
     color: var(--color-gray-500);
     font-size: 0.95rem;
+    font-weight: 500;
+    pointer-events: none;
+    user-select: none;
+    z-index: 1;
+}
+
+.ap-field .input-with-buttons:has(.ap-input-suffix) {
+    position: relative;
+}
+
+.ap-field .input-with-buttons:has(.ap-input-suffix) input {
+    padding-right: 28px;
+}
+
+/* Risk % field has no increment buttons — pull the suffix in */
+.ap-field .input-with-buttons:has(.ap-input-suffix):not(:has(.increment-btn-stack)) .ap-input-suffix {
+    right: 12px;
 }
 
 .ap-error {
@@ -5959,6 +5963,15 @@ tbody tr:last-child td {
     font-weight: 700;
     color: var(--color-primary);
     line-height: 1;
+    transition: font-size 0.15s, font-weight 0.15s, color 0.15s;
+}
+
+/* Empty-state: dial back the headline so the placeholder reads as
+   "no value yet" instead of a decorative bar. Aligns with label baseline. */
+.ap-output-shares.empty {
+    font-size: 0.95rem;
+    font-weight: 400;
+    color: var(--color-gray-500);
 }
 
 .ap-output-shares-label {
@@ -6066,21 +6079,6 @@ tbody tr:last-child td {
     color: #a1a1aa;
 }
 
-[data-theme="dark"] .ap-field .input-with-buttons {
-    background: #27272a;
-    border-color: #3f3f46;
-}
-
-[data-theme="dark"] .ap-field .input-with-buttons:focus-within {
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-}
-
-[data-theme="dark"] .ap-input {
-    color: #f4f4f5;
-}
-
-[data-theme="dark"] .ap-field .input-prefix,
 [data-theme="dark"] .ap-input-suffix {
     color: #71717a;
 }
@@ -6101,6 +6099,10 @@ tbody tr:last-child td {
 
 [data-theme="dark"] .ap-output-shares {
     color: #60a5fa;
+}
+
+[data-theme="dark"] .ap-output-shares.empty {
+    color: #71717a;
 }
 
 [data-theme="dark"] .ap-output-shares-label {
@@ -6159,18 +6161,6 @@ tbody tr:last-child td {
     :root:not([data-theme="light"]) .ap-field label {
         color: #a1a1aa;
     }
-    :root:not([data-theme="light"]) .ap-field .input-with-buttons {
-        background: #27272a;
-        border-color: #3f3f46;
-    }
-    :root:not([data-theme="light"]) .ap-field .input-with-buttons:focus-within {
-        border-color: #3b82f6;
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-    }
-    :root:not([data-theme="light"]) .ap-input {
-        color: #f4f4f5;
-    }
-    :root:not([data-theme="light"]) .ap-field .input-prefix,
     :root:not([data-theme="light"]) .ap-input-suffix {
         color: #71717a;
     }
@@ -6187,6 +6177,9 @@ tbody tr:last-child td {
     }
     :root:not([data-theme="light"]) .ap-output-shares {
         color: #60a5fa;
+    }
+    :root:not([data-theme="light"]) .ap-output-shares.empty {
+        color: #71717a;
     }
     :root:not([data-theme="light"]) .ap-output-shares-label {
         color: #a1a1aa;
